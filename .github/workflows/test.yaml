@@ -14,6 +14,7 @@ jobs:
     services:
       pebble:
         image: ghcr.io/letsencrypt/pebble:latest
+        command: -strict
         ports:
           - 14000:14000 # HTTPS ACME API
       challtestsrv:

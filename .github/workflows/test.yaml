@@ -17,11 +17,6 @@ jobs:
         command: -strict -dnsserver challtestsrv:8053
         ports:
           - 14000:14000 # HTTPS ACME API
-        options: >-
-          --health-cmd "wget --no-check-certificate --no-verbose --tries=1 --spider https://localhost:14000/dir || exit 1"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5					
       challtestsrv:
         image: ghcr.io/letsencrypt/pebble-challtestsrv:latest
         command: -defaultIPv6 "" -defaultIPv4 127.0.0.1
@@ -31,9 +26,19 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v7
 
-      - name: Wait for foo
+      - name: Wait for services
         run: |
-          sleep 10
+          until wget -q --spider http://pebble:14000/dir; do
+            echo "Waiting for Pebble..."
+            sleep 1
+          done
+
+          until wget -q --spider http://challtestsrv:8055/; do
+            echo "Waiting for challtestsrv..."
+            sleep 1
+          done
+
+          echo "Services are ready!"
 
       - name: Create Pebble certificate
         run: |

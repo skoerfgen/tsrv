@@ -1,6 +1,6 @@
 <?php
 
-require '../ACMECert.php';
+require 'ACMECert.php';
 
 use skoerfgen\ACMECert\ACMECert;
 

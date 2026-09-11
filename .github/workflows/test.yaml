@@ -1,4 +1,4 @@
-name: Run PHP HTTP test
+name: FooRunner
 
 on:
   push:

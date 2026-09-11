@@ -12,7 +12,7 @@ print_r($ac);
 $key=$ac->generateECKey();
 $ac->loadAccountKey($key);
 print_r($ac->register(true));
-
+echo "::notice title=Account::Registration successful\n";
 
 $domain_config=array(
 	'exampledomain0.net'=>array('challenge'=>'dns-01'),
@@ -60,3 +60,6 @@ $handler=function($opts) use ($ac,$ch){
 $fullchain=$ac->getCertificateChain($ac->generateECKey(),$domain_config,$handler,array('group'=>true,'authz_reuse'=>true));
 $ret=$ac->getSAN($fullchain);
 print_r($ret);
+echo "\033[32m✓ Certificate generated successfully\033[0m\n";
+
+file_put_contents(getenv('GITHUB_STEP_SUMMARY'), 'looks good', FILE_APPEND);

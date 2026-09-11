@@ -27,7 +27,7 @@ jobs:
           - 15000:15000 # HTTPS Management API
       challtestsrv:
         image: ghcr.io/letsencrypt/pebble-challtestsrv:latest
-        command: -defaultIPv6 ""
+        command: -defaultIPv6 "" -defaultIPv4 ""
         ports:
           - 8055:8055 # HTTP Management API
 

@@ -32,13 +32,7 @@ jobs:
             echo "Waiting for Pebble..."
             sleep 1
           done
-
-          until wget -q --spider http://challtestsrv:8055/; do
-            echo "Waiting for challtestsrv..."
-            sleep 1
-          done
-
-          echo "Services are ready!"
+          echo "Pebble ready!"
 
       - name: Create Pebble certificate
         run: |

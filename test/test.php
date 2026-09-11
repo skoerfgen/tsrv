@@ -15,18 +15,7 @@ print_r($ac->register(true));
 
 
 $domain_config=array(
-	'*.x.x.exampledomain.net'=>array('challenge'=>'dns-01'),
-	'*.exampledomain.net'=>array('challenge'=>'dns-01'),
 	'exampledomain.net'=>array('challenge'=>'dns-01'),
-	'x.x.exampledomain.net'=>array('challenge'=>'dns-01'),
-	'a.a.exampledomain.net'=>array('challenge'=>'dns-01'),
-	'*.a.a.exampledomain.net'=>array('challenge'=>'dns-01'),	
-	'b.b.exampledomain.net'=>array('challenge'=>'dns-01'),
-	'*.b.b.exampledomain.net'=>array('challenge'=>'dns-01'),	
-	'c.c.exampledomain.net'=>array('challenge'=>'dns-01'),
-	'*.c.c.exampledomain.net'=>array('challenge'=>'dns-01'),	
-	'd.d.exampledomain.net'=>array('challenge'=>'dns-01'),
-	'*.d.d.exampledomain.net'=>array('challenge'=>'dns-01'),
 );
 
 $ch=curl_init();

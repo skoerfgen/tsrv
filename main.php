@@ -15,5 +15,5 @@ $arrContextOptions=array(
         "verify_peer_name"=>false,
     ),
 );  
-$response=file_get_contents('https://nginx/', false, stream_context_create($arrContextOptions));
+$response=file_get_contents('http://nginx/', false, stream_context_create($arrContextOptions));
 var_dump($response);

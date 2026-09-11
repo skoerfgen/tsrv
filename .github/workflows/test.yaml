@@ -46,6 +46,7 @@ jobs:
             echo "Waiting for Nginx..."
             sleep 1
           done
+          sleep 30
 
       - name: Run main.php :)
         run: php main.php

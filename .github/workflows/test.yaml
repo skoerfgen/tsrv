@@ -55,4 +55,4 @@ jobs:
           EOF
           
       - name: Run main.php :)
-        run: php -d curl.cainfo=pebble.crt -d openssl.cafile=pebble.crt main.php
+        run: php -d curl.cainfo=pebble.crt -d openssl.cafile=pebble.crt test/test.php

@@ -33,7 +33,7 @@ jobs:
             sleep 1
           done
 
-          until wget --no-check-certificate -q --spider https://challtestsrv:8055/; do
+          until wget -q --spider http://challtestsrv:8055/; do
             echo "Waiting for challtestsrv..."
             sleep 1
           done

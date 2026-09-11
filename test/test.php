@@ -12,9 +12,9 @@ print_r($ac);
 $key=$ac->generateECKey();
 $ac->loadAccountKey($key);
 print_r($ac->register(true));
-echo "::error title=Account2::Registration unsuccessful\n";
+/*echo "::error title=Account2::Registration unsuccessful\n";
 echo "::notice title=Account::Registration successful\n";
-echo "::warning title=Foo::Missing semicolon or not\n";
+echo "::warning title=Foo::Missing semicolon or not\n";*/
 
 
 $domain_config=array(

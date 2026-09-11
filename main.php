@@ -6,7 +6,7 @@ $arrContextOptions=array(
         "verify_peer_name"=>false,
     ),
 		"http"=>array(
-			'user_agent'=>'curl',
+			//'user_agent'=>'curl',
 			'ignore_errors'=>true,
 
 		)

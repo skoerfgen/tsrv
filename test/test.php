@@ -13,6 +13,8 @@ $key=$ac->generateECKey();
 $ac->loadAccountKey($key);
 print_r($ac->register(true));
 echo "::notice title=Account::Registration successful\n";
+echo "::warning::Missing semicolon or not\n";
+
 
 $domain_config=array(
 	'exampledomain0.net'=>array('challenge'=>'dns-01'),

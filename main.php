@@ -6,7 +6,7 @@ $arrContextOptions=array(
         "verify_peer_name"=>false,
     ),
 );  
-$response=file_get_contents('https://pebble:14000/dir', false, stream_context_create($arrContextOptions));
+$response=file_get_contents('https://pebble:14000/di', false, stream_context_create($arrContextOptions));
 var_dump($response);
 
 $arrContextOptions=array(

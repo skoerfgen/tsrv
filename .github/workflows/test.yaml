@@ -21,7 +21,7 @@ jobs:
 
       pebble:
         image: ghcr.io/letsencrypt/pebble:latest
-        command: -config test/config/pebble-config.json -strict -dnsserver 10.30.50.3:8053
+        command: -config test/config/pebble-config.json -strict
         ports:
           - 14000:14000 # HTTPS ACME API
           - 15000:15000 # HTTPS Management API
@@ -46,7 +46,7 @@ jobs:
             echo "Waiting for Nginx..."
             sleep 1
           done
-          sleep 30
+          sleep 10
 
       - name: Run main.php :)
         run: php main.php

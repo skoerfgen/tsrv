@@ -7,7 +7,7 @@ $arrContextOptions=array(
     ),
 		"http"=>array(
 			//'user_agent'=>'curl',
-			'ignore_errors'=>true,
+			//'ignore_errors'=>true,
 
 		)
 );  

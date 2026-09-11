@@ -1,3 +1,5 @@
 <?php
 
-//file_get_contents('');
+$response = file_get_contents('http://nginx/');
+
+var_dump($response);

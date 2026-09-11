@@ -1,0 +1,39 @@
+name: Run PHP HTTP test
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    container:
+      image: php:8.3-cli
+
+    services:
+      nginx:
+        image: nginx:alpine
+        ports:
+          - 8080:80
+        volumes:
+          - .:/usr/share/nginx/html:ro
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Wait for Nginx
+        run: |
+          for i in {1..30}; do
+            if php -r "exit(@file_get_contents('http://nginx/') !== false ? 0 : 1);"; then
+              echo "Nginx is ready"
+              break
+            fi
+
+            echo "Waiting for Nginx..."
+            sleep 1
+          done
+
+      - name: Run main.php
+        run: php main.php

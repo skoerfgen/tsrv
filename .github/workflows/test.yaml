@@ -21,12 +21,12 @@ jobs:
 
       pebble:
         image: ghcr.io/letsencrypt/pebble:latest
-        command: -config test/config/pebble-config.json -strict
+        command: -config ./test/config/pebble-config.json -strict
         ports:
           - 14000:14000 # HTTPS ACME API
           - 15000:15000 # HTTPS Management API
         volumes:
-          - $PWD/test/config/pebble-config.json:/test/config/pebble-config.json
+          - ./test/config/pebble-config.json:/test/config/pebble-config.json
       challtestsrv:
         image: ghcr.io/letsencrypt/pebble-challtestsrv:latest
         command: -defaultIPv6 ""

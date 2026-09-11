@@ -25,8 +25,6 @@ jobs:
         ports:
           - 14000:14000 # HTTPS ACME API
           - 15000:15000 # HTTPS Management API
-        volumes:
-          - ./test/config/pebble-config.json:/test/config/pebble-config.json
       challtestsrv:
         image: ghcr.io/letsencrypt/pebble-challtestsrv:latest
         command: -defaultIPv6 ""

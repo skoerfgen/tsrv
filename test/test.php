@@ -13,23 +13,22 @@ $key=$ac->generateECKey();
 $ac->loadAccountKey($key);
 print_r($ac->register(true));
 
-
 /*echo "::error title=Account2::Registration unsuccessful\n";
 echo "::notice title=Account::Registration successful\n";
 echo "::warning title=Foo::Missing semicolon or not\n";*/
 
 
 $domain_config=array(
-	'exampledomain0.net'=>array('challenge'=>'dns-01'),
-	'exampledomain1.net'=>array('challenge'=>'dns-01'),
-	'exampledomain2.net'=>array('challenge'=>'dns-01'),
-	'exampledomain3.net'=>array('challenge'=>'dns-01'),
-	'exampledomain4.net'=>array('challenge'=>'dns-01'),
-	'exampledomain5.net'=>array('challenge'=>'dns-01'),
-	'exampledomain6.net'=>array('challenge'=>'dns-01'),
-	'exampledomain7.net'=>array('challenge'=>'dns-01'),
-	'exampledomain8.net'=>array('challenge'=>'dns-01'),
-	'exampledomain9.net'=>array('challenge'=>'dns-01'),
+	'example.net'=>array('challenge'=>'dns-01'),
+	'example.net'=>array('challenge'=>'dns-01'),
+	'example.net'=>array('challenge'=>'dns-01'),
+	'example.net'=>array('challenge'=>'dns-01'),
+	'example.net'=>array('challenge'=>'dns-01'),
+	'example.net'=>array('challenge'=>'dns-01'),
+	'example.net'=>array('challenge'=>'dns-01'),
+	'example.net'=>array('challenge'=>'dns-01'),
+	'example.net'=>array('challenge'=>'dns-01'),
+	'example.net'=>array('challenge'=>'dns-01'),
 );
 
 $ch=curl_init();

@@ -10,7 +10,7 @@ print_r($ac);
 
 
 $key=$ac->generateECKey();
-$ac->loadAccountKey($key);
+$ac->loadAccoUuntKey($key);
 print_r($ac->register(true));
 
 

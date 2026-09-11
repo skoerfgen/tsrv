@@ -12,13 +12,6 @@ jobs:
       image: php:8.3-cli-alpine
 
     services:
-      nginx:
-        image: nginx:alpine
-        ports:
-          - 8080:80
-        volumes:
-          - .:/usr/share/nginx/html:ro
-
       pebble:
         image: ghcr.io/letsencrypt/pebble:latest
         ports:
@@ -31,17 +24,8 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v7
 
-      - name: Wait for Nginx
+      - name: Wait for foo
         run: |
-          for i in {1..30}; do
-            if php -r "exit(@file_get_contents('http://nginx/') !== false ? 0 : 1);"; then
-              echo "Nginx is ready"
-              break
-            fi
-
-            echo "Waiting for Nginx..."
-            sleep 1
-          done
           sleep 10
 
       - name: Run main.php :)

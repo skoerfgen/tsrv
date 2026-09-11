@@ -35,5 +35,5 @@ jobs:
             sleep 1
           done
 
-      - name: Run main.php
+      - name: Run main.php :)
         run: php main.php

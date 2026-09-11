@@ -19,6 +19,7 @@ echo "::notice title=Account::Registration successful\n";
 echo "::warning title=Foo::Missing semicolon or not\n";*/
 
 
+
 $domain_config=array(
 	'example.net'=>array('challenge'=>'dns-01'),
 	'example.net'=>array('challenge'=>'dns-01'),

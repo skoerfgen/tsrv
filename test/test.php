@@ -22,7 +22,7 @@ if (PHP_VERSION_ID>=70100){
 		$ac->log('::endgroup::');
 	}
 }
-foreach([1024,2048] as $bits){
+foreach([2048,3072,4096] as $bits){
 	$ac->log('::group::Generating '.$bits.' bits RSA Key');
 	checkKey($ac->generateRSAKey($bits));	
 	$ac->log('::endgroup::');

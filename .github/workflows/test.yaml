@@ -10,6 +10,18 @@ permissions:
   contents: read
 
 jobs:
+  test-required:
+    name: All Tests
+    if: always()
+    needs: [test]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check test matrix
+        if: ${{ needs.test.result != 'success' }}
+        run: exit 1
+
+      - run: echo "All tests passed"
   test:
     strategy:
       matrix:
@@ -98,15 +110,4 @@ jobs:
       - name: Run test.php
         run: php -d curl.cainfo=pebble.crt -d openssl.cafile=pebble.crt test/test.php
         
-  test-required:
-    name: All Tests
-    if: ${{ always() }}
-    needs: [test]
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Check test matrix
-        if: ${{ needs.test.result != 'success' }}
-        run: exit 1
-
-      - run: echo "All tests passed"        
+       

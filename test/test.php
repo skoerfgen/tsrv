@@ -65,7 +65,7 @@ $handler=function($opts) use ($ac,$ch){
 				CURLOPT_URL=>'http://challtestsrv:8055/add-http01',
 				CURLOPT_RETURNTRANSFER=>true,
 				CURLOPT_POSTFIELDS=>json_encode(array(
-					'token'=>$opts['key'].'.',
+					'token'=>$opts['key'],
 					'content'=>$opts['value']
 				)),
 			));
@@ -78,7 +78,7 @@ $handler=function($opts) use ($ac,$ch){
 					CURLOPT_URL=>'http://challtestsrv:8055/del-http01',
 					CURLOPT_RETURNTRANSFER=>true,
 					CURLOPT_POSTFIELDS=>json_encode(array(
-						'token'=>$opts['key'].'.',
+						'token'=>$opts['key'],
 					)),
 				));
 				curl_exec($ch);

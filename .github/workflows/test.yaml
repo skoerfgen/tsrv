@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     name: php${{ matrix.version }}
     container:
-      image: php:${{ matrix.version }}-cli
+      image: php:${{ matrix.version }}-cli-ubuntu
 
     services:
       pebble:

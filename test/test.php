@@ -101,3 +101,7 @@ $ret=$ac->getSAN(reset($fullchain));
 $ac->log(print_r($ret,true));
 $ac->log(print_r($fullchain,true));
 $ac->log('::endgroup::');
+
+$ac->log('::group::Revoking Certificate');
+$ac->revoke(reset($fullchain));
+$ac->log('::endgroup::');

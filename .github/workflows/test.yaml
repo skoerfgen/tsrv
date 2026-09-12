@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   test-required:
-    name: All Tests
+    name: All ACMECert Tests
     if: always()
     needs: [test]
     runs-on: ubuntu-latest
@@ -24,6 +24,7 @@ jobs:
       - run: echo "All tests passed"
   test:
     strategy:
+      fail-fast: false
       matrix:
         version: [5.6,7.4,8.3,8.5]
         #os: [ubuntu-latest, windows-latest]

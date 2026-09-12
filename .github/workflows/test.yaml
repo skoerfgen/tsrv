@@ -26,6 +26,8 @@ jobs:
         command: -defaultIPv6 "" -defaultIPv4 "challtestsrv"
         ports:
           - 8055:8055 # HTTP Management API
+          - 8053:8053
+          - 5002:5002
     steps:
       - name: Check out repository
         uses: actions/checkout@v7

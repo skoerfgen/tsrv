@@ -86,8 +86,6 @@ $handler=function($opts) use ($ac,$ch){
 			};
 		break;
 	}
-	
-
 };
 
 $fullchain=$ac->getCertificateChain($ac->generateECKey(),$domain_config,$handler,array('group'=>true,'authz_reuse'=>true));

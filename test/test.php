@@ -1,6 +1,7 @@
 <?php
 
 echo 'PHP Version: '.PHP_VERSION,"\n";
+echo 'ENV: '.$_ENV['PEBBLE_IP'],"\n";
 
 require 'ACMECert.php';
 

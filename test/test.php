@@ -32,7 +32,7 @@ $ac->log($ac->getTermsURL());
 $ac->log('::endgroup::');
 
 $ac->log('::group::Get Profiles');
-$ac->log($ac->getProfiles());
+$ac->log(print_r($ac->getProfiles(),true));
 $ac->log('::endgroup::');
 
 

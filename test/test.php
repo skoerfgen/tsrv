@@ -10,6 +10,7 @@ $ac=new ACMECert('https://pebble:14000/dir');
 
 function checkKey($key){
 	global $ac;
+	$ac->log($key);
 	$ac->loadAccountKey($key);
 	$ac->register(true);
 }

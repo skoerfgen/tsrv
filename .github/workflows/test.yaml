@@ -55,6 +55,7 @@ jobs:
       #  uses: actions/checkout@v7
         
       - name: Checkout
+        #if: matrix.version == '5.6'
         run: |
           command -v git >/dev/null 2>&1 || apk add --no-cache git
           git config --global --add safe.directory $GITHUB_WORKSPACE

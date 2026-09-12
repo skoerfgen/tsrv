@@ -27,8 +27,9 @@ foreach([1024,2048] as $bits){
 	checkKey($ac->generateRSAKey($bits));	
 	$ac->log('::endgroup::');
 }
-$ac->log('Get Terms URL');
+$ac->log('::group::Get Terms URL');
 $ac->log($ac->getTermsURL());
+$ac->log('::endgroup::');
 
 
 $domain_config=array(

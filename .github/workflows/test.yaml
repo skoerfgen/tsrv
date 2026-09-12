@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     name: php${{ matrix.version }}-cli-alpine test
     container:
-      image: php:${{ matrix.version }}-cli-alpine
+      image: php:${{ matrix.version }}
 
     services:
       pebble:
@@ -89,7 +89,7 @@ jobs:
         run: php -d curl.cainfo=pebble.crt -d openssl.cafile=pebble.crt test/test.php
         
   test-required:
-    name: AllTests
+    name: All Tests
     if: ${{ always() }}
     needs: [test]
     runs-on: ubuntu-latest

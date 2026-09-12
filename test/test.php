@@ -111,7 +111,7 @@ $ac->log(print_r($fullchain,true));
 $ac->log('::endgroup::');
 
 $ac->log('::group::Split Chain');
-$ac->log(print_r($ac->splitChain($fullchain),true));
+$ac->log(print_r($ac->splitChain(reset($fullchain)),true));
 $ac->log('::endgroup::');
 
 $ac->log('::group::getRemainingPercent');

@@ -8,6 +8,6 @@ $ac=new ACMECert('https://pebble:14000/dir');
 
 print_r($ac);
 
-$key=$ac->generateECKey();
+$key=$ac->generateRSAKey();
 
 print_r($key);

@@ -41,8 +41,9 @@ $ac->log('::endgroup::');
 
 
 $domain_config=array(
-	'sub0.example.net'=>array('challenge'=>'dns-01'),
-	'sub1.example.net'=>array('challenge'=>'http-01'),
+	'*.example.net'=>array('challenge'=>'dns-01'),
+	'sub.other.example.net'=>array('challenge'=>'dns-01'),
+	'example.net'=>array('challenge'=>'http-01'),
 );
 
 $domain_config[gethostbyname('challtestsrv')]=array('challenge'=>'http-01');

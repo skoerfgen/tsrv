@@ -14,7 +14,7 @@ jobs:
     services:
       pebble:
         image: ghcr.io/letsencrypt/pebble:latest
-        command: -strict -dnsserver challtestsrv:8053
+        command: -dnsserver challtestsrv:8053
         ports:
           - 14000:14000 # HTTPS ACME API
         env:

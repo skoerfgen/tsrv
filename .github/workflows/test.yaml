@@ -42,7 +42,7 @@ jobs:
     steps:
       - name: Install system dependencies
         run: |
-          apk add --no-cache git
+          command -v git >/dev/null 2>&1 || apk add --no-cache git
       - name: Checkout repository
         run: |
           git init

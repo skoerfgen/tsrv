@@ -35,6 +35,10 @@ $ac->log('::group::Get Profiles');
 $ac->log(print_r($ac->getProfiles(),true));
 $ac->log('::endgroup::');
 
+$ac->log('::group::Get CAA Identities');
+$ac->log(print_r($ac->getCAAIdentities(),true));
+$ac->log('::endgroup::');
+
 
 $domain_config=array(
 	'sub0.example.net'=>array('challenge'=>'dns-01'),
@@ -104,6 +108,14 @@ $fullchain=$ac->getCertificateChains($ac->generateRSAKey(),$domain_config,$handl
 $ret=$ac->getSAN(reset($fullchain));
 $ac->log(print_r($ret,true));
 $ac->log(print_r($fullchain,true));
+$ac->log('::endgroup::');
+
+$ac->log('::group::Split Chain');
+$ac->log(print_r($ac->splitChain($fullchain),true));
+$ac->log('::endgroup::');
+
+$ac->log('::group::getRemainingPercent');
+$ac->log(print_r($ac->getRemainingPercent(reset($fullchain)),true));
 $ac->log('::endgroup::');
 
 $ac->log('::group::ARI');

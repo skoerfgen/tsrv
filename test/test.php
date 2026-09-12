@@ -19,43 +19,72 @@ echo "::warning title=Foo::Missing semicolon or not\n";*/
 
 $domain_config=array(
 	'sub0.example.net'=>array('challenge'=>'dns-01'),
-	'sub1.example.net'=>array('challenge'=>'dns-01'),
-	'sub2.example.net'=>array('challenge'=>'dns-01'),
+	'sub1.example.net'=>array('challenge'=>'http-01'),
+	/*'sub2.example.net'=>array('challenge'=>'dns-01'),
 	'sub3.example.net'=>array('challenge'=>'dns-01'),
 	'sub4.example.net'=>array('challenge'=>'dns-01'),
 	'sub5.example.net'=>array('challenge'=>'dns-01'),
 	'sub6.example.net'=>array('challenge'=>'dns-01'),
 	'sub7.example.net'=>array('challenge'=>'dns-01'),
 	'sub8.example.net'=>array('challenge'=>'dns-01'),
-	'sub9.example.net'=>array('challenge'=>'dns-01'),
+	'sub9.example.net'=>array('challenge'=>'dns-01'),*/
 );
 
 $ch=curl_init();
 
 $handler=function($opts) use ($ac,$ch){
-	$ac->log('-> SET DNS '.$opts['key'].'.'.' | '.$opts['value']);
-	curl_setopt_array($ch,array(
-		CURLOPT_URL=>'http://challtestsrv:8055/set-txt',
-		CURLOPT_RETURNTRANSFER=>true,
-		CURLOPT_POSTFIELDS=>json_encode(array(
-			'host'=>$opts['key'].'.',
-			'value'=>$opts['value']
-		)),
-	));
-	curl_exec($ch);
-	
-	
-	return function($opts)use($ch,$ac){
-		$ac->log('<- REM DNS '.$opts['key'].'.'.' | '.$opts['value']);
-		curl_setopt_array($ch,array(
-			CURLOPT_URL=>'http://challtestsrv:8055/clear-txt',
-			CURLOPT_RETURNTRANSFER=>true,
-			CURLOPT_POSTFIELDS=>json_encode(array(
-				'host'=>$opts['key'].'.',
-			)),
-		));
-		curl_exec($ch);
-	};
+	switch($opts['config']['challenge']){
+		case 'dns-01':
+			$ac->log('-> SET DNS '.$opts['key'].'.'.' | '.$opts['value']);
+			curl_setopt_array($ch,array(
+				CURLOPT_URL=>'http://challtestsrv:8055/set-txt',
+				CURLOPT_RETURNTRANSFER=>true,
+				CURLOPT_POSTFIELDS=>json_encode(array(
+					'host'=>$opts['key'].'.',
+					'value'=>$opts['value']
+				)),
+			));
+			curl_exec($ch);
+			
+			
+			return function($opts)use($ch,$ac){
+				$ac->log('<- REM DNS '.$opts['key'].'.'.' | '.$opts['value']);
+				curl_setopt_array($ch,array(
+					CURLOPT_URL=>'http://challtestsrv:8055/clear-txt',
+					CURLOPT_RETURNTRANSFER=>true,
+					CURLOPT_POSTFIELDS=>json_encode(array(
+						'host'=>$opts['key'].'.',
+					)),
+				));
+				curl_exec($ch);
+			};
+		break;
+		case 'http-01':
+			$ac->log('-> SET TXT '.$opts['key'].'.'.' | '.$opts['value']);
+			curl_setopt_array($ch,array(
+				CURLOPT_URL=>'http://challtestsrv:8055/add-http01',
+				CURLOPT_RETURNTRANSFER=>true,
+				CURLOPT_POSTFIELDS=>json_encode(array(
+					'token'=>$opts['key'].'.',
+					'content'=>$opts['value']
+				)),
+			));
+			curl_exec($ch);
+			
+			
+			return function($opts)use($ch,$ac){
+				$ac->log('<- REM TXT '.$opts['key'].'.'.' | '.$opts['value']);
+				curl_setopt_array($ch,array(
+					CURLOPT_URL=>'http://challtestsrv:8055/del-http01',
+					CURLOPT_RETURNTRANSFER=>true,
+					CURLOPT_POSTFIELDS=>json_encode(array(
+						'token'=>$opts['key'].'.',
+					)),
+				));
+				curl_exec($ch);
+			};
+		break;
+	}
 	
 
 };

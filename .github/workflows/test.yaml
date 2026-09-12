@@ -1,4 +1,4 @@
-name: ACMECert
+name: ACMECert Test Runner
 
 on:
   workflow_dispatch:

@@ -94,4 +94,4 @@ $fullchain=$ac->getCertificateChain($ac->generateECKey(),$domain_config,$handler
 $ret=$ac->getSAN($fullchain);
 print_r($ret);
 echo "\033[32m✓ Certificate generated successfully\033[0m\n";
-file_put_contents(getenv('GITHUB_STEP_SUMMARY'), "### Hello world! :rocket:\nlooks good!\n\033[32m✓ Certificate generated successfully\033[0m\n", FILE_APPEND);
+file_put_contents(getenv('GITHUB_STEP_SUMMARY'), "### Hello world! :rocket:\nlooks good!", FILE_APPEND);

@@ -33,7 +33,7 @@ jobs:
 
       - name: Wait for services
         run: |
-          until wget --no-check-certificate -q --spider https://pebble:14000/dir; do
+          until wget --no-check-certificate -q --spider https://127.0.0.1:14000/dir; do
             echo "Waiting for Pebble..."
             sleep 1
           done

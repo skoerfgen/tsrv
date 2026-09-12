@@ -31,15 +31,7 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v7
-
-      - name: Wait for services
-        run: |
-          until wget --no-check-certificate -q --spider https://pebble:14000/dir; do
-            echo "Waiting for Pebble..."
-            sleep 1
-          done
-          echo "Pebble ready!"
-
+        
       - name: Create Pebble certificate
         run: |
           cat > pebble.crt << 'EOF'
@@ -65,5 +57,19 @@ jobs:
           -----END CERTIFICATE-----
           EOF
           
+      - name: Wait for services
+        run: |
+          until wget --no-check-certificate -q --spider https://pebble:14000/dir; do
+            echo "Waiting for Pebble..."
+            sleep 1
+          done
+          echo "Pebble ready!"
+
+
+      - name: Get Pebble IP
+        run: |
+         PEBBLE_IP=$(getent hosts pebble | awk '{ print $1 }')
+         echo "PEBBLE_IP=$PEBBLE_IP" >> $GITHUB_ENV
+         
       - name: Run main.php :)
         run: php -d curl.cainfo=pebble.crt -d openssl.cafile=pebble.crt test/test.php

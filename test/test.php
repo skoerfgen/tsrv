@@ -18,5 +18,5 @@ $key=$ac->generateRSAKey();
 $ac->loadAccountKey($key);
 
 
-
+$ac->register(true);
 

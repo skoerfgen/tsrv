@@ -43,6 +43,7 @@ $ac->log('::endgroup::');
 $domain_config=array(
 	'sub0.example.net'=>array('challenge'=>'dns-01'),
 	'sub1.example.net'=>array('challenge'=>'http-01'),
+	'127.0.0.1'=>array('challenge'=>'http-01'),
 );
 
 $ch=curl_init();

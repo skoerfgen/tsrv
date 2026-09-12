@@ -47,22 +47,29 @@ $domain_config=array(
 
 $domain_config[gethostbyname('challtestsrv')]=array('challenge'=>'http-01');
 
-$ch=curl_init();
 
-$handler=function($opts) use ($ac,$ch){
+function req($path,$arr){
+	static $ch=null;
+
+	if ($ch===null){
+		$ch=curl_init();
+	}
+	curl_setopt_array($ch,array(
+		CURLOPT_URL=>'http://challtestsrv:8055/'.$path,
+		CURLOPT_RETURNTRANSFER=>true,
+		CURLOPT_POSTFIELDS=>json_encode($arr),
+	));
+	curl_exec($ch);
+}
+
+$handler=function($opts) use ($ac){
 	switch($opts['config']['challenge']){
 		case 'dns-01':
 			$ac->log('-> SET DNS '.$opts['key'].'.'.' | '.$opts['value']);
-			curl_setopt_array($ch,array(
-				CURLOPT_URL=>'http://challtestsrv:8055/set-txt',
-				CURLOPT_RETURNTRANSFER=>true,
-				CURLOPT_POSTFIELDS=>json_encode(array(
-					'host'=>$opts['key'].'.',
-					'value'=>$opts['value']
-				)),
+			req('set-txt',array(
+				'host'=>$opts['key'].'.',
+				'value'=>$opts['value']
 			));
-			curl_exec($ch);
-			
 			
 			return function($opts)use($ch,$ac){
 				$ac->log('<- REM DNS '.$opts['key'].'.'.' | '.$opts['value']);

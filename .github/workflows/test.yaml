@@ -98,11 +98,11 @@ jobs:
       - name: Run test.php
         run: php -d curl.cainfo=pebble.crt -d openssl.cafile=pebble.crt test/test.php
         
-      - name: upl
+      - name: Upload generated output
         uses: actions/upload-artifact@v4
-          with:
-            name: generated-output
-            path: foo/
+        with:
+          name: generated-output
+          path: foo/
             
   test-required:
     name: All Tests

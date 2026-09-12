@@ -75,5 +75,5 @@ jobs:
             -d "$(printf '{"ip":"%s"}' "$PEBBLE_IP")" \
             http://challtestsrv:8055/set-default-ipv4
          
-      - name: Run main.php :)
+      - name: Run test.php
         run: php -d curl.cainfo=pebble.crt -d openssl.cafile=pebble.crt test/test.php

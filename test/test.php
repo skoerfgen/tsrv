@@ -10,20 +10,20 @@ use skoerfgen\ACMECert\ACMECert;
 $ac=new ACMECert('https://pebble:14000/dir');
 
 
-echo '::group::Generating Keys',"\n";
+$ac->log('::group::Generating Keys');
 if (PHP_VERSION_ID>=70100){
 	$key=$ac->generateECKey();
-	echo $key,"\n";
+	$ac->log($key);
 	$ac->loadAccountKey($key);
 }
 $key=$ac->generateRSAKey();
-echo $key,"\n";
+$ac->log($key);
 $ac->loadAccountKey($key);
-echo '::endgroup::',"\n";
+$ac->log('::endgroup::');
 
-echo '::group::Register Account',"\n";
-print_r($ac->register(true),true);
-echo '::endgroup::',"\n";
+$ac->log('::group::Register Account');
+$ac->log(print_r($ac->register(true),true));
+$ac->log('::endgroup::');
 
 
 

@@ -1,8 +1,8 @@
 <?php
 
 echo 'PHP Version: '.PHP_VERSION,"\n";
-echo 'ENV: '.$_ENV['PEBBLE_IP'],"\n";
-
+echo 'NAME: '.gethostbyname('challtestsrv'),"\n";
+die('halt');
 require 'ACMECert.php';
 
 use skoerfgen\ACMECert\ACMECert;

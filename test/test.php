@@ -6,7 +6,8 @@ use skoerfgen\ACMECert\ACMECert;
 
 $ac=new ACMECert('https://pebble:14000/dir');
 
-print_r($ac);
-var_dump(getcwd());
 
-phpinfo();
+mkdir('foo');
+file_put_contents('foo/out.txt','it works!');
+print_r($ac);
+echo 'ok';

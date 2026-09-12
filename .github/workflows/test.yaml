@@ -1,5 +1,5 @@
 name: Test
-run_name: run${{ matrix.version }}
+run-name: run${{ matrix.version }}
 
 on:
   workflow_dispatch:

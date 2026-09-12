@@ -17,18 +17,19 @@ function checkKey($key){
 
 if (PHP_VERSION_ID>=70100){
 	foreach(['P-256','P-384'] as $curve){
-		$ac->log('Generating '.$curve.' EC Key');
+		$ac->log('::group::Generating '.$curve.' EC Key');
 		checkKey($ac->generateECKey($curve));
+		$ac->log('::endgroup::');
 	}
 }
 foreach([1024,2048] as $bits){
-	$ac->log('Generating '.$bits.' bits RSA Key');
+	$ac->log('::group::Generating '.$bits.' bits RSA Key');
 	checkKey($ac->generateRSAKey($bits));	
-
+	$ac->log('::endgroup::');
 }
-$ac->log('Get Terms URL');
+$ac->log('::group::Get Terms URL');
 $ac->log($ac->getTermsURL());
-
+$ac->log('::endgroup::');
 
 
 $domain_config=array(
@@ -94,8 +95,8 @@ $handler=function($opts) use ($ac,$ch){
 	}
 };
 
-$ac->log('Generating Certificate');
+$ac->log('::group::Generating Certificate');
 $fullchain=$ac->getCertificateChain($ac->generateRSAKey(),$domain_config,$handler,array('group'=>true,'authz_reuse'=>true));
-;
+$ac->log('::endgroup::');
 $ret=$ac->getSAN($fullchain);
 print_r($ret);

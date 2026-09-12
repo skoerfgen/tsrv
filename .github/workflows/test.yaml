@@ -69,7 +69,7 @@ jobs:
       - name: Get Pebble IP
         run: |
          PEBBLE_IP=$(getent hosts pebble | awk '{ print $1 }')
-         echo "PEBBLE_IP=$PEBBLE_IP" >> $GITHUB_ENV
+         echo "PEBBLE_IP=$PEBBLE_IP"
          
       - name: Run main.php :)
         run: php -d curl.cainfo=pebble.crt -d openssl.cafile=pebble.crt test/test.php

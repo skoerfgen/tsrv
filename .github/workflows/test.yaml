@@ -44,7 +44,7 @@ jobs:
         if: matrix.version != '5.6'
         uses: actions/checkout@v7
         
-      - name: Checkout (PHP 5.6) $GITHUB_SHA ${{ GITHUB_SHA }} ${{ $GITHUB_SHA }}
+      - name: Checkout (PHP 5.6)
         if: matrix.version == '5.6'
         run: |
           command -v git >/dev/null 2>&1 || apk add --no-cache git

@@ -31,6 +31,10 @@ $ac->log('::group::Get Terms URL');
 $ac->log($ac->getTermsURL());
 $ac->log('::endgroup::');
 
+$ac->log('::group::Get Profiles');
+$ac->log($ac->getProfiles());
+$ac->log('::endgroup::');
+
 
 $domain_config=array(
 	'sub0.example.net'=>array('challenge'=>'dns-01'),
@@ -114,6 +118,12 @@ $ac->log('::endgroup::');
 $ac->log('::group::Account Key Roll-over');
 $ac->log(print_r($ac->keyChange($ac->generateRSAKey()),true));
 $ac->log('::endgroup::');
+
+$ac->log('::group::Deactivate Account');
+$ac->log(print_r($ac->deactivateAccount(),true));
+$ac->log('::endgroup::');
+
+
 
 //$ac->log('::group::');
 //$ac->log('::endgroup::');

@@ -1,6 +1,5 @@
 <?php
 
-
 echo 'PHP Version: '.PHP_VERSION,"\n";
 
 require 'ACMECert.php';
@@ -8,8 +7,6 @@ require 'ACMECert.php';
 use skoerfgen\ACMECert\ACMECert;
 
 $ac=new ACMECert('https://pebble:14000/dir');
-//$ac->setLogger(function($txt){echo $txt,"\n";});
-
 
 function checkKey($key){
 	global $ac;
@@ -30,4 +27,4 @@ foreach([1024,2048] as $bits){
 
 
 
-
+echo $ac->getTermsURL(),"\n";

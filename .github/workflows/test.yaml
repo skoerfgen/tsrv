@@ -25,8 +25,8 @@ jobs:
     strategy:
       #fail-fast: false
       matrix:
-        version: ['5.6','7.0','7.4','8.0','8.5']
-        #version: ['8.5']
+        #version: ['5.6','7.0','7.4','8.0','8.5']
+        version: ['8.5']
         #os: [ubuntu-latest, windows-latest]
 
     runs-on: ubuntu-latest

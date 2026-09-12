@@ -71,7 +71,7 @@ jobs:
           PEBBLE_IP=$(getent hosts challtestsrv | awk '{ print $1 }')
           echo "Pebble IP: $PEBBLE_IP"
 
-          curl -H 'Content-Type: application/json' \
+          curl -s -H 'Content-Type: application/json' \
             -d "$(printf '{"ip":"%s"}' "$PEBBLE_IP")" \
             http://challtestsrv:8055/set-default-ipv4
          

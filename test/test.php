@@ -106,9 +106,14 @@ $ac->log(print_r($ret,true));
 $ac->log(print_r($fullchain,true));
 $ac->log('::endgroup::');
 
+$ac->log('::group::ARI');
+$ac->log(print_r($ac->getARI(reset($fullchain)),true));
+$ac->log('::endgroup::');
+
+
 $ac->log('::group::Revoking Certificate');
 $ac->revoke(reset($fullchain));
-
+$ac->log('::endgroup::');
 
 
 $ac->log('::group::Get Account');

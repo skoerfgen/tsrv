@@ -40,6 +40,9 @@ jobs:
           - 8053:8053 # DNS
           - 5002:5002 # HTTP-01
     steps:
+      - name: Install system dependencies
+        run: |
+          apk add --no-cache libc6-compat   
       - name: Check out repository
         uses: actions/checkout@v4
         

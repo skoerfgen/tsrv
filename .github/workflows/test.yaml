@@ -69,7 +69,8 @@ jobs:
       - name: Get Pebble IP
         run: |
          PEBBLE_IP=$(getent hosts pebble | awk '{ print $1 }')
-         echo "PEBBLE_IP=$PEBBLE_IP"
+         curl -d '{"ip":"$PEBBLE_IP"}' http://challtestsrv:8055/set-default-ipv4
+         echo $PEBBLE_IP
          
       - name: Run main.php :)
         run: php -d curl.cainfo=pebble.crt -d openssl.cafile=pebble.crt test/test.php

@@ -98,6 +98,6 @@ $handler=function($opts) use ($ac,$ch){
 $ac->log('::group::Generating Certificate');
 $fullchain=$ac->getCertificateChain($ac->generateRSAKey(),$domain_config,$handler,array('group'=>true,'authz_reuse'=>true));
 $ret=$ac->getSAN($fullchain);
-print_r($ret);
+$ac->log(print_r($ret,true));
 $ac->log($fullchain);
 $ac->log('::endgroup::');

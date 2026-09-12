@@ -11,10 +11,15 @@ permissions:
 
 jobs:
   test:
+    strategy:
+      matrix:
+        version: [8.3,8.5]
+        #os: [ubuntu-latest, windows-latest]
+
     runs-on: ubuntu-latest
 
     container:
-      image: php:8.3-cli-alpine
+      image: php:${{ matrix.version }}-cli-alpine
 
     services:
       pebble:

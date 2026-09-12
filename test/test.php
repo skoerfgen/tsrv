@@ -104,4 +104,17 @@ $ac->log('::endgroup::');
 
 $ac->log('::group::Revoking Certificate');
 $ac->revoke(reset($fullchain));
+
+
+
+$ac->log('::group::Get Account');
+$ac->log(print_r($ac->getAccount(),true));
 $ac->log('::endgroup::');
+
+$ac->log('::group::Account Key Roll-over');
+$ac->log(print_r($ac->keyChange($ac->generateRSAKey()),true));
+$ac->log('::endgroup::');
+
+//$ac->log('::group::');
+//$ac->log('::endgroup::');
+

@@ -40,6 +40,9 @@ jobs:
           - 8053:8053 # DNS
           - 5002:5002 # HTTP-01
     steps:
+      - name: Install system dependencies
+        run: |
+          apk add --no-cache git
       - name: Checkout repository
         run: |
           git init

@@ -11,7 +11,8 @@ $ac=new ACMECert('https://pebble:14000/dir');
 $ac->setLogger(function($txt){echo $txt,"\n";});
 
 
-function checkKey($key)use($ac){
+function checkKey($key){
+	global $ac;
 	$ac->loadAccountKey($key);
 	$ac->register(true);
 }

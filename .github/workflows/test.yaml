@@ -68,7 +68,7 @@ jobs:
 
       - name: Get Pebble IP
         run: |
-         PEBBLE_IP=$(getent hosts pebble | awk '{ print $1 }')
+         PEBBLE_IP=$(getent hosts challtestsrv | awk '{ print $1 }')
          curl -d '{"ip":"$PEBBLE_IP"}' http://challtestsrv:8055/set-default-ipv4
          echo $PEBBLE_IP
          

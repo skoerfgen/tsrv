@@ -42,6 +42,9 @@ jobs:
     steps:
       - name: Install system dependencies
         run: |
+          apk add --no-cache libgcc libstdc++ ca-certificates   
+      - name: Install system dependencies
+        run: |
           apk add --no-cache libc6-compat   
       - name: Check out repository
         uses: actions/checkout@v4

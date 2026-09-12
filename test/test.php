@@ -13,7 +13,6 @@ $ac->loadAccountKey($key);
 
 print_r($ac->register(true));
 
-
 $ac->log("::error title=Account2::Registration unsuccessful");
 $ac->log("::notice title=Account::Registration successful");
 $ac->log("::warning title=Foo::Missing semicolon or not");

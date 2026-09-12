@@ -8,7 +8,7 @@ $ac=new ACMECert('https://pebble:14000/dir');
 
 print_r($ac);
 
-$key=$ac->generateECKey();
+$key=$ac->generateRSAKey();
 $ac->loadAccountKey($key);
 
 print_r($ac->register(true));
@@ -88,7 +88,7 @@ $handler=function($opts) use ($ac,$ch){
 	}
 };
 
-$fullchain=$ac->getCertificateChain($ac->generateECKey(),$domain_config,$handler,array('group'=>true,'authz_reuse'=>true));
+$fullchain=$ac->getCertificateChain($ac->generateRSAKey(),$domain_config,$handler,array('group'=>true,'authz_reuse'=>true));
 $ret=$ac->getSAN($fullchain);
 print_r($ret);
 echo "\033[32m✓ Certificate generated successfully\033[0m\n";

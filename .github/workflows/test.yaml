@@ -40,14 +40,12 @@ jobs:
           - 8053:8053 # DNS
           - 5002:5002 # HTTP-01
     steps:
-      - name: Install system dependencies
+      - name: Checkout repository
         run: |
-          apk add --no-cache libgcc libstdc++ ca-certificates   
-      - name: Install system dependencies
-        run: |
-          apk add --no-cache libc6-compat   
-      - name: Check out repository
-        uses: actions/checkout@v4
+          git init
+          git remote add origin "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git"
+          git fetch --depth=1 origin "$GITHUB_SHA"
+          git checkout --detach FETCH_HEAD
         
       - name: Create Pebble certificate
         run: |

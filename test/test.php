@@ -19,12 +19,12 @@ function checkKey($key){
 
 if (PHP_VERSION_ID>=70100){
 	foreach(['P-256','P-384'] as $curve){
-		$ac->log('Generating '.$curve.' EC Key');
+		$ac->log('::notice::Generating '.$curve.' EC Key');
 		checkKey($ac->generateECKey($curve));	
 	}
 }
 foreach([1024,2048] as $bits){
-	$ac->log('Generating '.$bits.' bits RSA Key');
+	$ac->log('::notice::Generating '.$bits.' bits RSA Key');
 	checkKey($ac->generateRSAKey($bits));	
 }
 

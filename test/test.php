@@ -13,9 +13,9 @@ $key=$ac->generateECKey();
 $ac->loadAccountKey($key);
 print_r($ac->register(true));
 
-/*echo "::error title=Account2::Registration unsuccessful\n";
+echo "::error title=Account2::Registration unsuccessful\n";
 echo "::notice title=Account::Registration successful\n";
-echo "::warning title=Foo::Missing semicolon or not\n";*/
+echo "::warning title=Foo::Missing semicolon or not\n";
 
 $domain_config=array(
 	'sub0.example.net'=>array('challenge'=>'dns-01'),
@@ -95,4 +95,4 @@ $ret=$ac->getSAN($fullchain);
 print_r($ret);
 echo "\033[32m✓ Certificate generated successfully\033[0m\n";
 
-file_put_contents(getenv('GITHUB_STEP_SUMMARY'), 'looks good', FILE_APPEND);
+file_put_contents(getenv('GITHUB_STEP_SUMMARY'), "### Hello world! :rocket:\nlooks good!", FILE_APPEND);

@@ -40,24 +40,9 @@ jobs:
           - 8053:8053 # DNS
           - 5002:5002 # HTTP-01
     steps:
-      - name: Install system dependencies (only PHP 5.6)
-        if: matrix.version == '5.6'
+      - name: Install system dependencies
         run: |
           command -v git >/dev/null 2>&1 || apk add --no-cache git
-          
-      - name: Checkout
-        if: matrix.version != '5.6'
-        uses: actions/checkout@v7
-
-      - name: Checkout (only PHP 5.6)
-        if: matrix.version == '5.6'
-        run: |
-          git config --global --add safe.directory $GITHUB_WORKSPACE
-          git init
-          git remote add origin "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git"
-          git fetch --depth=1 origin "$GITHUB_SHA"
-          git checkout --detach FETCH_HEAD
-          
       - name: Checkout repository
         run: |
           git config --global --add safe.directory $GITHUB_WORKSPACE

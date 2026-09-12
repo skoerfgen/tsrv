@@ -16,13 +16,15 @@ function checkKey($key){
 
 if (PHP_VERSION_ID>=70100){
 	foreach(['P-256','P-384'] as $curve){
-		$ac->log('Generating '.$curve.' EC Key');
-		checkKey($ac->generateECKey($curve));	
+		$ac->log('::group::Generating '.$curve.' EC Key');
+		checkKey($ac->generateECKey($curve));
+		$ac->log('::endgroup::');
 	}
 }
 foreach([1024,2048] as $bits){
-	$ac->log('Generating '.$bits.' bits RSA Key');
+	$ac->log('::group::Generating '.$bits.' bits RSA Key');
 	checkKey($ac->generateRSAKey($bits));	
+	$ac->log('::endgroup::');
 }
 $ac->log('Get Terms URL');
 $ac->log($ac->getTermsURL());

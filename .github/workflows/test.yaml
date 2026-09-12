@@ -14,9 +14,10 @@ jobs:
     services:
       pebble:
         image: ghcr.io/letsencrypt/pebble:latest
-        command: -strict -dnsserver challtestsrv:8053 -http01 127.0.0.1:5002
+        command: -strict -dnsserver challtestsrv:8053 -http01 challtestsrv:5002
         ports:
           - 14000:14000 # HTTPS ACME API
+          - 5002:5002
         env:
           PEBBLE_WFE_NONCEREJECT: "0"
           PEBBLE_VA_NOSLEEP: "1"
@@ -33,7 +34,7 @@ jobs:
 
       - name: Wait for services
         run: |
-          until wget --no-check-certificate -q --spider https://127.0.0.1:14000/dir; do
+          until wget --no-check-certificate -q --spider https://pebble:14000/dir; do
             echo "Waiting for Pebble..."
             sleep 1
           done

@@ -21,16 +21,16 @@ echo "::warning title=Foo::Missing semicolon or not\n";*/
 
 
 $domain_config=array(
-	'example.net'=>array('challenge'=>'dns-01'),
-	'example.net'=>array('challenge'=>'dns-01'),
-	'example.net'=>array('challenge'=>'dns-01'),
-	'example.net'=>array('challenge'=>'dns-01'),
-	'example.net'=>array('challenge'=>'dns-01'),
-	'example.net'=>array('challenge'=>'dns-01'),
-	'example.net'=>array('challenge'=>'dns-01'),
-	'example.net'=>array('challenge'=>'dns-01'),
-	'example.net'=>array('challenge'=>'dns-01'),
-	'example.net'=>array('challenge'=>'dns-01'),
+	'sub0.example.net'=>array('challenge'=>'dns-01'),
+	'sub1.example.net'=>array('challenge'=>'dns-01'),
+	'sub2.example.net'=>array('challenge'=>'dns-01'),
+	'sub3.example.net'=>array('challenge'=>'dns-01'),
+	'sub4.example.net'=>array('challenge'=>'dns-01'),
+	'sub5.example.net'=>array('challenge'=>'dns-01'),
+	'sub6.example.net'=>array('challenge'=>'dns-01'),
+	'sub7.example.net'=>array('challenge'=>'dns-01'),
+	'sub8.example.net'=>array('challenge'=>'dns-01'),
+	'sub9.example.net'=>array('challenge'=>'dns-01'),
 );
 
 $ch=curl_init();

@@ -1,4 +1,4 @@
-name: FooRunner
+name: ACMECert
 
 on:
   workflow_dispatch:

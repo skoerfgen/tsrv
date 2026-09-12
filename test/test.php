@@ -19,7 +19,7 @@ echo "::warning title=Foo::Missing semicolon or not\n";*/
 
 $domain_config=array(
 	'sub0.example.net'=>array('challenge'=>'dns-01'),
-	'127.0.0.1'=>array('challenge'=>'http-01'),
+	'challtestsrv'=>array('challenge'=>'http-01'),
 	/*'sub2.example.net'=>array('challenge'=>'dns-01'),
 	'sub3.example.net'=>array('challenge'=>'dns-01'),
 	'sub4.example.net'=>array('challenge'=>'dns-01'),

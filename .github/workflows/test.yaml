@@ -13,13 +13,13 @@ jobs:
   test:
     strategy:
       matrix:
-        version: [5.6]
+        version: [7.4,8.3,8.5]
         #os: [ubuntu-latest, windows-latest]
 
     runs-on: ubuntu-latest
     name: php${{ matrix.version }}
     container:
-      image: php:${{ matrix.version }}-cli
+      image: php:${{ matrix.version }}-cli-alpine
 
     services:
       pebble:
@@ -40,7 +40,7 @@ jobs:
           - 5002:5002 # HTTP-01
     steps:
       - name: Check out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         
       - name: Create Pebble certificate
         run: |

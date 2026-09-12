@@ -60,6 +60,7 @@ $handler=function($opts) use ($ac,$ch){
 			};
 		break;
 		case 'http-01':
+			$opts['key']=basename($opts['key']);
 			$ac->log('-> SET TXT '.$opts['key'].'.'.' | '.$opts['value']);
 			curl_setopt_array($ch,array(
 				CURLOPT_URL=>'http://challtestsrv:8055/add-http01',

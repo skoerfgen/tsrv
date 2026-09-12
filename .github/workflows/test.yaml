@@ -21,7 +21,7 @@ jobs:
     container:
       image: php:${{ matrix.version }}-cli-alpine
     env:
-      ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: ${{ matrix.version == '5.6' && 'true' || '' }}     
+      ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
 
     services:
       pebble:

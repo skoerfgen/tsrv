@@ -8,7 +8,7 @@ $ac=new ACMECert('https://pebble:14000/dir');
 
 print_r($ac);
 
-$key=$ac->generateECKey();
+$key=$ac->genXerateECKey();
 $ac->loadAccountKey($key);
 
 print_r($ac->register(true));

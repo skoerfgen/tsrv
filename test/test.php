@@ -71,42 +71,26 @@ $handler=function($opts) use ($ac){
 				'value'=>$opts['value']
 			));
 			
-			return function($opts)use($ch,$ac){
+			return function($opts)use($ac){
 				$ac->log('<- REM DNS '.$opts['key'].'.'.' | '.$opts['value']);
-				curl_setopt_array($ch,array(
-					CURLOPT_URL=>'http://challtestsrv:8055/clear-txt',
-					CURLOPT_RETURNTRANSFER=>true,
-					CURLOPT_POSTFIELDS=>json_encode(array(
-						'host'=>$opts['key'].'.',
-					)),
+				req('clear-txt',array(
+					'host'=>$opts['key'].'.',
 				));
-				curl_exec($ch);
 			};
 		break;
 		case 'http-01':
 			$opts['key']=basename($opts['key']);
 			$ac->log('-> SET TXT '.$opts['key'].'.'.' | '.$opts['value']);
-			curl_setopt_array($ch,array(
-				CURLOPT_URL=>'http://challtestsrv:8055/add-http01',
-				CURLOPT_RETURNTRANSFER=>true,
-				CURLOPT_POSTFIELDS=>json_encode(array(
-					'token'=>$opts['key'],
-					'content'=>$opts['value']
-				)),
+			req('add-http01',array(
+				'token'=>$opts['key'],
+				'content'=>$opts['value']
 			));
-			curl_exec($ch);
-			
-			
+	
 			return function($opts)use($ch,$ac){
 				$ac->log('<- REM TXT '.$opts['key'].'.'.' | '.$opts['value']);
-				curl_setopt_array($ch,array(
-					CURLOPT_URL=>'http://challtestsrv:8055/del-http01',
-					CURLOPT_RETURNTRANSFER=>true,
-					CURLOPT_POSTFIELDS=>json_encode(array(
-						'token'=>$opts['key'],
-					)),
+				req('del-http01',array(
+					'token'=>$opts['key'],
 				));
-				curl_exec($ch);
 			};
 		break;
 	}

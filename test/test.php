@@ -1,7 +1,7 @@
 <?php
 
 
-echo '::notice title=Account::'.PHP_VERSION,"\n";
+echo '::notice title=PHP Version::'.PHP_VERSION,"\n";
 
 require 'ACMECert.php';
 

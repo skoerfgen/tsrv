@@ -8,7 +8,7 @@ require 'ACMECert.php';
 use skoerfgen\ACMECert\ACMECert;
 
 $ac=new ACMECert('https://pebble:14000/dir');
-$ac->setLogger(function($txt){echo $txt;});
+$ac->setLogger(function($txt){echo $txt,"\n";});
 
 if (PHP_VERSION_ID>=70100){
 	$key=$ac->generateECKey();

@@ -11,7 +11,7 @@ print_r($ac);
 $key=$ac->generateECKey();
 $ac->loadAccountKey($key);
 
-$ac->register(true);
+print_r($ac->register(true));
 
 $ac->log("::error title=Account2::Registration unsuccessful");
 $ac->log("::notice title=Account::Registration successful");

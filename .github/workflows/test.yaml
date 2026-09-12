@@ -98,6 +98,12 @@ jobs:
       - name: Run test.php
         run: php -d curl.cainfo=pebble.crt -d openssl.cafile=pebble.crt test/test.php
         
+      - name: upl
+        uses: actions/upload-artifact@v4
+          with:
+            name: generated-output
+            path: foo/
+            
   test-required:
     name: All Tests
     if: ${{ always() }}

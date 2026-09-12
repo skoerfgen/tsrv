@@ -1,4 +1,4 @@
-name: ACMECert Test Runner
+name: ACMECert Test
 
 on:
   workflow_dispatch:
@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   test-required:
-    name: All ACMECert Tests
+    name: All Tests
     if: always()
     needs: [test]
     runs-on: ubuntu-latest

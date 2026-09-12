@@ -1,8 +1,7 @@
 <?php
 
 echo 'PHP Version: '.PHP_VERSION,"\n";
-echo 'NAME: '.gethostbyname('challtestsrv'),"\n";
-die('halt');
+
 require 'ACMECert.php';
 
 use skoerfgen\ACMECert\ACMECert;
@@ -44,8 +43,9 @@ $ac->log('::endgroup::');
 $domain_config=array(
 	'sub0.example.net'=>array('challenge'=>'dns-01'),
 	'sub1.example.net'=>array('challenge'=>'http-01'),
-	'127.0.0.1'=>array('challenge'=>'http-01'),
 );
+
+$domain_config[gethostbyname('challtestsrv')]=array('challenge'=>'http-01');
 
 $ch=curl_init();
 

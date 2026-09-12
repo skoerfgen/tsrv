@@ -23,7 +23,7 @@ jobs:
           PEBBLE_AUTHZREUSE: "0"
       challtestsrv:
         image: ghcr.io/letsencrypt/pebble-challtestsrv:latest
-        command: -defaultIPv6 "" -defaultIPv4 "127.0.0.1" -http01 pebble:80
+        command: -defaultIPv6 "" -defaultIPv4 "challtestsrv"
         ports:
           - 8055:8055 # HTTP Management API
     steps:

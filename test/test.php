@@ -10,7 +10,7 @@ print_r($ac);
 
 
 $key=$ac->generateECKey();
-$ac->loadAccoufntKey($key);
+$ac->loadAccountKey($key);
 print_r($ac->register(true));
 
 /*echo "::error title=Account2::Registration unsuccessful\n";

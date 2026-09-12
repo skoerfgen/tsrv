@@ -1,13 +1,19 @@
 <?php
 
+
+echo '::notice title=Account::'.PHP_VERSION,"\n";
+
 require 'ACMECert.php';
 
 use skoerfgen\ACMECert\ACMECert;
 
 $ac=new ACMECert('https://pebble:14000/dir');
+$keys=array();
 
-print_r($ac);
+if (PHP_VERSION_ID>=70100){
+	$keys[]=$ac->generateECKey();
+}
+$keys[]=$ac->generateRSAKey();
 
-$key=$ac->generateRSAKey();
 
-print_r($key);
+print_r($keys);

@@ -36,7 +36,7 @@ jobs:
     services:
       pebble:
         image: ghcr.io/letsencrypt/pebble:latest
-        command: -strict -dnsserver challtestsrv:8053 -config test/config/pebble-config.json
+        command: -strict -dnsserver challtestsrv:8053 -config <(jq '.pebble.externalAccountBindingRequired = true' test/config/pebble-config.json)
         ports:
           - 14000:14000 # HTTPS ACME API
         env:

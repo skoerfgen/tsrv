@@ -97,7 +97,7 @@ $handler=function($opts) use ($ac){
 		break;
     case 'tls-alpn-01':
       var_dump($opts);
-			$cert=$ac->generateALPNCertificate($ac->generateRSAKey(),$opts['domain'],$opts['value']);
+			//$cert=$ac->generateALPNCertificate($ac->generateRSAKey(),$opts['domain'],$opts['value']);
       req('add-tlsalpn01',array(
 				'host'=>$opts['domain'],
 				'content'=>$opts['value']			

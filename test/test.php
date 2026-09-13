@@ -2,8 +2,7 @@
 
 echo 'PHP Version: '.PHP_VERSION,"\n";
 
-$ownIp = gethostbyname(gethostname());
-echo "Own IP: " . $ownIp . "\n";
+echo "Own IP: " . gethostbyname(gethostname()) . "\n";
 
 require 'ACMECert.php';
 
@@ -98,11 +97,11 @@ $handler=function($opts) use ($ac){
 			};
 		break;
     case 'tls-alpn-01':
-      echo 'setting ip to '.$ownIp;
+      echo 'setting ip to '.gethostbyname(gethostname());
 			req('add-a',array(
 				'host'=>$opts['domain'],
 				'addresses'=>array(
-					array($ownIp)
+					array(gethostbyname(gethostname()))
 				)
 			));
 

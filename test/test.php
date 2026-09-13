@@ -130,17 +130,6 @@ $handler=function($opts) use ($ac){
 				$ac->log('ALPN TERM');
       };
     break;
-    case 'Xtls-alpn-01':
-      req('add-tlsalpn01',array(
-				'host'=>$opts['domain'],
-				'content'=>$opts['value']			
-			));
-			return function($opts){
-        req('del-tlsalpn01',array(
-					'host'=>$opts['domain']
-				));
-      };
-    break;
 	}
 };
 

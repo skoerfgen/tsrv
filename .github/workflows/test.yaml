@@ -49,7 +49,7 @@ jobs:
         ports:
           #- 8055:8055 # HTTP Management API
           - 8053:8053 # DNS
-          - 5002:5002 # HTTP-01
+          #- 5002:5002 # HTTP-01
     steps:
       #- name: Checkout@v7
       #  if: matrix.version != '5.6'

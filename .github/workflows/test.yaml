@@ -64,7 +64,24 @@ jobs:
           git remote add origin "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git"
           git fetch --depth=1 origin "$GITHUB_SHA"
           git checkout --detach FETCH_HEAD
-        
+          
+      - name: Wait for services
+        run: |
+          until wget --no-check-certificate -q --spider https://pebble:14000/dir; do
+            echo "Waiting for Pebble..."
+            sleep 1
+          done
+          echo "Pebble ready!"
+
+      - name: Get challtestsrv IP
+        run: |
+          PEBBLE_IP=$(getent hosts challtestsrv | awk '{ print $1 }')
+          echo "Pebble IP: $PEBBLE_IP"
+
+          curl -s -H 'Content-Type: application/json' \
+            -d "$(printf '{"ip":"%s"}' "$PEBBLE_IP")" \
+            http://challtestsrv:8055/set-default-ipv4
+
       - name: Create Pebble certificate
         run: |
           cat > pebble.crt << 'EOF'
@@ -89,25 +106,7 @@ jobs:
           v1lhy71EhBuXXwRQJry0lTdF+w==
           -----END CERTIFICATE-----
           EOF
-          
-      - name: Wait for services
-        run: |
-          until wget --no-check-certificate -q --spider https://pebble:14000/dir; do
-            echo "Waiting for Pebble..."
-            sleep 1
-          done
-          echo "Pebble ready!"
 
-
-      - name: Get challtestsrv IP
-        run: |
-          PEBBLE_IP=$(getent hosts challtestsrv | awk '{ print $1 }')
-          echo "Pebble IP: $PEBBLE_IP"
-
-          curl -s -H 'Content-Type: application/json' \
-            -d "$(printf '{"ip":"%s"}' "$PEBBLE_IP")" \
-            http://challtestsrv:8055/set-default-ipv4
-         
       - name: Run test.php
         run: php -d curl.cainfo=pebble.crt -d openssl.cafile=pebble.crt test/test.php
         

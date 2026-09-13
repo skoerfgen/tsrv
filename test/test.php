@@ -72,6 +72,7 @@ req('add-a',array(
 		array(gethostbyname(gethostname()))
 	)
 ));
+sleep(5);
 
 $handler=function($opts) use ($ac){
 	switch($opts['config']['challenge']){

@@ -121,7 +121,7 @@ $handler=function($opts) use ($ac){
 
       $ac->log(fgets($pipes[1]));
 
-      return function($opts) use ($resource,$pipes){
+      return function($opts) use ($resource,$pipes,$ac){
         // Stop ALPN Responder
         fclose($pipes[0]);
         fclose($pipes[1]);

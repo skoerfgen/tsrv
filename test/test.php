@@ -49,7 +49,6 @@ $domain_config=array(
 
 $domain_config[gethostbyname('challtestsrv')]=array('challenge'=>'http-01');
 
-
 function req($path,$arr){
 	static $ch=null;
 
@@ -95,19 +94,17 @@ $handler=function($opts) use ($ac){
 				));
 			};
 		break;
-    /*case 'tls-alpn-01':
-      var_dump($opts);
-			$cert=$ac->generateALPNCertificate($ac->generateRSAKey(),$opts['domain'],$opts['value']);
+    case 'tls-alpn-01':
       req('add-tlsalpn01',array(
 				'host'=>$opts['domain'],
-				'content'=>$cert			
+				'content'=>$opts['value']			
 			));
 			return function($opts){
         req('del-tlsalpn01',array(
 					'host'=>$opts['domain']
 				));
       };
-    break;*/		
+    break;
 	}
 };
 

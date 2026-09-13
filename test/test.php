@@ -98,7 +98,8 @@ $handler=function($opts) use ($ac){
 			};
 		break;
     case 'tls-alpn-01':
-      req('add-a',array(
+      echo 'setting ip to '.$ownIp;
+			req('add-a',array(
 				'host'=>$opts['domain'],
 				'addresses'=>array(
 					array($ownIp)

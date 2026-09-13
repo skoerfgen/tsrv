@@ -140,7 +140,6 @@ $ac->log('::group::Revoking Certificate');
 $ac->revoke(reset($fullchain));
 $ac->log('::endgroup::');
 
-
 $ac->log('::group::Get Account');
 $ac->log(print_r($ac->getAccount(),true));
 $ac->log('::endgroup::');
@@ -152,9 +151,3 @@ $ac->log('::endgroup::');
 $ac->log('::group::Deactivate Account');
 $ac->log(print_r($ac->deactivateAccount(),true));
 $ac->log('::endgroup::');
-
-
-
-//$ac->log('::group::');
-//$ac->log('::endgroup::');
-

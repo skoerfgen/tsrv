@@ -46,7 +46,7 @@ $ac->log('::endgroup::');
 $domain_config=array(
 	'*.example.net'=>array('challenge'=>'dns-01'),
 	'sub.other.example.net'=>array('challenge'=>'dns-01'),
-	//'sub2.other.example.net'=>array('challenge'=>'tls-alpn-01'),
+	'sub2.other.example.net'=>array('challenge'=>'tls-alpn-01'),
 	'example.net'=>array('challenge'=>'http-01'),
 );
 
@@ -97,8 +97,16 @@ $handler=function($opts) use ($ac){
 				));
 			};
 		break;
-    case 'Xtls-alpn-01':
-      $cert=$ac->generateALPNCertificate('file://'.'some_private_key.pem',$opts['domain'],$opts['value']);
+    case 'tls-alpn-01':
+      req('add-a',array(
+				'host'=>$opts['domain'],
+				'addresses'=>array(
+					array($ownIp)
+				)
+			));
+
+			file_put_contents('some_private_key.pem',$ac->generateRSAKey());
+			$cert=$ac->generateALPNCertificate('file://'.'some_private_key.pem',$opts['domain'],$opts['value']);
       // Use $cert and some_private_key.pem(<- does not have to be a specific key,
       // just make sure you generated one) to serve the certificate for $opts['domain']
 
@@ -109,9 +117,6 @@ $handler=function($opts) use ($ac){
       // store the generated verification certificate to be used by the ALPN Responder.
       file_put_contents('alpn_cert.pem',$cert);
 
-      // To keep this example simple, the included Example ALPN Responder listens on port 443,
-      // so - for the sake of this example - you have to stop the webserver here, like:
-      shell_exec('/etc/init.d/apache2 stop');
 
       // Start ALPN Responder (requires node.js)
       $resource=proc_open(
@@ -134,7 +139,7 @@ $handler=function($opts) use ($ac){
         proc_close($resource);
       };
     break;
-    case 'tls-alpn-01':
+    case 'Xtls-alpn-01':
       req('add-tlsalpn01',array(
 				'host'=>$opts['domain'],
 				'content'=>$opts['value']			

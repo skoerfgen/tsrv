@@ -59,7 +59,7 @@ jobs:
       - name: Git Checkout + NodeJS install
         #if: matrix.version == '5.6'
         run: |
-          command -v git >/dev/null 2>&1 || apk add --no-cache git nodejs
+          command -v git >/dev/null 2>&1 || apk add --no-cache git nodejs iptables
           git config --global --add safe.directory $GITHUB_WORKSPACE
           git init
           git remote add origin "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git"

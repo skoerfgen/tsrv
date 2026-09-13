@@ -126,6 +126,10 @@ $ac->log('::group::getRemainingPercent');
 $ac->log(print_r($ac->getRemainingPercent(reset($fullchain)),true));
 $ac->log('::endgroup::');
 
+$ac->log('::group::getRemainingDays');
+$ac->log(print_r($ac->getRemainingDays(reset($fullchain)),true));
+$ac->log('::endgroup::');
+
 if (PHP_VERSION_ID>=70201){
 	$ac->log('::group::ARI');
 	$ac->log(print_r($ac->getARI(reset($fullchain)),true));

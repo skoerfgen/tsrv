@@ -45,11 +45,11 @@ jobs:
           PEBBLE_AUTHZREUSE: "0"
       challtestsrv:
         image: ghcr.io/letsencrypt/pebble-challtestsrv:latest
-        command: -defaultIPv6 "" -defaultIPv4 "127.0.0.1"
-        ports:
-          - 8055:8055 # HTTP Management API
-          - 8053:8053 # DNS
-          - 5002:5002 # HTTP-01
+        command: -defaultIPv6 "" -defaultIPv4 "127.0.0.1" -tlsalpn01 ""
+        #ports:
+          #- 8055:8055 # HTTP Management API
+          #- 8053:8053 # DNS
+          #- 5002:5002 # HTTP-01
     steps:
       #- name: Checkout@v7
       #  if: matrix.version != '5.6'
@@ -58,7 +58,7 @@ jobs:
       - name: Git Checkout
         #if: matrix.version == '5.6'
         run: |
-          command -v git >/dev/null 2>&1 || apk add --no-cache git
+          command -v git >/dev/null 2>&1 || apk add --no-cache git nodejs
           git config --global --add safe.directory $GITHUB_WORKSPACE
           git init
           git remote add origin "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git"
@@ -73,14 +73,14 @@ jobs:
           done
           echo "Pebble ready!"
 
-      - name: Set challtestsrv IP
-        run: |
-          C_IP=$(getent hosts challtestsrv | awk '{ print $1 }')
-          echo "challtestsrv IP: $C_IP"
-
-          curl -s -H 'Content-Type: application/json' \
-            -d "$(printf '{"ip":"%s"}' "$C_IP")" \
-            http://challtestsrv:8055/set-default-ipv4
+      #- name: Set challtestsrv IP
+      #  run: |
+      #    C_IP=$(getent hosts challtestsrv | awk '{ print $1 }')
+      #    echo "challtestsrv IP: $C_IP"
+			#
+      #    curl -s -H 'Content-Type: application/json' \
+      #      -d "$(printf '{"ip":"%s"}' "$C_IP")" \
+      #      http://challtestsrv:8055/set-default-ipv4
 
       - name: Create Pebble CA certificate
         run: |

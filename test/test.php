@@ -2,6 +2,8 @@
 
 echo 'PHP Version: '.PHP_VERSION,"\n";
 
+echo "Own IP: " . gethostbyname(gethostname()) . "\n";
+
 require 'ACMECert.php';
 
 use skoerfgen\ACMECert\ACMECert;
@@ -43,7 +45,7 @@ $ac->log('::endgroup::');
 $domain_config=array(
 	'*.example.net'=>array('challenge'=>'dns-01'),
 	'sub.other.example.net'=>array('challenge'=>'dns-01'),
-	//'sub2.other.example.net'=>array('challenge'=>'tls-alpn-01'),
+	'sub2.other.example.net'=>array('challenge'=>'tls-alpn-01'),
 	'example.net'=>array('challenge'=>'http-01'),
 );
 
@@ -61,6 +63,12 @@ function req($path,$arr){
 		CURLOPT_POSTFIELDS=>json_encode($arr),
 	));
 	curl_exec($ch);
+}
+
+function setIP($ip=null){
+	req('set-default-ipv4',array(
+		'ip'=>$ip===null?gethostbyname(gethostname()):$ip
+	));	
 }
 
 $handler=function($opts) use ($ac){
@@ -82,12 +90,13 @@ $handler=function($opts) use ($ac){
 		case 'http-01':
 			$opts['key']=basename($opts['key']);
 			$ac->log('-> SET TXT '.$opts['key'].'.'.' | '.$opts['value']);
+			setIP(gethostbyname('challtestsrv'));
 			req('add-http01',array(
 				'token'=>$opts['key'],
 				'content'=>$opts['value']
 			));
 	
-			return function($opts)use($ch,$ac){
+			return function($opts)use($ac){
 				$ac->log('<- REM TXT '.$opts['key'].'.'.' | '.$opts['value']);
 				req('del-http01',array(
 					'token'=>$opts['key'],
@@ -95,14 +104,30 @@ $handler=function($opts) use ($ac){
 			};
 		break;
     case 'tls-alpn-01':
-      req('add-tlsalpn01',array(
-				'host'=>$opts['domain'],
-				'content'=>$opts['value']			
-			));
-			return function($opts){
-        req('del-tlsalpn01',array(
-					'host'=>$opts['domain']
-				));
+			setIP();
+
+			file_put_contents('some_private_key.pem',$ac->generateRSAKey());
+			$cert=$ac->generateALPNCertificate('file://'.'some_private_key.pem',$opts['domain'],$opts['value']);
+      file_put_contents('alpn_cert.pem',$cert);
+      $resource=proc_open(
+        'node alpn_responder.js some_private_key.pem alpn_cert.pem',
+        array(
+          0=>array('pipe','r'),
+          1=>array('pipe','w')
+        ),
+        $pipes
+      );
+
+
+      $ac->log(fgets($pipes[1]));
+
+      return function($opts) use ($resource,$pipes,$ac){
+        // Stop ALPN Responder
+        fclose($pipes[0]);
+        fclose($pipes[1]);
+        proc_terminate($resource);
+        proc_close($resource);
+				$ac->log('ALPN TERM');
       };
     break;
 	}

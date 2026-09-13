@@ -129,7 +129,7 @@ $handler=function($opts) use ($ac){
       );
 
       // wait until alpn responder is listening
-      fgets($pipes[1]);
+      var_dump(fgets($pipes[1]));
 
       return function($opts) use ($resource,$pipes){
         // Stop ALPN Responder

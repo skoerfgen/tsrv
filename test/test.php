@@ -108,18 +108,7 @@ $handler=function($opts) use ($ac){
 
 			file_put_contents('some_private_key.pem',$ac->generateRSAKey());
 			$cert=$ac->generateALPNCertificate('file://'.'some_private_key.pem',$opts['domain'],$opts['value']);
-      // Use $cert and some_private_key.pem(<- does not have to be a specific key,
-      // just make sure you generated one) to serve the certificate for $opts['domain']
-
-
-      // This example uses an included ALPN Responder - a standalone https-server
-      // written in a few lines of node.js - which is able to complete this challenge.
-
-      // store the generated verification certificate to be used by the ALPN Responder.
       file_put_contents('alpn_cert.pem',$cert);
-
-
-      // Start ALPN Responder (requires node.js)
       $resource=proc_open(
         'node alpn_responder.js some_private_key.pem alpn_cert.pem',
         array(
@@ -129,8 +118,8 @@ $handler=function($opts) use ($ac){
         $pipes
       );
 
-      // wait until alpn responder is listening
-      var_dump(fgets($pipes[1]));
+
+      $ac->log(fgets($pipes[1]));
 
       return function($opts) use ($resource,$pipes){
         // Stop ALPN Responder
@@ -138,6 +127,7 @@ $handler=function($opts) use ($ac){
         fclose($pipes[1]);
         proc_terminate($resource);
         proc_close($resource);
+				$ac->log('ALPN TERM');
       };
     break;
     case 'Xtls-alpn-01':

@@ -3,7 +3,9 @@ name: ACMECert Test
 on:
   workflow_dispatch:
   pull_request:
-  #push:
+  push:
+    branches:
+      - master
 
 permissions:
   contents: read
@@ -77,7 +79,7 @@ jobs:
       #  run: |
       #    C_IP=$(getent hosts challtestsrv | awk '{ print $1 }')
       #    echo "challtestsrv IP: $C_IP"
-			#
+      #
       #    curl -s -H 'Content-Type: application/json' \
       #      -d "$(printf '{"ip":"%s"}' "$C_IP")" \
       #      http://challtestsrv:8055/set-default-ipv4

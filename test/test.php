@@ -67,7 +67,7 @@ function req($path,$arr){
 
 function setIP($ip=null){
 	req('set-default-ipv4',array(
-		'ip'=>$ip===null?gethostbyname(gethostname()):$ip;
+		'ip'=>$ip===null?gethostbyname(gethostname()):$ip
 	));	
 }
 

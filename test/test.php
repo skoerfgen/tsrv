@@ -49,7 +49,6 @@ $domain_config=array(
 
 $domain_config[gethostbyname('challtestsrv')]=array('challenge'=>'http-01');
 
-
 function req($path,$arr){
 	static $ch=null;
 

@@ -46,9 +46,9 @@ jobs:
       challtestsrv:
         image: ghcr.io/letsencrypt/pebble-challtestsrv:latest
         command: -defaultIPv6 "" -defaultIPv4 "127.0.0.1" -tlsalpn01 ""
-        ports:
+        #ports:
           #- 8055:8055 # HTTP Management API
-          - 8053:8053 # DNS
+          #- 8053:8053 # DNS
           #- 5002:5002 # HTTP-01
     steps:
       #- name: Checkout@v7

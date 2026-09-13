@@ -70,7 +70,11 @@ req('add-a',array(
 	'host'=>'sub2.other.example.net',
 	'addresses'=>array(gethostbyname(gethostname()))
 ));
-sleep(5);
+var_dump(array(
+	'host'=>'sub2.other.example.net',
+	'addresses'=>array(gethostbyname(gethostname()))
+));
+sleep(1);
 
 $handler=function($opts) use ($ac){
 	switch($opts['config']['challenge']){

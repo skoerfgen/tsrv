@@ -68,9 +68,7 @@ function req($path,$arr){
 echo 'setting ip to '.gethostbyname(gethostname());
 req('add-a',array(
 	'host'=>'sub2.other.example.net',
-	'addresses'=>array(
-		array(gethostbyname(gethostname()))
-	)
+	'addresses'=>array(gethostbyname(gethostname()))
 ));
 sleep(5);
 

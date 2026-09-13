@@ -100,7 +100,7 @@ $handler=function($opts) use ($ac){
 			$cert=$ac->generateALPNCertificate($ac->generateRSAKey(),$opts['domain'],$opts['value']);
       req('add-tlsalpn01',array(
 				'host'=>$opts['domain'],
-				'content'=>$cert			
+				'content'=>$opts['value']			
 			));
 			return function($opts){
         req('del-tlsalpn01',array(

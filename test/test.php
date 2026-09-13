@@ -1,95 +1,156 @@
 <?php
 
+echo 'PHP Version: '.PHP_VERSION,"\n";
+
 require 'ACMECert.php';
 
 use skoerfgen\ACMECert\ACMECert;
 
 $ac=new ACMECert('https://pebble:14000/dir');
 
-print_r($ac);
+function checkKey($key){
+	global $ac;
+	$ac->log($key);
+	$ac->loadAccountKey($key);
+	$ac->register(true);
+}
 
-$key=$ac->generateRSAKey();
-$ac->loadAccountKey($key);
+if (PHP_VERSION_ID>=70100){
+	foreach(['P-256','P-384'] as $curve){
+		$ac->log('::group::Generating '.$curve.' EC Key');
+		checkKey($ac->generateECKey($curve));
+		$ac->log('::endgroup::');
+	}
+}
+foreach([2048,3072,4096] as $bits){
+	$ac->log('::group::Generating '.$bits.' bits RSA Key');
+	checkKey($ac->generateRSAKey($bits));	
+	$ac->log('::endgroup::');
+}
+$ac->log('::group::Get Terms URL');
+$ac->log($ac->getTermsURL());
+$ac->log('::endgroup::');
 
-print_r($ac->register(true));
+$ac->log('::group::Get Profiles');
+$ac->log(print_r($ac->getProfiles(),true));
+$ac->log('::endgroup::');
 
-$ac->log("::error title=Account2::Registration unsuccessful");
-$ac->log("::notice title=Account::Registration successful");
-$ac->log("::warning title=Foo::Missing semicolon or not");
+$ac->log('::group::Get CAA Identities');
+$ac->log(print_r($ac->getCAAIdentities(),true));
+$ac->log('::endgroup::');
+
 
 $domain_config=array(
-	'sub0.example.net'=>array('challenge'=>'dns-01'),
-	'sub1.example.net'=>array('challenge'=>'http-01'),
-	/*'sub2.example.net'=>array('challenge'=>'dns-01'),
-	'sub3.example.net'=>array('challenge'=>'dns-01'),
-	'sub4.example.net'=>array('challenge'=>'dns-01'),
-	'sub5.example.net'=>array('challenge'=>'dns-01'),
-	'sub6.example.net'=>array('challenge'=>'dns-01'),
-	'sub7.example.net'=>array('challenge'=>'dns-01'),
-	'sub8.example.net'=>array('challenge'=>'dns-01'),
-	'sub9.example.net'=>array('challenge'=>'dns-01'),*/
+	'*.example.net'=>array('challenge'=>'dns-01'),
+	'sub.other.example.net'=>array('challenge'=>'dns-01'),
+	//'sub2.other.example.net'=>array('challenge'=>'tls-alpn-01'),
+	'example.net'=>array('challenge'=>'http-01'),
 );
 
-$ch=curl_init();
+$domain_config[gethostbyname('challtestsrv')]=array('challenge'=>'http-01');
 
-$handler=function($opts) use ($ac,$ch){
+
+function req($path,$arr){
+	static $ch=null;
+
+	if ($ch===null){
+		$ch=curl_init();
+	}
+	curl_setopt_array($ch,array(
+		CURLOPT_URL=>'http://challtestsrv:8055/'.$path,
+		CURLOPT_RETURNTRANSFER=>true,
+		CURLOPT_POSTFIELDS=>json_encode($arr),
+	));
+	curl_exec($ch);
+}
+
+$handler=function($opts) use ($ac){
 	switch($opts['config']['challenge']){
 		case 'dns-01':
 			$ac->log('-> SET DNS '.$opts['key'].'.'.' | '.$opts['value']);
-			curl_setopt_array($ch,array(
-				CURLOPT_URL=>'http://challtestsrv:8055/set-txt',
-				CURLOPT_RETURNTRANSFER=>true,
-				CURLOPT_POSTFIELDS=>json_encode(array(
-					'host'=>$opts['key'].'.',
-					'value'=>$opts['value']
-				)),
+			req('set-txt',array(
+				'host'=>$opts['key'].'.',
+				'value'=>$opts['value']
 			));
-			curl_exec($ch);
 			
-			
-			return function($opts)use($ch,$ac){
+			return function($opts)use($ac){
 				$ac->log('<- REM DNS '.$opts['key'].'.'.' | '.$opts['value']);
-				curl_setopt_array($ch,array(
-					CURLOPT_URL=>'http://challtestsrv:8055/clear-txt',
-					CURLOPT_RETURNTRANSFER=>true,
-					CURLOPT_POSTFIELDS=>json_encode(array(
-						'host'=>$opts['key'].'.',
-					)),
+				req('clear-txt',array(
+					'host'=>$opts['key'].'.',
 				));
-				curl_exec($ch);
 			};
 		break;
 		case 'http-01':
 			$opts['key']=basename($opts['key']);
 			$ac->log('-> SET TXT '.$opts['key'].'.'.' | '.$opts['value']);
-			curl_setopt_array($ch,array(
-				CURLOPT_URL=>'http://challtestsrv:8055/add-http01',
-				CURLOPT_RETURNTRANSFER=>true,
-				CURLOPT_POSTFIELDS=>json_encode(array(
-					'token'=>$opts['key'],
-					'content'=>$opts['value']
-				)),
+			req('add-http01',array(
+				'token'=>$opts['key'],
+				'content'=>$opts['value']
 			));
-			curl_exec($ch);
-			
-			
+	
 			return function($opts)use($ch,$ac){
 				$ac->log('<- REM TXT '.$opts['key'].'.'.' | '.$opts['value']);
-				curl_setopt_array($ch,array(
-					CURLOPT_URL=>'http://challtestsrv:8055/del-http01',
-					CURLOPT_RETURNTRANSFER=>true,
-					CURLOPT_POSTFIELDS=>json_encode(array(
-						'token'=>$opts['key'],
-					)),
+				req('del-http01',array(
+					'token'=>$opts['key'],
 				));
-				curl_exec($ch);
 			};
 		break;
+    /*case 'tls-alpn-01':
+      var_dump($opts);
+			$cert=$ac->generateALPNCertificate($ac->generateRSAKey(),$opts['domain'],$opts['value']);
+      req('add-tlsalpn01',array(
+				'host'=>$opts['domain'],
+				'content'=>$cert			
+			));
+			return function($opts){
+        req('del-tlsalpn01',array(
+					'host'=>$opts['domain']
+				));
+      };
+    break;*/		
 	}
 };
 
-$fullchain=$ac->getCertificateChain($ac->generateRSAKey(),$domain_config,$handler,array('group'=>true,'authz_reuse'=>true));
-$ret=$ac->getSAN($fullchain);
-print_r($ret);
-echo "\033[32m✓ Certificate generated successfully\033[0m\n";
-file_put_contents(getenv('GITHUB_STEP_SUMMARY'), "### Hello world! :rocket:\nlooks good!", FILE_APPEND);
+$ac->log('::group::Generating Certificate');
+$fullchain=$ac->getCertificateChains($ac->generateRSAKey(),$domain_config,$handler,array('group'=>true,'authz_reuse'=>true));
+$ret=$ac->getSAN(reset($fullchain));
+$ac->log(print_r($ret,true));
+$ac->log(print_r($fullchain,true));
+$ac->log('::endgroup::');
+
+$ac->log('::group::Split Chain');
+$ac->log(print_r($ac->splitChain(reset($fullchain)),true));
+$ac->log('::endgroup::');
+
+$ac->log('::group::getRemainingPercent');
+$ac->log(print_r($ac->getRemainingPercent(reset($fullchain)),true));
+$ac->log('::endgroup::');
+
+if (PHP_VERSION_ID>=70201){
+	$ac->log('::group::ARI');
+	$ac->log(print_r($ac->getARI(reset($fullchain)),true));
+	$ac->log('::endgroup::');
+}
+
+$ac->log('::group::Revoking Certificate');
+$ac->revoke(reset($fullchain));
+$ac->log('::endgroup::');
+
+
+$ac->log('::group::Get Account');
+$ac->log(print_r($ac->getAccount(),true));
+$ac->log('::endgroup::');
+
+$ac->log('::group::Account Key Roll-over');
+$ac->log(print_r($ac->keyChange($ac->generateRSAKey()),true));
+$ac->log('::endgroup::');
+
+$ac->log('::group::Deactivate Account');
+$ac->log(print_r($ac->deactivateAccount(),true));
+$ac->log('::endgroup::');
+
+
+
+//$ac->log('::group::');
+//$ac->log('::endgroup::');
+

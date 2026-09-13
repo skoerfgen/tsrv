@@ -1,5 +1,4 @@
-name: Test
-
+name: ACMECert Test
 
 on:
   workflow_dispatch:
@@ -10,18 +9,30 @@ permissions:
   contents: read
 
 jobs:
+  test-required:
+    name: All Tests
+    if: always()
+    needs: [test]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check test matrix
+        if: ${{ needs.test.result != 'success' }}
+        run: exit 1
+
+      - run: echo "All tests passed"
   test:
     strategy:
+      #fail-fast: false
       matrix:
-        version: [5.6,7.4,8.2,8.5]
+        version: ['5.6','7.0','7.4','8.0','8.5']
+        #version: ['8.5']
         #os: [ubuntu-latest, windows-latest]
 
     runs-on: ubuntu-latest
     name: php${{ matrix.version }}
     container:
       image: php:${{ matrix.version }}-cli-alpine
-    env:
-      ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
     services:
       pebble:
         image: ghcr.io/letsencrypt/pebble:latest
@@ -40,18 +51,38 @@ jobs:
           - 8053:8053 # DNS
           - 5002:5002 # HTTP-01
     steps:
-      - name: Install system dependencies
+      #- name: Checkout@v7
+      #  if: matrix.version != '5.6'
+      #  uses: actions/checkout@v7
+        
+      - name: Git Checkout
+        #if: matrix.version == '5.6'
         run: |
           command -v git >/dev/null 2>&1 || apk add --no-cache git
-      - name: Checkout repository
-        run: |
           git config --global --add safe.directory $GITHUB_WORKSPACE
           git init
           git remote add origin "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git"
           git fetch --depth=1 origin "$GITHUB_SHA"
           git checkout --detach FETCH_HEAD
-        
-      - name: Create Pebble certificate
+          
+      - name: Wait for Pebble to startup
+        run: |
+          until wget --no-check-certificate -q --spider https://pebble:14000/dir; do
+            echo "Waiting for Pebble..."
+            sleep 1
+          done
+          echo "Pebble ready!"
+
+      - name: Set challtestsrv IP
+        run: |
+          C_IP=$(getent hosts challtestsrv | awk '{ print $1 }')
+          echo "challtestsrv IP: $C_IP"
+
+          curl -s -H 'Content-Type: application/json' \
+            -d "$(printf '{"ip":"%s"}' "$C_IP")" \
+            http://challtestsrv:8055/set-default-ipv4
+
+      - name: Create Pebble CA certificate
         run: |
           cat > pebble.crt << 'EOF'
           -----BEGIN CERTIFICATE-----
@@ -75,37 +106,8 @@ jobs:
           v1lhy71EhBuXXwRQJry0lTdF+w==
           -----END CERTIFICATE-----
           EOF
-          
-      - name: Wait for services
-        run: |
-          until wget --no-check-certificate -q --spider https://pebble:14000/dir; do
-            echo "Waiting for Pebble..."
-            sleep 1
-          done
-          echo "Pebble ready!"
 
-
-      - name: Get challtestsrv IP
-        run: |
-          PEBBLE_IP=$(getent hosts challtestsrv | awk '{ print $1 }')
-          echo "Pebble IP: $PEBBLE_IP"
-
-          curl -s -H 'Content-Type: application/json' \
-            -d "$(printf '{"ip":"%s"}' "$PEBBLE_IP")" \
-            http://challtestsrv:8055/set-default-ipv4
-         
-      - name: Run test.php
+      - name: Run Tests
         run: php -d curl.cainfo=pebble.crt -d openssl.cafile=pebble.crt test/test.php
         
-  test-required:
-    name: All Tests
-    if: ${{ always() }}
-    needs: [test]
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Check test matrix
-        if: ${{ needs.test.result != 'success' }}
-        run: exit 1
-
-      - run: echo "All tests passed"        
+       

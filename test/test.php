@@ -43,7 +43,7 @@ $ac->log('::endgroup::');
 $domain_config=array(
 	'*.example.net'=>array('challenge'=>'dns-01'),
 	'sub.other.example.net'=>array('challenge'=>'dns-01'),
-	'sub2.other.example.net'=>array('challenge'=>'tls-alpn-01'),
+	//'sub2.other.example.net'=>array('challenge'=>'tls-alpn-01'),
 	'example.net'=>array('challenge'=>'http-01'),
 );
 
@@ -96,8 +96,6 @@ $handler=function($opts) use ($ac){
 			};
 		break;
     case 'tls-alpn-01':
-      var_dump($opts);
-			//$cert=$ac->generateALPNCertificate($ac->generateRSAKey(),$opts['domain'],$opts['value']);
       req('add-tlsalpn01',array(
 				'host'=>$opts['domain'],
 				'content'=>$opts['value']			

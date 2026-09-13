@@ -620,7 +620,7 @@ class ACMECert extends ACMEv2 {
 					);
 				break;
 				case 'tls-alpn-01':
-					return array(null,$this->keyAuthorization($challenge['token']));
+					return array(null,hash('sha256',$this->keyAuthorization($challenge['token'])));
 				break;
 			}
 		}

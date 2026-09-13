@@ -2,6 +2,9 @@
 
 echo 'PHP Version: '.PHP_VERSION,"\n";
 
+$ownIp = gethostbyname(gethostname());
+echo "Own IP: " . $ownIp . "\n";
+
 require 'ACMECert.php';
 
 use skoerfgen\ACMECert\ACMECert;
@@ -87,13 +90,50 @@ $handler=function($opts) use ($ac){
 				'content'=>$opts['value']
 			));
 	
-			return function($opts)use($ch,$ac){
+			return function($opts)use($ac){
 				$ac->log('<- REM TXT '.$opts['key'].'.'.' | '.$opts['value']);
 				req('del-http01',array(
 					'token'=>$opts['key'],
 				));
 			};
 		break;
+    case 'Xtls-alpn-01':
+      $cert=$ac->generateALPNCertificate('file://'.'some_private_key.pem',$opts['domain'],$opts['value']);
+      // Use $cert and some_private_key.pem(<- does not have to be a specific key,
+      // just make sure you generated one) to serve the certificate for $opts['domain']
+
+
+      // This example uses an included ALPN Responder - a standalone https-server
+      // written in a few lines of node.js - which is able to complete this challenge.
+
+      // store the generated verification certificate to be used by the ALPN Responder.
+      file_put_contents('alpn_cert.pem',$cert);
+
+      // To keep this example simple, the included Example ALPN Responder listens on port 443,
+      // so - for the sake of this example - you have to stop the webserver here, like:
+      shell_exec('/etc/init.d/apache2 stop');
+
+      // Start ALPN Responder (requires node.js)
+      $resource=proc_open(
+        'node alpn_responder.js some_private_key.pem alpn_cert.pem',
+        array(
+          0=>array('pipe','r'),
+          1=>array('pipe','w')
+        ),
+        $pipes
+      );
+
+      // wait until alpn responder is listening
+      fgets($pipes[1]);
+
+      return function($opts) use ($resource,$pipes){
+        // Stop ALPN Responder
+        fclose($pipes[0]);
+        fclose($pipes[1]);
+        proc_terminate($resource);
+        proc_close($resource);
+      };
+    break;
     case 'tls-alpn-01':
       req('add-tlsalpn01',array(
 				'host'=>$opts['domain'],

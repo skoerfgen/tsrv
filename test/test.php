@@ -4,7 +4,7 @@ echo 'PHP Version: '.PHP_VERSION,"\n";
 
 echo "Own IP: " . gethostbyname(gethostname()) . "\n";
 
-var_dump(shell_exec('iptables -t nat -A PREROUTING -p tcp --dport 5001 -j REDIRECT --to-port 443'));
+var_dump(shell_exec('sudo iptables -t nat -A PREROUTING -p tcp --dport 5001 -j REDIRECT --to-port 443'));
 
 require 'ACMECert.php';
 

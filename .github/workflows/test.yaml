@@ -73,14 +73,14 @@ jobs:
           done
           echo "Pebble ready!"
 
-      - name: Set challtestsrv IP
-        run: |
-          C_IP=$(getent hosts challtestsrv | awk '{ print $1 }')
-          echo "challtestsrv IP: $C_IP"
-
-          curl -s -H 'Content-Type: application/json' \
-            -d "$(printf '{"ip":"%s"}' "$C_IP")" \
-            http://challtestsrv:8055/set-default-ipv4
+      #- name: Set challtestsrv IP
+      #  run: |
+      #    C_IP=$(getent hosts challtestsrv | awk '{ print $1 }')
+      #    echo "challtestsrv IP: $C_IP"
+			#
+      #    curl -s -H 'Content-Type: application/json' \
+      #      -d "$(printf '{"ip":"%s"}' "$C_IP")" \
+      #      http://challtestsrv:8055/set-default-ipv4
 
       - name: Create Pebble CA certificate
         run: |

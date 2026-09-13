@@ -43,10 +43,10 @@ $ac->log('::endgroup::');
 
 
 $domain_config=array(
-	'*.example.net'=>array('challenge'=>'dns-01'),
-	'sub.other.example.net'=>array('challenge'=>'dns-01'),
+	//'*.example.net'=>array('challenge'=>'dns-01'),
+	//'sub.other.example.net'=>array('challenge'=>'dns-01'),
 	'sub2.other.example.net'=>array('challenge'=>'tls-alpn-01'),
-	'example.net'=>array('challenge'=>'http-01'),
+	//'example.net'=>array('challenge'=>'http-01'),
 );
 
 $domain_config[gethostbyname('challtestsrv')]=array('challenge'=>'http-01');
@@ -66,13 +66,8 @@ function req($path,$arr){
 }
 
 echo 'setting ip to '.gethostbyname(gethostname());
-req('add-a',array(
-	'host'=>'sub2.other.example.net',
-	'addresses'=>array(gethostbyname(gethostname()))
-));
-var_dump(array(
-	'host'=>'sub2.other.example.net',
-	'addresses'=>array(gethostbyname(gethostname()))
+req('set-default-ipv4',array(
+	'ip'=>gethostbyname(gethostname())
 ));
 sleep(1);
 

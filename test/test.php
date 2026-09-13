@@ -65,6 +65,14 @@ function req($path,$arr){
 	curl_exec($ch);
 }
 
+echo 'setting ip to '.gethostbyname(gethostname());
+req('add-a',array(
+	'host'=>'sub2.other.example.net',
+	'addresses'=>array(
+		array(gethostbyname(gethostname()))
+	)
+));
+
 $handler=function($opts) use ($ac){
 	switch($opts['config']['challenge']){
 		case 'dns-01':
@@ -97,13 +105,7 @@ $handler=function($opts) use ($ac){
 			};
 		break;
     case 'tls-alpn-01':
-      echo 'setting ip to '.gethostbyname(gethostname()).' ('.$opts['domain'].')';
-			req('add-a',array(
-				'host'=>$opts['domain'],
-				'addresses'=>array(
-					array(gethostbyname(gethostname()))
-				)
-			));
+
 
 			file_put_contents('some_private_key.pem',$ac->generateRSAKey());
 			$cert=$ac->generateALPNCertificate('file://'.'some_private_key.pem',$opts['domain'],$opts['value']);

@@ -4,6 +4,8 @@ echo 'PHP Version: '.PHP_VERSION,"\n";
 
 echo "Own IP: " . gethostbyname(gethostname()) . "\n";
 
+//var_dump(shell_exec('nohup socat TCP-LISTEN:5001,reuseaddr,fork TCP:127.0.0.1:443 >/var/log/socat.log 2>&1 &'));
+
 require 'ACMECert.php';
 
 use skoerfgen\ACMECert\ACMECert;

@@ -97,7 +97,7 @@ $handler=function($opts) use ($ac){
 			};
 		break;
     case 'tls-alpn-01':
-      echo 'setting ip to '.gethostbyname(gethostname());
+      echo 'setting ip to '.gethostbyname(gethostname()).' ('.$opts['domain'].')';
 			req('add-a',array(
 				'host'=>$opts['domain'],
 				'addresses'=>array(

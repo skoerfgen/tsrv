@@ -9,7 +9,7 @@ $hostname = 'challtestsrv';
 $ipv4 = gethostbyname($hostname);
 
 $records = dns_get_record($hostname, DNS_AAAA);
-$ipv6 = $records[0]['ipv6'] ?? null;
+print_r($records);
 
 echo "IPv4: $ipv4\n";
 echo "IPv6: $ipv6\n";

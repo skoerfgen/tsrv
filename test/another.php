@@ -49,7 +49,7 @@ $domain_config=array(
 	'sub2.other.example.net'=>array('challenge'=>'tls-alpn-01'),
 	'example.net'=>array('challenge'=>'http-01'),
 );
-$domain_config[gethostbyname('challtestsrv')]=array('challenge'=>'http-01');
+$domain_config[gethostbyname('pebble')]=array('challenge'=>'http-01');
 
 $handler=function($opts) use ($ac){
 	switch($opts['config']['challenge']){

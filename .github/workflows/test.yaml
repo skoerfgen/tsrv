@@ -107,7 +107,7 @@ jobs:
           -----END CERTIFICATE-----
           EOF
 
-      - name: alpnproxy
+      - name: Proxy TLS-ALPN-01 request from port 5001 to port 443
         run: |
           nohup socat TCP-LISTEN:5001,reuseaddr,fork TCP:127.0.0.1:443 &
 

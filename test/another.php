@@ -10,9 +10,9 @@ $ac->setLogger(function($txt){
 	echo $txt,"\n";
 });
 
-start('Constructor');
+open('Constructor');
 print_r($ac);
-end();
+close();
 
 
 
@@ -20,9 +20,9 @@ end();
 
 
 
-function start($txt){
+function open($txt){
 	echo '::group::'.$txt,"\n";
 }
-function end($txt){
+function close($txt){
 	echo '::endgroup::',"\n";
 }

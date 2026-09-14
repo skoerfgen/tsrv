@@ -1,8 +1,12 @@
 <?php
 
+
+
 echo 'PHP Version: '.PHP_VERSION,"\n";
 // echo "Own IP: " . gethostbyname(gethostname()) . "\n";
+var_dump(file_get_contents('/proc/sys/net/ipv6/conf/all/disable_ipv6'));
 
+exit();
 require 'ACMECert.php';
 use skoerfgen\ACMECert\ACMECert;
 $ac=new ACMECert('https://pebble:14000/dir');

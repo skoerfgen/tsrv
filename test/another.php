@@ -10,7 +10,19 @@ $ac->setLogger(function($txt){
 	echo $txt,"\n";
 });
 
-open('Constructor');
+open('RSA & EC Keys');
+
+
+foreach([2048,3072,4096] as $bits){
+	open('RSA '.$bits);
+	echo 'OK',"\n";
+	close();
+}
+
+foreach(['P-256','P-384'] as $curve){
+	
+}
+
 print_r($ac);
 close();
 

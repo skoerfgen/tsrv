@@ -55,12 +55,12 @@ jobs:
       #  if: matrix.version != '5.6'
       #  uses: actions/checkout@v7
         
-      - name: Install Dependencies
+      - name: Install dependencies
         #if: matrix.version == '5.6'
         run: |
           command -v git >/dev/null 2>&1 || apk add --no-cache git nodejs socat
           
-      - name: Git Checkout Commit
+      - name: Git checkout commit
         #if: matrix.version == '5.6'
         run: |
           git config --global --add safe.directory $GITHUB_WORKSPACE

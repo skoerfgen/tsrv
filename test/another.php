@@ -107,7 +107,7 @@ $handler=function($opts) use ($ac){
         fclose($pipes[1]);
         proc_terminate($resource);
         proc_close($resource);
-				$ac->log('ALPN TERM');
+				$ac->log('ACMECert Example ALPN Responder - Terminated');
       };
     break;
 	}

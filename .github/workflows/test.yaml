@@ -2,7 +2,7 @@ name: ACMECert Test
 
 on:
   workflow_dispatch:
-  pull_request:
+  #pull_request:
   push:
   
 permissions:

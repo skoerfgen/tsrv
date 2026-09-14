@@ -12,7 +12,7 @@ $ac->setLogger(function($txt){
 
 if (PHP_VERSION_ID>=70100){
 	foreach(['P-256','P-384','P-521'] as $k=>$curve){
-		open('Generate/'.($k===0?'Register':'Account Key Rollover').' EC '.$curve.' Key');
+		open('Generate EC '.$curve.' Key ('.($k===0?'Register':'Account Key Rollover').')');
 		$key=$ac->generateECKey($curve);
 		$ac->log($key);
 		if ($k===0) {
@@ -25,9 +25,16 @@ if (PHP_VERSION_ID>=70100){
 	}
 }
 
-foreach([4096,3072,2048] as $bits){
-	open('Generate/Register RSA '.$bits.' Key');
-	checkAccountKey($ac->generateRSAKey($bits));
+foreach([4096,3072,2048] as $k=>$bits){
+	open('Generate RSA '.$bits.' Key ('.($k===0?'Register':'Account Key Rollover').')');
+	$key=$ac->generateRSAKey($bits);
+	$ac->log($key);
+	if ($k===0) {
+		$ac->loadAccountKey($key);
+		$ac->register(true);
+	}else{
+		$ac->keyChange($key);
+	}	
 	close();
 }
 

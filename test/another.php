@@ -40,7 +40,6 @@ if (PHP_VERSION_ID>=70100){
 	}
 }
 
-
 // cert
 open('Generate Certificate');
 $domain_config=array(

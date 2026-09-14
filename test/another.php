@@ -119,13 +119,13 @@ $ret=$ac->getSAN(reset($fullchain));
 print_r($ret);
 
 foreach($fullchain as $issuer=>$chain){
-	echo $issuer,"\n";
+	echo 'Chain: ('.$issuer.'):',"\n";
 	print_r($ac->splitChain($chain));	
 }
 close();
 
 if (PHP_VERSION_ID>=70201){
-	open('ARI');
+	open('ACME Renewal Information (ARI)');
 	print_r($ac->getARI(reset($fullchain)));
 	close();
 }

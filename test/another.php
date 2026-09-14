@@ -88,7 +88,9 @@ $handler=function($opts) use ($ac){
 
 			file_put_contents('some_private_key.pem',$ac->generateRSAKey());
 			$cert=$ac->generateALPNCertificate('file://'.'some_private_key.pem',$opts['domain'],$opts['value']);
-      file_put_contents('alpn_cert.pem',$cert);
+      echo 'ALPN certificate:',"\n";
+			echo $cert,"\n";
+			file_put_contents('alpn_cert.pem',$cert);
       $resource=proc_open(
         'node alpn_responder.js some_private_key.pem alpn_cert.pem',
         array(

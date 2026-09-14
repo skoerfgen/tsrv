@@ -86,6 +86,14 @@ jobs:
       #      -d "$(printf '{"ip":"%s"}' "$C_IP")" \
       #      http://challtestsrv:8055/set-default-ipv4
 
+      - name: Proxy TLS-ALPN-01 request from port 5001 to port 443
+        run: |
+          nohup socat TCP-LISTEN:5001,reuseaddr,fork TCP:127.0.0.1:443 &
+
+      #- name: ls
+      #  run: |
+      #    tree -a .;ls -hal;tree --help;tree --version
+         
       - name: Create Pebble CA certificate
         run: |
           cat > pebble.crt << 'EOF'
@@ -110,14 +118,6 @@ jobs:
           v1lhy71EhBuXXwRQJry0lTdF+w==
           -----END CERTIFICATE-----
           EOF
-
-      - name: Proxy TLS-ALPN-01 request from port 5001 to port 443
-        run: |
-          nohup socat TCP-LISTEN:5001,reuseaddr,fork TCP:127.0.0.1:443 &
-
-      #- name: ls
-      #  run: |
-      #    tree -a .;ls -hal;tree --help;tree --version
           
       #- name: Run Tests
       #  run: php -d curl.cainfo=pebble.crt -d openssl.cafile=pebble.crt test/test.php

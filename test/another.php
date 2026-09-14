@@ -1,6 +1,6 @@
 <?php
 
-// echo 'PHP Version: '.PHP_VERSION,"\n";
+echo 'PHP Version: '.PHP_VERSION,"\n";
 // echo "Own IP: " . gethostbyname(gethostname()) . "\n";
 
 require 'ACMECert.php';
@@ -10,18 +10,18 @@ $ac->setLogger(function($txt){
 	echo $txt,"\n";
 });
 
-print_r($ac);
-
 foreach([2048,3072,4096] as $bits){
-	open('RSA '.$bits);
+	open('Generate/Register RSA '.$bits.' Key');
 	checkAccountKey($ac->generateRSAKey($bits));
 	close();
 }
 
-foreach(['P-256','P-384'] as $curve){
-	open('EC '.$curve);
-	checkAccountKey($ac->generateECKey($curve));
-	close();
+if (PHP_VERSION_ID>=70100){
+	foreach(['P-256','P-384'] as $curve){
+		open('Generate/Register EC '.$curve.' Key');
+		checkAccountKey($ac->generateECKey($curve));
+		close();
+	}
 }
 
 

@@ -20,7 +20,6 @@ function checkKey($key){
 }
 
 
-
 if (PHP_VERSION_ID>=70100){
 	foreach(['P-256','P-384'] as $curve){
 		$ac->log('::group::Generating '.$curve.' EC Key');

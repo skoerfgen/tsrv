@@ -21,6 +21,7 @@ if (PHP_VERSION_ID>=70100){
 		}else{
 			$ac->keyChange($key);
 		}
+		print_r($ac->getAccount());
 		close();
 	}
 }
@@ -34,11 +35,12 @@ foreach([4096,3072,2048] as $k=>$bits){
 		$ac->register(true);
 	}else{
 		$ac->keyChange($key);
-	}	
+	}
+	print_r($ac->getAccount());
 	close();
 }
 
-print_r($ac->getAccount());
+
 
 function open($txt){
 	echo '::group::'.$txt,"\n";

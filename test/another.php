@@ -23,6 +23,6 @@ close();
 function open($txt){
 	echo '::group::'.$txt,"\n";
 }
-function close($txt){
+function close(){
 	echo '::endgroup::',"\n";
 }

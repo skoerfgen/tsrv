@@ -109,7 +109,7 @@ jobs:
 
       - name: alpnproxy
         run: |
-          nohup socat TCP-LISTEN:5001,reuseaddr,fork TCP:127.0.0.1:443 &
+          nohup socat -d -d TCP-LISTEN:5001,reuseaddr,fork TCP:127.0.0.1:443 &
           
       - name: Run Tests
         run: php -d curl.cainfo=pebble.crt -d openssl.cafile=pebble.crt test/test.php

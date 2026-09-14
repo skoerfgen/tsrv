@@ -1,7 +1,20 @@
 <?php
 
 echo 'PHP Version: '.PHP_VERSION,"\n";
+
 // echo "Own IP: " . gethostbyname(gethostname()) . "\n";
+
+$hostname = gethostname();
+
+$ipv4 = gethostbyname($hostname);
+
+$records = dns_get_record($hostname, DNS_AAAA);
+$ipv6 = $records[0]['ipv6'] ?? null;
+
+echo "IPv4: $ipv4\n";
+echo "IPv6: $ipv6\n";
+
+exit();
 
 require 'ACMECert.php';
 use skoerfgen\ACMECert\ACMECert;

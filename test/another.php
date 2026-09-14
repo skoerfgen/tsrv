@@ -11,7 +11,7 @@ $ac->setLogger(function($txt){
 });
 
 if (PHP_VERSION_ID>=70100){
-	foreach(['P-256','P-384'] as $curve){
+	foreach(['P-256','P-384','P-521'] as $curve){
 		open('Generate/Register EC '.$curve.' Key');
 		checkAccountKey($ac->generateECKey($curve));
 		close();

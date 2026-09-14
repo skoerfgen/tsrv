@@ -117,7 +117,11 @@ $handler=function($opts) use ($ac){
 $fullchain=$ac->getCertificateChains($ac->generateRSAKey(),$domain_config,$handler,array('group'=>true,'authz_reuse'=>true));
 $ret=$ac->getSAN(reset($fullchain));
 print_r($ret);
-print_r($fullchain);
+
+foreach($fullchain as $issuer=>$chain){
+	echo $issuer,"\n";
+	print_r($ac->splitChain($chain));	
+}
 close();
 
 if (PHP_VERSION_ID>=70201){
@@ -130,6 +134,9 @@ open('Revoke Certificate');
 $ac->revoke(reset($fullchain));
 close();
 
+open('Deactivate Account');
+print_r($ac->deactivateAccount());
+close();
 
 // ============================================================================
 

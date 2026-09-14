@@ -11,7 +11,7 @@ $ac->setLogger(function($txt){
 });
 
 if (PHP_VERSION_ID>=70100){
-	foreach(['P-256','P-384','P-521','P-384'] as $k=>$curve){
+	foreach(['P-256','P-384','P-521'] as $k=>$curve){
 		open('Generate EC '.$curve.' Key ('.($k===0?'Register':'Account Key Rollover').')');
 		$key=$ac->generateECKey($curve);
 		$ac->log($key);
@@ -38,21 +38,7 @@ foreach([4096,3072,2048] as $k=>$bits){
 	close();
 }
 
-
-
-
-
-
-
-
-
-
-function checkAccountKey($key){
-	global $ac;
-	$ac->log($key);
-	$ac->loadAccountKey($key);
-	$ac->register(true);
-}
+print_r($ac->getAccount());
 
 function open($txt){
 	echo '::group::'.$txt,"\n";

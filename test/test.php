@@ -12,7 +12,7 @@ use skoerfgen\ACMECert\ACMECert;
 
 $ac=new ACMECert('https://pebble:14000/dir');
 
-function checkKey($key){
+function checkXKey($key){
 	global $ac;
 	$ac->log($key);
 	$ac->loadAccountKey($key);

@@ -1,20 +1,7 @@
 <?php
 
 echo 'PHP Version: '.PHP_VERSION,"\n";
-
 // echo "Own IP: " . gethostbyname(gethostname()) . "\n";
-
-$hostname = 'challtestsrv';
-
-$ipv4 = gethostbyname($hostname);
-
-$records = dns_get_record($hostname, DNS_AAAA);
-print_r($records);
-
-echo "IPv4: $ipv4\n";
-echo "IPv6: $ipv6\n";
-
-exit();
 
 require 'ACMECert.php';
 use skoerfgen\ACMECert\ACMECert;
@@ -66,30 +53,29 @@ $domain_config[gethostbyname('challtestsrv')]=array('challenge'=>'http-01');
 $handler=function($opts) use ($ac){
 	switch($opts['config']['challenge']){
 		case 'dns-01':
-			$ac->log('-> SET DNS '.$opts['key'].'.'.' | '.$opts['value']);
+			$ac->log('-> Set DNS TXT record '.$opts['key'].' -> '.$opts['value']);
 			req('set-txt',array(
 				'host'=>$opts['key'].'.',
 				'value'=>$opts['value']
 			));
 			
 			return function($opts)use($ac){
-				$ac->log('<- REM DNS '.$opts['key'].'.'.' | '.$opts['value']);
+				$ac->log('<- Remove DNS record '.$opts['key'].' <- '.$opts['value']);
 				req('clear-txt',array(
 					'host'=>$opts['key'].'.',
 				));
 			};
 		break;
 		case 'http-01':
-			$opts['key']=basename($opts['key']);
-			$ac->log('-> SET TXT '.$opts['key'].'.'.' | '.$opts['value']);
+			$ac->log('-> Set file '.$opts['key'].' -> '.$opts['value']);
 			setA($opts['domain'],gethostbyname('challtestsrv'));
 			req('add-http01',array(
-				'token'=>$opts['key'],
+				'token'=>basename($opts['key']),
 				'content'=>$opts['value']
 			));
 	
 			return function($opts)use($ac){
-				$ac->log('<- REM TXT '.$opts['key'].'.'.' | '.$opts['value']);
+				$ac->log('<- Remove file '.$opts['key'].' <- '.$opts['value']);
 				req('del-http01',array(
 					'token'=>$opts['key'],
 				));
@@ -100,7 +86,7 @@ $handler=function($opts) use ($ac){
 
 			file_put_contents('some_private_key.pem',$ac->generateRSAKey());
 			$cert=$ac->generateALPNCertificate('file://'.'some_private_key.pem',$opts['domain'],$opts['value']);
-      echo 'ALPN certificate:',"\n";
+      $ac->log('-> Set ALPN certificate -> '.$opts['value']);
 			echo $cert;
 			file_put_contents('alpn_cert.pem',$cert);
       $resource=proc_open(

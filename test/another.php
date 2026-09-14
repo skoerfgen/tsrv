@@ -10,27 +10,34 @@ $ac->setLogger(function($txt){
 	echo $txt,"\n";
 });
 
-open('RSA & EC Keys');
-
+print_r($ac);
 
 foreach([2048,3072,4096] as $bits){
 	open('RSA '.$bits);
-	echo 'OK',"\n";
+	checkAccountKey($ac->generateRSAKey($bits));
 	close();
 }
 
 foreach(['P-256','P-384'] as $curve){
-	
+	open('EC '.$curve);
+	checkAccountKey($ac->generateECKey($curve));
+	close();
 }
 
-print_r($ac);
-close();
 
 
 
 
 
 
+
+
+function checkAccountKey($key){
+	global $ac;
+	$ac->log($key);
+	$ac->loadAccountKey($key);
+	$ac->register(true);
+}
 
 function open($txt){
 	echo '::group::'.$txt,"\n";

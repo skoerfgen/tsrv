@@ -113,6 +113,7 @@ $handler=function($opts) use ($ac){
 	}
 };
 
+
 $fullchain=$ac->getCertificateChains($ac->generateRSAKey(),$domain_config,$handler,array('group'=>true,'authz_reuse'=>true));
 $ret=$ac->getSAN(reset($fullchain));
 print_r($ret,true);

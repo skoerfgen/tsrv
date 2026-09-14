@@ -4,7 +4,7 @@ echo 'PHP Version: '.PHP_VERSION,"\n";
 
 // echo "Own IP: " . gethostbyname(gethostname()) . "\n";
 
-$hostname = gethostname();
+$hostname = 'challtestsrv';
 
 $ipv4 = gethostbyname($hostname);
 

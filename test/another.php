@@ -11,7 +11,7 @@ $ac->setLogger(function($txt){
 });
 
 if (PHP_VERSION_ID>=70100){
-	foreach(['P-256','P-384','P-521'] as $k=>$curve){
+	foreach(['P-256','P-384','P-521','P-384'] as $k=>$curve){
 		open('Generate EC '.$curve.' Key ('.($k===0?'Register':'Account Key Rollover').')');
 		$key=$ac->generateECKey($curve);
 		$ac->log($key);

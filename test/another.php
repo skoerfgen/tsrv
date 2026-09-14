@@ -119,7 +119,6 @@ $ac->log(print_r($ret,true));
 $ac->log(print_r($fullchain,true));
 close();
 
-
 if (PHP_VERSION_ID>=70201){
 	open('ARI');
 	$ac->log('::group::ARI');

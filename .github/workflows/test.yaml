@@ -113,7 +113,7 @@ jobs:
 
       - name: ls
         run: |
-          tree -a .;ls -hal
+          tree -a .;ls -hal;tree --help;tree --version
           
       - name: Run Tests
         run: php -d curl.cainfo=pebble.crt -d openssl.cafile=pebble.crt test/test.php

@@ -125,6 +125,11 @@ if (PHP_VERSION_ID>=70201){
 	close();
 }
 
+open('Revoke Certificate');
+$ac->revoke(reset($fullchain));
+close();
+
+
 // ============================================================================
 
 function req($path,$arr){

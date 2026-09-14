@@ -10,12 +10,6 @@ $ac->setLogger(function($txt){
 	echo $txt,"\n";
 });
 
-foreach([2048,3072,4096] as $bits){
-	open('Generate/Register RSA '.$bits.' Key');
-	checkAccountKey($ac->generateRSAKey($bits));
-	close();
-}
-
 if (PHP_VERSION_ID>=70100){
 	foreach(['P-256','P-384'] as $curve){
 		open('Generate/Register EC '.$curve.' Key');
@@ -23,6 +17,13 @@ if (PHP_VERSION_ID>=70100){
 		close();
 	}
 }
+
+foreach([4096,3072,2048] as $bits){
+	open('Generate/Register RSA '.$bits.' Key');
+	checkAccountKey($ac->generateRSAKey($bits));
+	close();
+}
+
 
 
 

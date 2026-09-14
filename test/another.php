@@ -10,6 +10,20 @@ $ac->setLogger(function($txt){
 	echo $txt,"\n";
 });
 
+foreach([2048,3072,4096] as $k=>$bits){
+	open('Generate RSA '.$bits.' Key ('.($k===0?'Register':'Account Key Rollover').')');
+	$key=$ac->generateRSAKey($bits);
+	$ac->log($key);
+	if ($k===0) {
+		$ac->loadAccountKey($key);
+		$ac->register(true);
+	}else{
+		$ac->keyChange($key);
+	}
+	print_r($ac->getAccount());
+	close();
+}
+
 if (PHP_VERSION_ID>=70100){
 	foreach(['P-256','P-384','P-521'] as $k=>$curve){
 		open('Generate EC '.$curve.' Key ('.($k===0?'Register':'Account Key Rollover').')');
@@ -26,23 +40,9 @@ if (PHP_VERSION_ID>=70100){
 	}
 }
 
-foreach([4096,3072,2048] as $k=>$bits){
-	open('Generate RSA '.$bits.' Key ('.($k===0?'Register':'Account Key Rollover').')');
-	$key=$ac->generateRSAKey($bits);
-	$ac->log($key);
-	if ($k===0) {
-		$ac->loadAccountKey($key);
-		$ac->register(true);
-	}else{
-		$ac->keyChange($key);
-	}
-	print_r($ac->getAccount());
-	close();
-}
-
 
 // cert
-
+open('Generate Certificate');
 $domain_config=array(
 	'*.example.net'=>array('challenge'=>'dns-01'),
 	'sub.other.example.net'=>array('challenge'=>'dns-01'),
@@ -117,6 +117,16 @@ $fullchain=$ac->getCertificateChains($ac->generateRSAKey(),$domain_config,$handl
 $ret=$ac->getSAN(reset($fullchain));
 $ac->log(print_r($ret,true));
 $ac->log(print_r($fullchain,true));
+close();
+
+
+if (PHP_VERSION_ID>=70201){
+	open('ARI');
+	$ac->log('::group::ARI');
+	$ac->log(print_r($ac->getARI(reset($fullchain)),true));
+	$ac->log('::endgroup::');
+	close();
+}
 
 // ============================================================================
 

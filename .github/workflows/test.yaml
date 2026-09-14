@@ -34,7 +34,7 @@ jobs:
         #os: [ubuntu-latest, windows-latest]
 
     runs-on: ubuntu-latest
-    name: php${{ matrix.version }}
+    name: PHP ${{ matrix.version }}
     container:
       image: php:${{ matrix.version }}-cli-alpine
     services:

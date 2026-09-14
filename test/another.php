@@ -70,7 +70,7 @@ $handler=function($opts) use ($ac){
 		case 'http-01':
 			$opts['key']=basename($opts['key']);
 			$ac->log('-> SET TXT '.$opts['key'].'.'.' | '.$opts['value']);
-			setIP(gethostbyname('challtestsrv'));
+			setA($opts['domain'],gethostbyname('challtestsrv'));
 			req('add-http01',array(
 				'token'=>$opts['key'],
 				'content'=>$opts['value']
@@ -84,7 +84,7 @@ $handler=function($opts) use ($ac){
 			};
 		break;
     case 'tls-alpn-01':
-			setIP();
+			setA($opts['domain']);
 
 			file_put_contents('some_private_key.pem',$ac->generateRSAKey());
 			$cert=$ac->generateALPNCertificate('file://'.'some_private_key.pem',$opts['domain'],$opts['value']);
@@ -159,6 +159,12 @@ function req($path,$arr){
 function setIP($ip=null){
 	req('set-default-ipv4',array(
 		'ip'=>$ip===null?gethostbyname(gethostname()):$ip
+	));	
+}
+function setA($host,$ip=null){
+	req('add-a',array(
+		'host'=>$host,
+		'addresses'=>array($ip===null?gethostbyname(gethostname()):$ip)
 	));	
 }
 

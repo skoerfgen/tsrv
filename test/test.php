@@ -133,9 +133,7 @@ $handler=function($opts) use ($ac){
 	}
 };
 
-$csr=$ac->generateCSR($ac->generateRSAKey(),array_keys($domain_config));
-echo 'CSR '.$csr,"\n";
-$fullchain=$ac->getCertificateChains($csr,$domain_config,$handler,array('group'=>true,'authz_reuse'=>true));
+$fullchain=$ac->getCertificateChains($ac->generateRSAKey(),$domain_config,$handler,array('group'=>true,'authz_reuse'=>true));
 $ret=$ac->getSAN(reset($fullchain));
 echo 'Subject Alternative Names (SAN) ';
 print_r($ret);
@@ -161,6 +159,11 @@ if (PHP_VERSION_ID>=70201){
 open('Revoke Certificate');
 $ac->revoke(reset($fullchain));
 close();
+
+$csr=$ac->generateCSR($ac->generateRSAKey(),array_keys($domain_config));
+echo 'CSR '.$csr,"\n";
+$fullchain=$ac->getCertificateChains($csr,$domain_config,$handler,array('group'=>true,'authz_reuse'=>true));
+print_r($fullchain);
 
 open('Deactivate Account');
 print_r($ac->deactivateAccount());

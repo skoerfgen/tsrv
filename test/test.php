@@ -57,7 +57,8 @@ print_r([
 ]);
 close();
 
-
+// exceptions
+$ac->register(true);
 
 
 // cert

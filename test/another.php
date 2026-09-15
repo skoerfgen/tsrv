@@ -3,37 +3,6 @@
 echo 'PHP Version: '.PHP_VERSION,"\n";
 // echo "Own IP: " . gethostbyname(gethostname()) . "\n";
 
-function getIPv6Addresses(): array
-{
-    $result = [];
-
-    if (!is_readable('/proc/net/if_inet6')) {
-        return $result;
-    }
-
-    foreach (file('/proc/net/if_inet6', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) as $line) {
-        $parts = preg_split('/\s+/', trim($line));
-
-        // address, index, prefix, scope, flags, interface
-        if (count($parts) >= 6) {
-            $hex = $parts[0];
-
-            // Convert 32 hex chars to a normal IPv6 address
-            $ipv6 = inet_ntop(pack('H*', $hex));
-
-            if ($ipv6 !== false) {
-                $result[$parts[5]][] = $ipv6;
-            }
-        }
-    }
-
-    return $result;
-}
-
-print_r(getIPv6Addresses());
-
-exit();
-
 require 'ACMECert.php';
 use skoerfgen\ACMECert\ACMECert;
 $ac=new ACMECert('https://pebble:14000/dir');
@@ -78,6 +47,7 @@ $domain_config=array(
 	'sub.other.example.net'=>array('challenge'=>'dns-01'),
 	'sub2.other.example.net'=>array('challenge'=>'tls-alpn-01'),
 	'example.net'=>array('challenge'=>'http-01'),
+	'::1'=>array('challenge'=>'http-01'),
 );
 $domain_config[gethostbyname('challtestsrv')]=array('challenge'=>'http-01');
 

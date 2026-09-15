@@ -2,6 +2,8 @@
 
 echo 'PHP Version: '.PHP_VERSION,"\n";
 // echo "Own IP: " . gethostbyname(gethostname()) . "\n";
+phpinfo();
+exit();
 
 require 'ACMECert.php';
 use skoerfgen\ACMECert\ACMECert;

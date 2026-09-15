@@ -69,7 +69,7 @@ $domain_config=array(
 );
 $domain_config[gethostbyname('challtestsrv')]=array('challenge'=>'http-01');
 
-echo 'domain_config:',"\n";
+echo 'domain_config ';
 print_r($domain_config);
 
 $handler=function($opts) use ($ac){

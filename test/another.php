@@ -42,6 +42,7 @@ if (PHP_VERSION_ID>=70100){
 
 // cert
 open('Generate Certificate');
+
 $domain_config=array(
 	'*.example.net'=>array('challenge'=>'dns-01'),
 	'sub.other.example.net'=>array('challenge'=>'dns-01'),
@@ -50,11 +51,11 @@ $domain_config=array(
 );
 $domain_config[gethostbyname('challtestsrv')]=array('challenge'=>'http-01');
 
-echo json_encode([
-	'domain_config'=>$domain_config
-],JSON_PRETTY_PRINT);
+echo 'domain_config:',"\n";
+print_r($domain_config);
 
 $handler=function($opts) use ($ac){
+	print_r($opts);
 	switch($opts['config']['challenge']){
 		case 'dns-01':
 			$ac->log('-> Set DNS TXT record '.$opts['key'].' -> '.$opts['value']);

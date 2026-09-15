@@ -50,6 +50,13 @@ $ac->update(['info@example.net','info2@example.net']);
 print_r($ac->getAccount());
 close();
 
+open('Metadata');
+print_r([
+	'getTermsURL'=>getTermsURL(),
+	'getCAAIdentities'=>getCAAIdentities(),
+	'getProfiles'=>getProfiles(),
+]);
+close();
 
 // cert
 open('Generate Certificate');

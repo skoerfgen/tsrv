@@ -6,7 +6,7 @@ echo 'PHP Version: '.PHP_VERSION,"\n";
 // echo "Own IP: " . gethostbyname(gethostname()) . "\n";
 var_dump(file_get_contents('/proc/sys/net/ipv6/conf/all/disable_ipv6'));
 
-$hostname = gethostname();
+$hostname = 'challtestsrv';
 
 $ipv4 = gethostbyname($hostname);
 

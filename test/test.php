@@ -41,7 +41,6 @@ if (PHP_VERSION_ID>=70100){
 }
 
 // update
-
 open('Update Account');
 print_r($ac->getAccount());
 $ac->update('info@example.net');

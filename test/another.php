@@ -2,7 +2,7 @@
 
 echo 'PHP Version: '.PHP_VERSION,"\n";
 // echo "Own IP: " . gethostbyname(gethostname()) . "\n";
-echo shell_exec('/usr/local/etc/php/');
+echo shell_exec('ls -hal /usr/local/etc/php/');
 exit();
 
 require 'ACMECert.php';

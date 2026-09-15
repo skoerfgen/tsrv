@@ -10,6 +10,9 @@ $ac->setLogger(function($txt){
 	echo $txt,"\n";
 });
 
+// exceptions
+$ac->getAccount();
+
 foreach([2048,3072,4096] as $k=>$bits){
 	open('Generate RSA '.$bits.' Key ('.($k===0?'Register':'Account Key Rollover').')');
 	$key=$ac->generateRSAKey($bits);
@@ -57,8 +60,7 @@ print_r([
 ]);
 close();
 
-// exceptions
-$ac->register(true);
+
 
 
 // cert

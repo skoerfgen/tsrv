@@ -140,7 +140,7 @@ echo 'Subject Alternative Names (SAN) ';
 print_r($ret);
 
 foreach($fullchain as $issuer=>$chain){
-	echo 'Chain: ('.$issuer.') ';
+	echo 'Chain: '.$issuer.' ';
 	print_r($ac->splitChain($chain));	
 }
 

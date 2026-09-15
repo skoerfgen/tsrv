@@ -134,7 +134,7 @@ $handler=function($opts) use ($ac){
 };
 
 $csr=$ac->generateCSR($ac->generateRSAKey(),array_keys($domain_config));
-echo 'CSR '.$csr;
+echo 'CSR '.$csr,"\n";
 $fullchain=$ac->getCertificateChains($csr,$domain_config,$handler,array('group'=>true,'authz_reuse'=>true));
 $ret=$ac->getSAN(reset($fullchain));
 echo 'Subject Alternative Names (SAN) ';

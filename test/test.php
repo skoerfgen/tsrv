@@ -10,10 +10,6 @@ $ac->setLogger(function($txt){
 	echo $txt,"\n";
 });
 
-// exceptions
-$ac->loadAccountKey($ac->generateRSAKey());
-$ac->getAccount();
-
 foreach([2048,3072,4096] as $k=>$bits){
 	open('Generate RSA '.$bits.' Key ('.($k===0?'Register':'Account Key Rollover').')');
 	$key=$ac->generateRSAKey($bits);
@@ -60,9 +56,6 @@ print_r([
 	'getProfiles'=>$ac->getProfiles(),
 ]);
 close();
-
-
-
 
 // cert
 open('Generate Certificate');
@@ -140,7 +133,9 @@ $handler=function($opts) use ($ac){
 	}
 };
 
-$fullchain=$ac->getCertificateChains($ac->generateRSAKey(),$domain_config,$handler,array('group'=>true,'authz_reuse'=>true));
+$csr=$ac->generateCSR($ac->generateRSAKey(),array_keys($domain_config));
+echo 'CSR '.$csr;
+$fullchain=$ac->getCertificateChains($csr,$domain_config,$handler,array('group'=>true,'authz_reuse'=>true));
 $ret=$ac->getSAN(reset($fullchain));
 echo 'Subject Alternative Names (SAN) ';
 print_r($ret);

@@ -67,7 +67,7 @@ class ACMECert extends ACMEv2 {
 	private function _register($termsOfServiceAgreed=false,$contacts=array(),$extra=array()){
 		$this->log('Registering account');
 
-		$ret=$this->request('newAccouznt',array(
+		$ret=$this->request('newAccount',array(
 			'termsOfServiceAgreed'=>(bool)$termsOfServiceAgreed,
 			'contact'=>$this->make_contacts_array($contacts)
 		)+$extra);

@@ -142,6 +142,12 @@ foreach($fullchain as $issuer=>$chain){
 	echo 'Chain: ('.$issuer.'):',"\n";
 	print_r($ac->splitChain($chain));	
 }
+
+print_r([
+	'getRemainingPercent'=>$ac->getRemainingPercent(reset($fullchain)),
+	'getRemainingDays'=>$ac->getRemainingDays(reset($fullchain))
+]);
+
 close();
 
 if (PHP_VERSION_ID>=70201){

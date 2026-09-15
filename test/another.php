@@ -136,10 +136,11 @@ $handler=function($opts) use ($ac){
 
 $fullchain=$ac->getCertificateChains($ac->generateRSAKey(),$domain_config,$handler,array('group'=>true,'authz_reuse'=>true));
 $ret=$ac->getSAN(reset($fullchain));
+echo 'Subject Alternative Names (SAN) ';
 print_r($ret);
 
 foreach($fullchain as $issuer=>$chain){
-	echo 'Chain: ('.$issuer.'):',"\n";
+	echo 'Chain: ('.$issuer.') ';
 	print_r($ac->splitChain($chain));	
 }
 

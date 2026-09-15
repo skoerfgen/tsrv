@@ -125,6 +125,6 @@ jobs:
       - name: Run ACMECert Tests
         run: |
           cp /usr/local/etc/php/php.ini-development /usr/local/etc/php/php.ini
-					tree /usr/local/etc/php/
+          tree /usr/local/etc/php/
           php -d curl.cainfo=pebble.crt -d openssl.cafile=pebble.crt test/another.php
         

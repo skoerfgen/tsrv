@@ -52,9 +52,9 @@ close();
 
 open('Metadata');
 print_r([
-	'getTermsURL'=>getTermsURL(),
-	'getCAAIdentities'=>getCAAIdentities(),
-	'getProfiles'=>getProfiles(),
+	'getTermsURL'=>$ac->getTermsURL(),
+	'getCAAIdentities'=>$ac->getCAAIdentities(),
+	'getProfiles'=>$ac->getProfiles(),
 ]);
 close();
 

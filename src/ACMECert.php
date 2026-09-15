@@ -33,7 +33,7 @@ use skoerfgen\ACMECert\ACME_Exception;
 use Exception;
 use stdClass;
 
-cladss ACMECert extends ACMEv2 {
+class ACMECert extends ACMEv2 {
 	private $alternate_chains=array();
 
 	public function register($termsOfServiceAgreed=false,$contacts=array()){

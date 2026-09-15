@@ -123,5 +123,7 @@ jobs:
       #  run: php -d curl.cainfo=pebble.crt -d openssl.cafile=pebble.crt test/test.php
       #  
       - name: Run ACMECert Tests
-        run: php -d curl.cainfo=pebble.crt -d openssl.cafile=pebble.crt test/another.php
+        run: |
+          cp /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini
+          php -d curl.cainfo=pebble.crt -d openssl.cafile=pebble.crt test/another.php
         

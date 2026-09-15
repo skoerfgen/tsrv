@@ -133,37 +133,39 @@ $handler=function($opts) use ($ac){
 	}
 };
 
-$fullchain=$ac->getCertificateChains($ac->generateRSAKey(),$domain_config,$handler,array('group'=>true,'authz_reuse'=>true));
-$ret=$ac->getSAN(reset($fullchain));
+$fullchains=$ac->getCertificateChains($ac->generateRSAKey(),$domain_config,$handler);
+$ret=$ac->getSAN(reset($fullchains));
 echo 'Subject Alternative Names (SAN) ';
 print_r($ret);
 
-foreach($fullchain as $issuer=>$chain){
+foreach($fullchains as $issuer=>$chain){
 	echo 'Chain: '.$issuer.' ';
 	print_r($ac->splitChain($chain));	
 }
 
 print_r([
-	'getRemainingPercent'=>$ac->getRemainingPercent(reset($fullchain)),
-	'getRemainingDays'=>$ac->getRemainingDays(reset($fullchain))
+	'getRemainingPercent'=>$ac->getRemainingPercent(reset($fullchains)),
+	'getRemainingDays'=>$ac->getRemainingDays(reset($fullchains))
 ]);
 
 close();
 
 if (PHP_VERSION_ID>=70201){
 	open('ACME Renewal Information (ARI)');
-	print_r($ac->getARI(reset($fullchain)));
+	print_r($ac->getARI(reset($fullchains)));
 	close();
 }
 
 open('Revoke Certificate');
-$ac->revoke(reset($fullchain));
+$ac->revoke(reset($fullchains));
 close();
 
+open('Using pre-generated CSR');
 $csr=$ac->generateCSR($ac->generateRSAKey(),array_keys($domain_config));
 echo 'CSR '.$csr,"\n";
-$fullchain=$ac->getCertificateChains($csr,$domain_config,$handler,array('group'=>true,'authz_reuse'=>true));
-print_r($fullchain);
+$fullchains=$ac->getCertificateChains($csr,$domain_config,$handler);
+print_r($fullchains);
+close();
 
 open('Deactivate Account');
 print_r($ac->deactivateAccount());

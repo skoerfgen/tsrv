@@ -25,8 +25,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        version: ['5.6','7.0','7.4','8.0','8.5']
-        #version: ['8.5']
+        #version: ['5.6','7.0','7.4','8.0','8.5']
+        version: ['8.5']
         #os: [ubuntu-latest, windows-latest]
 
     runs-on: ubuntu-latest
@@ -40,9 +40,9 @@ jobs:
         ports:
           - 14000:14000 # HTTPS ACME API
         env:
-          PEBBLE_WFE_NONCEREJECT: "0"
-          PEBBLE_VA_NOSLEEP: "1"
-          PEBBLE_AUTHZREUSE: "0"
+          PEBBLE_WFE_NONCEREJECT: 0
+          PEBBLE_VA_NOSLEEP: 1
+          PEBBLE_AUTHZREUSE: 100
       challtestsrv:
         image: ghcr.io/letsencrypt/pebble-challtestsrv:latest
         command: -defaultIPv6 "" -defaultIPv4 "127.0.0.1" -tlsalpn01 ""

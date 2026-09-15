@@ -40,6 +40,17 @@ if (PHP_VERSION_ID>=70100){
 	}
 }
 
+// update
+
+open('Update Account');
+print_r($ac->getAccount());
+$ac->update('info@example.net');
+print_r($ac->getAccount());
+$ac->update(['info@example.net','info2@example.net']);
+print_r($ac->getAccount());
+close();
+
+
 // cert
 open('Generate Certificate');
 
@@ -55,7 +66,6 @@ echo 'domain_config:',"\n";
 print_r($domain_config);
 
 $handler=function($opts) use ($ac){
-	print_r($opts);
 	switch($opts['config']['challenge']){
 		case 'dns-01':
 			$ac->log('-> Set DNS TXT record '.$opts['key'].' -> '.$opts['value']);
@@ -103,7 +113,6 @@ $handler=function($opts) use ($ac){
         $pipes
       );
 
-
       $ac->log(trim(fgets($pipes[1])));
 
       return function($opts) use ($resource,$pipes,$ac){
@@ -117,7 +126,6 @@ $handler=function($opts) use ($ac){
     break;
 	}
 };
-
 
 $fullchain=$ac->getCertificateChains($ac->generateRSAKey(),$domain_config,$handler,array('group'=>true,'authz_reuse'=>true));
 $ret=$ac->getSAN(reset($fullchain));

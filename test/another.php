@@ -49,6 +49,9 @@ $domain_config=array(
 	'example.net'=>array('challenge'=>'http-01'),
 );
 $domain_config[gethostbyname('challtestsrv')]=array('challenge'=>'http-01');
+print_r([
+	'domain_config'=>$domain_config
+]);
 
 $handler=function($opts) use ($ac){
 	switch($opts['config']['challenge']){

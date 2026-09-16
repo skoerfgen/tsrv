@@ -1,4 +1,4 @@
-name: ACMECert Test
+name: ACMECert
 
 on:
   workflow_dispatch:
@@ -9,8 +9,44 @@ permissions:
   contents: read
 
 jobs:
+  build-pebble:
+    name: Build Pebble Containers
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build Pebble EAB
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: test/pebble/Dockerfile
+          build-args: |
+            CONFIG=pebble-config-eab.json
+          push: true
+          tags: ghcr.io/${{ github.repository }}/pebble-eab:${{ github.sha }}
+
+      - name: Build Pebble non-EAB
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: test/pebble/Dockerfile
+          build-args: |
+            CONFIG=pebble-config-no-eab.json
+          push: true
+          tags: ghcr.io/${{ github.repository }}/pebble-no-eab:${{ github.sha }}
+
   test-required:
-    name: All Tests
+    name: All ACMECert Tests
     if: always()
     needs: [test]
     runs-on: ubuntu-latest
@@ -21,7 +57,10 @@ jobs:
         run: exit 1
 
       - run: echo "All tests passed"
+      
+      
   test:
+    needs: build-pebble
     strategy:
       fail-fast: false
       matrix:
@@ -34,22 +73,27 @@ jobs:
     container:
       image: php:${{ matrix.version }}-cli-alpine
     services:
+
       pebble:
-        image: ghcr.io/letsencrypt/pebble:latest
+        image: ghcr.io/${{ github.repository }}/pebble-no-eab:${{ github.sha }}
         command: -strict -dnsserver challtestsrv:8053
-        ports:
-          - 14000:14000 # HTTPS ACME API
         env:
           PEBBLE_WFE_NONCEREJECT: 0
           PEBBLE_VA_NOSLEEP: 1
           PEBBLE_AUTHZREUSE: 100
+          
+      pebble-eab:
+        image: ghcr.io/${{ github.repository }}/pebble-eab:${{ github.sha }}
+        command: -strict -dnsserver challtestsrv:8053
+        env:
+          PEBBLE_WFE_NONCEREJECT: 0
+          PEBBLE_VA_NOSLEEP: 1
+          PEBBLE_AUTHZREUSE: 100
+          
       challtestsrv:
-        image: ghcr.io/letsencrypt/pebble-challtestsrv:latest
+        image: ghcr.io/letsencrypt/pebble-challtestsrv:2.10.1
         command: -defaultIPv6 "" -defaultIPv4 "127.0.0.1" -tlsalpn01 ""
-        ports:
-          #- 8055:8055 # HTTP Management API
-          - 8053:8053 # DNS
-          - 5002:5002 # HTTP-01
+
     steps:
       #- name: Checkout@v7
       #  if: matrix.version != '5.6'
@@ -69,13 +113,13 @@ jobs:
           git fetch --depth=1 origin "$GITHUB_SHA"
           git checkout --detach FETCH_HEAD
           
-      - name: Wait for Pebble to startup
-        run: |
-          until wget --no-check-certificate -q --spider https://pebble:14000/dir; do
-            echo "Waiting for Pebble..."
-            sleep 1
-          done
-          echo "Pebble ready!"
+      #- name: Wait for Pebble to startup
+      #  run: |
+      #    until wget --no-check-certificate -q --spider https://pebble:14000/dir; do
+      #      echo "Waiting for Pebble..."
+      #      sleep 1
+      #    done
+      #    echo "Pebble ready!"
 
       #- name: Set challtestsrv IP
       #  run: |
@@ -86,13 +130,9 @@ jobs:
       #      -d "$(printf '{"ip":"%s"}' "$C_IP")" \
       #      http://challtestsrv:8055/set-default-ipv4
 
-      - name: Proxy TLS-ALPN-01 request from port 5001 to port 443
+      - name: Proxy requests from 127.0.0.1:14000 to pebble-eab:14000
         run: |
-          nohup socat TCP-LISTEN:5001,reuseaddr,fork TCP:127.0.0.1:443 &
-
-      #- name: ls
-      #  run: |
-      #    tree -a .;ls -hal;tree --help;tree --version
+          nohup socat TCP-LISTEN:14000,bind=127.0.0.1,reuseaddr,fork TCP:pebble-eab:14000 &
          
       - name: Create Pebble CA certificate
         run: |
@@ -119,5 +159,5 @@ jobs:
           -----END CERTIFICATE-----
           EOF
           
-      - name: Run ACEMCert Tests
+      - name: Run ACMECert Tests
         run: php -d curl.cainfo=pebble.crt -d openssl.cafile=pebble.crt test/test.php

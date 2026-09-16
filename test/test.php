@@ -5,6 +5,13 @@ echo 'PHP Version: '.PHP_VERSION,"\n";
 
 require 'ACMECert.php';
 use skoerfgen\ACMECert\ACMECert;
+
+open('EAB');
+$ac=new ACMECert('https://127.0.0.1:14000/dir');
+$ac->loadAccountKey($ac->generateRSAKey());
+print_r($ac->registerEAB(true,'kid-1','zWNDZM6eQGHWpSRTPal5eIUYFTu7EajVIoguysqZ9wG44nMEtx3MUAsUDkMTQ12W'));
+close();
+
 $ac=new ACMECert('https://pebble:14000/dir');
 $ac->setLogger(function($txt){
 	echo $txt,"\n";
@@ -152,9 +159,24 @@ close();
 
 if (PHP_VERSION_ID>=70201){
 	open('ACME Renewal Information (ARI)');
-	print_r($ac->getARI(reset($fullchains)));
+	$ari=$ac->getARI(reset($fullchains));
+	print_r($ari);
+	close();
+	
+	open('Using ARI');
+	$fullchains=$ac->getCertificateChains($ac->generateRSAKey(),$domain_config,$handler,array('replaces'=>$ari['ari_cert_id']));
+	print_r($fullchains);
 	close();
 }
+
+open('Profiles');
+foreach($ac->getProfiles() as $name=>$description){
+	echo 'Using Profile "'.$name.'" ('.$description.')',"\n";
+	$fullchains=$ac->getCertificateChains($ac->generateRSAKey(),$domain_config,$handler,array('profile'=>$name));
+	print_r($fullchains);
+}
+close();
+
 
 open('Revoke Certificate');
 $ac->revoke(reset($fullchains));

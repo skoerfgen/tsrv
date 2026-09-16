@@ -5,6 +5,12 @@ echo 'PHP Version: '.PHP_VERSION,"\n";
 
 require 'ACMECert.php';
 use skoerfgen\ACMECert\ACMECert;
+
+$ac=new ACMECert('https://127.0.0.1:14000/dir');
+print_r($ac->registerEAB(true,'kid-1','zWNDZM6eQGHWpSRTPal5eIUYFTu7EajVIoguysqZ9wG44nMEtx3MUAsUDkMTQ12W'));
+exit();
+
+
 $ac=new ACMECert('https://pebble:14000/dir');
 $ac->setLogger(function($txt){
 	echo $txt,"\n";

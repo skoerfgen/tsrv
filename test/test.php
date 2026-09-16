@@ -171,7 +171,6 @@ if (PHP_VERSION_ID>=70201){
 
 open('Profiles');
 foreach($ac->getProfiles() as $name=>$description){
-	if ($name==='default') continue;
 	echo 'Using Profile "'.$name.'" ('.$description.')',"\n";
 	$fullchains=$ac->getCertificateChains($ac->generateRSAKey(),$domain_config,$handler,array('profile'=>$name));
 	print_r($fullchains);

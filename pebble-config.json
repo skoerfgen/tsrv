@@ -5,7 +5,7 @@
     "certificate": "test/certs/localhost/cert.pem",
     "privateKey": "test/certs/localhost/key.pem",
     "httpPort": 5002,
-    "tlsPort": 5001,
+    "tlsPort": 443,
     "ocspResponderURL": "",
     "externalAccountBindingRequired": false,
     "domainBlocklist": ["blocked-domain.example"],

@@ -69,13 +69,13 @@ jobs:
           git fetch --depth=1 origin "$GITHUB_SHA"
           git checkout --detach FETCH_HEAD
           
-      - name: Wait for Pebble to startup
-        run: |
-          until wget --no-check-certificate -q --spider https://pebble:14000/dir; do
-            echo "Waiting for Pebble..."
-            sleep 1
-          done
-          echo "Pebble ready!"
+      #- name: Wait for Pebble to startup
+      #  run: |
+      #    until wget --no-check-certificate -q --spider https://pebble:14000/dir; do
+      #      echo "Waiting for Pebble..."
+      #      sleep 1
+      #    done
+      #    echo "Pebble ready!"
 
       #- name: Set challtestsrv IP
       #  run: |

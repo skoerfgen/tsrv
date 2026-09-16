@@ -75,8 +75,6 @@ jobs:
       pebble:
         image: ghcr.io/${{ github.repository }}/pebble-no-eab:${{ github.sha }}
         command: -strict -dnsserver challtestsrv:8053
-        ports:
-          - 14000:14000
         env:
           PEBBLE_WFE_NONCEREJECT: 0
           PEBBLE_VA_NOSLEEP: 1

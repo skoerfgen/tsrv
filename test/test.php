@@ -162,6 +162,13 @@ if (PHP_VERSION_ID>=70201){
 	close();
 }
 
+open('Profiles');
+foreach($ac->getProfiles() as $name=>$description){
+	echo 'Using Profile "'.$name.'" ('.$description.')',"\n"
+	$fullchains=$ac->getCertificateChains($ac->generateRSAKey(),$domain_config,$handler,array('profile'=>$name));
+	print_r($fullchains);
+}
+close();
 
 
 open('Revoke Certificate');

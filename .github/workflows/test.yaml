@@ -24,12 +24,25 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - uses: docker/build-push-action@v7
+      - name: Build Pebble EAB
+        uses: docker/build-push-action@v7
         with:
           context: .
-          file: test/Dockerfile.pebble
+          file: test/pebble/Dockerfile
+          build-args: |
+            CONFIG=pebble-config-eab.json
           push: true
-          tags: ghcr.io/${{ github.repository }}/pebble:${{ github.sha }}
+          tags: ghcr.io/${{ github.repository }}/pebble-eab:${{ github.sha }}
+
+      - name: Build Pebble non-EAB
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: test/pebble/Dockerfile
+          build-args: |
+            CONFIG=pebble-config-no-eab.json
+          push: true
+          tags: ghcr.io/${{ github.repository }}/pebble-no-eab:${{ github.sha }}
 
   test-required:
     name: All Tests
@@ -57,11 +70,17 @@ jobs:
     container:
       image: php:${{ matrix.version }}-cli-alpine
     services:
-      pebble:
-        image: ghcr.io/${{ github.repository }}/pebble:${{ github.sha }}
-        command: -strict -dnsserver challtestsrv:8053
-        #ports:
-          #- 14000:14000 # HTTPS ACME API
+      pebble-eab:
+        image: ghcr.io/${{ github.repository }}/pebble-eab:${{ github.sha }}
+        command: -config /test/my-pebble-config.json -strict -dnsserver challtestsrv:8053
+        env:
+          PEBBLE_WFE_NONCEREJECT: 0
+          PEBBLE_VA_NOSLEEP: 1
+          PEBBLE_AUTHZREUSE: 100
+
+      pebble-no-eab:
+        image: ghcr.io/${{ github.repository }}/pebble-no-eab:${{ github.sha }}
+        command: -config /test/my-pebble-config.json -strict -dnsserver challtestsrv:8053
         env:
           PEBBLE_WFE_NONCEREJECT: 0
           PEBBLE_VA_NOSLEEP: 1

@@ -70,13 +70,7 @@ jobs:
     container:
       image: php:${{ matrix.version }}-cli-alpine
     services:
-      pebble-eab:
-        image: ghcr.io/${{ github.repository }}/pebble-eab:${{ github.sha }}
-        command: -strict -dnsserver challtestsrv:8053
-        env:
-          PEBBLE_WFE_NONCEREJECT: 0
-          PEBBLE_VA_NOSLEEP: 1
-          PEBBLE_AUTHZREUSE: 100
+
 
       pebble:
         image: ghcr.io/${{ github.repository }}/pebble-no-eab:${{ github.sha }}
@@ -85,6 +79,15 @@ jobs:
           PEBBLE_WFE_NONCEREJECT: 0
           PEBBLE_VA_NOSLEEP: 1
           PEBBLE_AUTHZREUSE: 100
+          
+      pebble-eab:
+        image: ghcr.io/${{ github.repository }}/pebble-eab:${{ github.sha }}
+        command: -strict -dnsserver challtestsrv:8053
+        env:
+          PEBBLE_WFE_NONCEREJECT: 0
+          PEBBLE_VA_NOSLEEP: 1
+          PEBBLE_AUTHZREUSE: 100
+          
       challtestsrv:
         image: ghcr.io/letsencrypt/pebble-challtestsrv:2.10.1
         command: -defaultIPv6 "" -defaultIPv4 "127.0.0.1" -tlsalpn01 ""

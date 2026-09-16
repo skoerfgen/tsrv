@@ -5,14 +5,10 @@ echo 'PHP Version: '.PHP_VERSION,"\n";
 
 require 'ACMECert.php';
 use skoerfgen\ACMECert\ACMECert;
-$ac=new ACMECert('https://pebble:14000/dir');
+$ac=new ACMECert('https://pebble-no-eab:14000/dir');
 $ac->setLogger(function($txt){
 	echo $txt,"\n";
 });
-print_r($ac);
-
-$ac2=new ACMECert('https://pebble-eab:14000/dir');
-print_r($ac2);
 
 foreach([2048,3072,4096] as $k=>$bits){
 	open('Generate RSA '.$bits.' Key ('.($k===0?'Register':'Account Key Rollover').')');

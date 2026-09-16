@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   build-pebble:
-    name: Build Pebble
+    name: Build Pebble Containers
     runs-on: ubuntu-latest
     permissions:
       contents: read

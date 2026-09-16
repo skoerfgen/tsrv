@@ -152,9 +152,17 @@ close();
 
 if (PHP_VERSION_ID>=70201){
 	open('ACME Renewal Information (ARI)');
-	print_r($ac->getARI(reset($fullchains)));
+	$ari=$ac->getARI(reset($fullchains));
+	print_r($ari);
+	close();
+	
+	open('Using ARI');
+	$fullchains=$ac->getCertificateChains($ac->generateRSAKey(),$domain_config,$handler,array('replaces'=>$ari['ari_cert_id ']));
+	print_r($fullchains);
 	close();
 }
+
+
 
 open('Revoke Certificate');
 $ac->revoke(reset($fullchains));

@@ -157,7 +157,7 @@ if (PHP_VERSION_ID>=70201){
 	close();
 	
 	open('Using ARI');
-	$fullchains=$ac->getCertificateChains($ac->generateRSAKey(),$domain_config,$handler,array('replaces'=>$ari['ari_cert_id ']));
+	$fullchains=$ac->getCertificateChains($ac->generateRSAKey(),$domain_config,$handler,array('replaces'=>$ari['ari_cert_id']));
 	print_r($fullchains);
 	close();
 }

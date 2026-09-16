@@ -45,7 +45,7 @@ jobs:
           tags: ghcr.io/${{ github.repository }}/pebble-no-eab:${{ github.sha }}
 
   test-required:
-    name: All Tests
+    name: All ACMECert Tests
     if: always()
     needs: [test]
     runs-on: ubuntu-latest
@@ -56,6 +56,8 @@ jobs:
         run: exit 1
 
       - run: echo "All tests passed"
+      
+      
   test:
     needs: build-pebble
     strategy:
@@ -70,7 +72,6 @@ jobs:
     container:
       image: php:${{ matrix.version }}-cli-alpine
     services:
-
 
       pebble:
         image: ghcr.io/${{ github.repository }}/pebble-no-eab:${{ github.sha }}
@@ -91,10 +92,7 @@ jobs:
       challtestsrv:
         image: ghcr.io/letsencrypt/pebble-challtestsrv:2.10.1
         command: -defaultIPv6 "" -defaultIPv4 "127.0.0.1" -tlsalpn01 ""
-        #ports:
-          #- 8055:8055 # HTTP Management API
-          #- 8053:8053 # DNS
-          #- 5002:5002 # HTTP-01
+
     steps:
       #- name: Checkout@v7
       #  if: matrix.version != '5.6'
@@ -131,16 +129,9 @@ jobs:
       #      -d "$(printf '{"ip":"%s"}' "$C_IP")" \
       #      http://challtestsrv:8055/set-default-ipv4
 
-      #- name: Proxy TLS-ALPN-01 request from port 5001 to port 443
-      #  run: |
-      #    nohup socat TCP-LISTEN:5001,reuseaddr,fork TCP:127.0.0.1:443 &
-      - name: foo
+      - name: Proxy requests from 127.0.0.1:14000 to pebble-eab:14000
         run: |
           nohup socat TCP-LISTEN:14000,bind=127.0.0.1,reuseaddr,fork TCP:pebble-eab:14000 &
-
-      #- name: ls
-      #  run: |
-      #    tree -a .;ls -hal;tree --help;tree --version
          
       - name: Create Pebble CA certificate
         run: |

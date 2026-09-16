@@ -134,6 +134,9 @@ jobs:
       #- name: Proxy TLS-ALPN-01 request from port 5001 to port 443
       #  run: |
       #    nohup socat TCP-LISTEN:5001,reuseaddr,fork TCP:127.0.0.1:443 &
+      - name: foo
+        run: |
+          nohup socat TCP-LISTEN:14000,bind=127.0.0.1,reuseaddr,fork TCP:pebble-eab:14000 &
 
       #- name: ls
       #  run: |

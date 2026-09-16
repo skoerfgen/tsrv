@@ -5,7 +5,7 @@ echo 'PHP Version: '.PHP_VERSION,"\n";
 
 require 'ACMECert.php';
 use skoerfgen\ACMECert\ACMECert;
-$ac=new ACMECert('https://localhost:14000/dir');
+$ac=new ACMECert('https://pebble:14000/dir');
 $ac->setLogger(function($txt){
 	echo $txt,"\n";
 });

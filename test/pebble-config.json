@@ -10,7 +10,7 @@
     "externalAccountBindingRequired": false,
     "domainBlocklist": ["blocked-domain.example"],
     "retryAfter": {
-        "authz": 1,
+        "authz": 5,
         "order": 1
     },
     "keyAlgorithm": "ecdsa",

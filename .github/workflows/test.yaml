@@ -72,7 +72,7 @@ jobs:
     services:
 
 
-      pebblet:
+      localhost:
         image: ghcr.io/${{ github.repository }}/pebble-no-eab:${{ github.sha }}
         command: -strict -dnsserver challtestsrv:8053
         env:

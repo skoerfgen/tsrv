@@ -96,7 +96,7 @@ $handler=function($opts) use ($ac){
 function genCert($key){
 	global $domain_config,$handler,$ac;
 	// cert
-	open('Generate Certificate');
+	
 	echo 'domain_config ';
 	print_r($domain_config);
 
@@ -114,7 +114,7 @@ function genCert($key){
 		'getRemainingPercent'=>$ac->getRemainingPercent(reset($fullchains)),
 		'getRemainingDays'=>$ac->getRemainingDays(reset($fullchains))
 	]);
-	close();
+	
 }
 
 
@@ -129,8 +129,8 @@ foreach([2048,3072,4096] as $k=>$bits){
 		$ac->keyChange($key);
 	}
 	print_r($ac->getAccount());
-	$pivate=$ac->generateRSAKey($bits);
-	$csr=$ac->generateCSR($pivate,array_keys($domain_config));
+	$private=$ac->generateRSAKey($bits);
+	$csr=$ac->generateCSR($private,array_keys($domain_config));
 	genCert($csr);
 	genCert($ac->generateRSAKey($bits));
 	close();

@@ -185,8 +185,6 @@ jobs:
       packages: write
 
     steps:
-
-          
       - name: Check Pebble EAB image
         id: check-eab
         run: |

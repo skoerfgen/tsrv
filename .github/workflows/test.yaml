@@ -9,6 +9,15 @@ permissions:
   contents: read
 
 jobs:
+  setup:
+    runs-on: ubuntu-latest
+    outputs:
+      pebble-version: ${{ steps.version.outputs.pebble-version }}
+
+    steps:
+      - id: version
+        run: echo "pebble-version=2.10.1" >> "$GITHUB_OUTPUT"
+        
   build-pebble:
     name: Build Pebble Containers
     runs-on: ubuntu-latest
@@ -28,7 +37,7 @@ jobs:
       - name: Check Pebble EAB image
         id: check-eab
         run: |
-          IMAGE="ghcr.io/${{ github.repository }}/pebble-eab:${{ matrix.pebble_version }}"
+          IMAGE="ghcr.io/${{ github.repository }}/pebble-eab:${{ needs.setup.outputs.pebble-version }}"
 
           if docker manifest inspect "$IMAGE" > /dev/null 2>&1; then
             echo "exists=true" >> "$GITHUB_OUTPUT"
@@ -48,12 +57,12 @@ jobs:
           build-args: |
             CONFIG=pebble-config-eab.json
           push: true
-          tags: ghcr.io/${{ github.repository }}/pebble-eab:${{ matrix.pebble_version }}
+          tags: ghcr.io/${{ github.repository }}/pebble-eab:${{ needs.setup.outputs.pebble-version }}
 
       - name: Check Pebble non-EAB image
         id: check-no-eab
         run: |
-          IMAGE="ghcr.io/${{ github.repository }}/pebble-no-eab:${{ matrix.pebble_version }}"
+          IMAGE="ghcr.io/${{ github.repository }}/pebble-no-eab:${{ needs.setup.outputs.pebble-version }}"
 
           if docker manifest inspect "$IMAGE" > /dev/null 2>&1; then
             echo "exists=true" >> "$GITHUB_OUTPUT"
@@ -72,7 +81,7 @@ jobs:
           build-args: |
             CONFIG=pebble-config-no-eab.json
           push: true
-          tags: ghcr.io/${{ github.repository }}/pebble-no-eab:${{ matrix.pebble_version }}
+          tags: ghcr.io/${{ github.repository }}/pebble-no-eab:${{ needs.setup.outputs.pebble-version }}
 
   test-required:
     name: All ACMECert Tests
@@ -94,7 +103,6 @@ jobs:
       fail-fast: false
       matrix:
         version: ['5.6','7.0','7.4','8.0','8.5']
-        pebble_version: ['2.10.1']
         #version: ['8.5']
         #os: [ubuntu-latest, windows-latest]
 
@@ -105,7 +113,7 @@ jobs:
     services:
 
       pebble:
-        image: ghcr.io/${{ github.repository }}/pebble-no-eab:${{ matrix.pebble_version }}
+        image: ghcr.io/${{ github.repository }}/pebble-no-eab:${{ needs.setup.outputs.pebble-version }}
         command: -strict -dnsserver challtestsrv:8053
         env:
           PEBBLE_WFE_NONCEREJECT: 0
@@ -113,7 +121,7 @@ jobs:
           PEBBLE_AUTHZREUSE: 100
           
       pebble-eab:
-        image: ghcr.io/${{ github.repository }}/pebble-eab:${{ matrix.pebble_version }}
+        image: ghcr.io/${{ github.repository }}/pebble-eab:${{ needs.setup.outputs.pebble-version }}
         command: -strict -dnsserver challtestsrv:8053
         env:
           PEBBLE_WFE_NONCEREJECT: 0
@@ -121,7 +129,7 @@ jobs:
           PEBBLE_AUTHZREUSE: 100
           
       challtestsrv:
-        image: ghcr.io/letsencrypt/pebble-challtestsrv:${{ matrix.pebble_version }}
+        image: ghcr.io/letsencrypt/pebble-challtestsrv:${{ needs.setup.outputs.pebble-version }}
         command: -defaultIPv6 "" -defaultIPv4 "127.0.0.1" -tlsalpn01 ""
 
     steps:

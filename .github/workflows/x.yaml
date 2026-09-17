@@ -12,14 +12,25 @@ permissions:
 jobs:
   build-pebble:
     name: Build Pebble Containers
+
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
-
+      
+    container:
+      image: php:8.5-cli-alpine
     steps:
       - name: docker test
         run: |
-          docker run -p 14000:14000 -p 15000:15000 ghcr.io/letsencrypt/pebble:latest
+          docker run --name humanname -p 14000:14000 -p 15000:15000 ghcr.io/letsencrypt/pebble:latest
+          
+      - name: run
+        run: |
+          php -r "echo file_get_contents('https://localhost:14000/dir');"
+          
+      - name: stop docker
+        run: |
+          docker rm -f humanname
       
       

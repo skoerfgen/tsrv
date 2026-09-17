@@ -104,7 +104,7 @@ jobs:
     services:
 
       pebble:
-        image: ghcr.io/${{ github.repository }}/pebble-no-eab:${{ github.sha }}
+        image: ghcr.io/${{ github.repository }}/pebble-no-eab:2.10.1
         command: -strict -dnsserver challtestsrv:8053
         env:
           PEBBLE_WFE_NONCEREJECT: 0
@@ -112,7 +112,7 @@ jobs:
           PEBBLE_AUTHZREUSE: 100
           
       pebble-eab:
-        image: ghcr.io/${{ github.repository }}/pebble-eab:${{ github.sha }}
+        image: ghcr.io/${{ github.repository }}/pebble-eab:2.10.1
         command: -strict -dnsserver challtestsrv:8053
         env:
           PEBBLE_WFE_NONCEREJECT: 0

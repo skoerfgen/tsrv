@@ -8,6 +8,10 @@ on:
 permissions:
   contents: read
 
+env:
+  PEBBLE_VERSION: "2.10.1"
+
+
 jobs:
   test:
     needs: [build-pebble,setup]
@@ -171,7 +175,7 @@ jobs:
 
     steps:
       - id: version
-        run: echo "pebble-version=2.10.1" >> "$GITHUB_OUTPUT"
+        run: echo "pebble-version=${{ env.PEBBLE_VERSION }}" >> "$GITHUB_OUTPUT"
       
   build-pebble:
     needs: setup

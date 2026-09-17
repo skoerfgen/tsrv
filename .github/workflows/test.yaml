@@ -80,29 +80,6 @@ jobs:
       #    curl -s -H 'Content-Type: application/json' \
       #      -d "$(printf '{"ip":"%s"}' "$C_IP")" \
       #      http://challtestsrv:8055/set-default-ipv4
-
-      - name: Wait for Pebble to startup
-        run: |
-          php -r '
-          $timeout = 60;
-          $start = time();
-
-          while (!@file_get_contents("https://pebble:14000/dir")) {
-              echo "Waiting for Pebble...\n";
-
-              if (time() - $start >= $timeout) {
-                  exit("Timeout waiting for Pebble\n");
-              }
-
-              sleep(1);
-          }
-
-          echo "Pebble ready!\n";
-          '
-      - name: Proxy requests from 127.0.0.1:14000 to pebble-eab:14000
-        run: |
-          nohup socat TCP-LISTEN:14000,bind=127.0.0.1,reuseaddr,fork TCP:pebble-eab:14000 &
-         
       - name: Create Pebble CA certificate
         run: |
           cat > pebble.crt << 'EOF'
@@ -127,6 +104,30 @@ jobs:
           v1lhy71EhBuXXwRQJry0lTdF+w==
           -----END CERTIFICATE-----
           EOF
+          
+      - name: Wait for Pebble to startup
+        run: |
+          php -d curl.cainfo=pebble.crt -d openssl.cafile=pebble.crt -r '
+          $timeout = 60;
+          $start = time();
+
+          while (!@file_get_contents("https://pebble:14000/dir")) {
+              echo "Waiting for Pebble...\n";
+
+              if (time() - $start >= $timeout) {
+                  exit("Timeout waiting for Pebble\n");
+              }
+
+              sleep(1);
+          }
+
+          echo "Pebble ready!\n";
+          '
+      - name: Proxy requests from 127.0.0.1:14000 to pebble-eab:14000
+        run: |
+          nohup socat TCP-LISTEN:14000,bind=127.0.0.1,reuseaddr,fork TCP:pebble-eab:14000 &
+         
+
           
       - name: Run ACMECert Tests
         run: php -d curl.cainfo=pebble.crt -d openssl.cafile=pebble.crt test/test.php

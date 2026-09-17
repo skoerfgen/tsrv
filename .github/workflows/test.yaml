@@ -111,7 +111,7 @@ jobs:
           $timeout = 60;
           $start = time();
 
-          while (!file_get_contents("https://pebble:14000/dir")) {
+          while (!file_get_contents("https://pebble:14000/")) {
               echo "Waiting for Pebble...\n";
 
               if (time() - $start >= $timeout) {

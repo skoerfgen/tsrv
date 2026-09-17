@@ -129,6 +129,9 @@ foreach([2048,3072,4096] as $k=>$bits){
 		$ac->keyChange($key);
 	}
 	print_r($ac->getAccount());
+	$pivate=$ac->generateRSAKey($bits);
+	$csr=$ac->generateCSR($pivate,array_keys($domain_config));
+	genCert($csr);
 	genCert($ac->generateRSAKey($bits));
 	close();
 }

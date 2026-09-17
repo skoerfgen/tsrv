@@ -128,7 +128,7 @@ jobs:
           timeout=60
           elapsed=0
 
-          until wget --no-check-certificate -q --spider https://127.0.0.1:14000/dir; do
+          until wget --no-check-certificate -q --spider https://pebble-eab:14000/dir; do
             if [ "$elapsed" -ge "$timeout" ]; then
               echo "Timed out waiting for Pebble after ${timeout}s"
               exit 1

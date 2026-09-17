@@ -83,14 +83,22 @@ jobs:
 
       - name: Wait for Pebble to startup
         run: |
-          timeout 30s sh -c '
-            until wget --no-check-certificate -q --spider https://pebble:14000/dir; do
-              echo "Waiting for Pebble..."
-              sleep 1
-            done
-          '
-          echo "Pebble ready!"
+					php -r '
+					$timeout = 60;
+					$start = time();
 
+					while (!@file_get_contents("https://pebble:14000/dir")) {
+							echo "Waiting for Pebble...\n";
+
+							if (time() - $start >= $timeout) {
+									exit("Timeout waiting for Pebble\n");
+							}
+
+							sleep(1);
+					}
+
+					echo "Pebble ready!\n";
+					'
       - name: Proxy requests from 127.0.0.1:14000 to pebble-eab:14000
         run: |
           nohup socat TCP-LISTEN:14000,bind=127.0.0.1,reuseaddr,fork TCP:pebble-eab:14000 &

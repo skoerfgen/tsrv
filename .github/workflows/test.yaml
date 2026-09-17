@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   setup:
-		name: Set Pebble Version
+    name: Set Pebble Version
     runs-on: ubuntu-latest
     outputs:
       pebble-version: ${{ steps.version.outputs.pebble-version }}

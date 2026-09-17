@@ -2,13 +2,16 @@ name: Build Pebble
 
 on:
   workflow_dispatch:
+    inputs:
+      pebble-version:
+        description: Pebble version
+        required: true
+        default: "2.10.1"
 
 permissions:
   contents: read
   packages: write
 
-env:
-  PEBBLE_VERSION: "2.10.0"
   
 jobs:
   build-pebble:
@@ -35,7 +38,7 @@ jobs:
           build-args: |
             CONFIG=pebble-config-eab.json
           push: true
-          tags: ghcr.io/${{ github.repository }}/pebble-eab:${{ env.PEBBLE_VERSION }}
+          tags: ghcr.io/${{ github.repository }}/pebble-eab:${{ inputs.pebble-version }}
 
       - name: Build Pebble non-EAB
         uses: docker/build-push-action@v7
@@ -45,4 +48,4 @@ jobs:
           build-args: |
             CONFIG=pebble-config-no-eab.json
           push: true
-          tags: ghcr.io/${{ github.repository }}/pebble-no-eab:${{ env.PEBBLE_VERSION }}
+          tags: ghcr.io/${{ github.repository }}/pebble-no-eab:${{ inputs.pebble-version }}

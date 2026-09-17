@@ -2,6 +2,11 @@ name: ACMECert Test
 
 on:
   workflow_dispatch:
+    inputs:
+      pebble-version:
+        description: Pebble version
+        required: true
+        default: "2.10.1"	
   #pull_request:
   push:
   
@@ -39,7 +44,7 @@ jobs:
     services:
 
       pebble:
-        image: ghcr.io/${{ github.repository }}/pebble-no-eab:2.10.0
+        image: ghcr.io/${{ github.repository }}/pebble-no-eab:${{ inputs.pebble-version }}
         command: -strict -dnsserver challtestsrv:8053
         env:
           PEBBLE_WFE_NONCEREJECT: 0
@@ -47,7 +52,7 @@ jobs:
           PEBBLE_AUTHZREUSE: 100
           
       pebble-eab:
-        image: ghcr.io/${{ github.repository }}/pebble-eab:2.10.0
+        image: ghcr.io/${{ github.repository }}/pebble-eab:${{ inputs.pebble-version }}
         command: -strict -dnsserver challtestsrv:8053
         env:
           PEBBLE_WFE_NONCEREJECT: 0
@@ -55,7 +60,7 @@ jobs:
           PEBBLE_AUTHZREUSE: 100
           
       challtestsrv:
-        image: ghcr.io/letsencrypt/pebble-challtestsrv:2.10.0
+        image: ghcr.io/letsencrypt/pebble-challtestsrv:${{ inputs.pebble-version }}
         command: -defaultIPv6 "" -defaultIPv4 "127.0.0.1" -tlsalpn01 ""
 
     steps:

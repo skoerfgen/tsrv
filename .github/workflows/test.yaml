@@ -112,11 +112,24 @@ jobs:
       - name: Run ACMECert Tests
         run: php -d curl.cainfo=pebble.crt -d openssl.cafile=pebble.crt test/test.php
         
-        
-        
-        
+  test-required:
+    name: All ACMECert Tests
+    if: always()
+    needs: [test]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check test matrix
+        if: ${{ needs.test.result != 'success' }}
+        run: exit 1
+
+      - run: echo "All tests passed"
+
+
+
+
   setup:
-    name: Set Pebble Version
+    name: Setup
     runs-on: ubuntu-latest
     outputs:
       pebble-version: ${{ steps.version.outputs.pebble-version }}
@@ -191,16 +204,4 @@ jobs:
           push: true
           tags: ghcr.io/${{ github.repository }}/pebble-no-eab:${{ needs.setup.outputs.pebble-version }}
 
-  test-required:
-    name: All ACMECert Tests
-    if: always()
-    needs: [test]
-    runs-on: ubuntu-latest
 
-    steps:
-      - name: Check test matrix
-        if: ${{ needs.test.result != 'success' }}
-        run: exit 1
-
-      - run: echo "All tests passed"
-              

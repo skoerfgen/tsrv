@@ -94,7 +94,7 @@ $handler=function($opts) use ($ac){
 
 
 function genCert($key){
-	global $domain_config,$handler;
+	global $domain_config,$handler,$ac;
 	// cert
 	open('Generate Certificate');
 	echo 'domain_config ';
@@ -168,7 +168,7 @@ print_r([
 close();
 
 
-
+/*
 if (PHP_VERSION_ID>=70201){
 	open('ACME Renewal Information (ARI)');
 	$ari=$ac->getARI(reset($fullchains));
@@ -180,6 +180,7 @@ if (PHP_VERSION_ID>=70201){
 	print_r($fullchains);
 	close();
 }
+*/
 
 open('Profiles');
 foreach($ac->getProfiles() as $name=>$description){
@@ -189,10 +190,11 @@ foreach($ac->getProfiles() as $name=>$description){
 }
 close();
 
-
+/*
 open('Revoke Certificate');
 $ac->revoke(reset($fullchains));
 close();
+*/
 
 open('Using pre-generated CSR');
 $csr=$ac->generateCSR($ac->generateRSAKey(),array_keys($domain_config));

@@ -15,6 +15,7 @@ $ac->loadAccountKey($ac->generateRSAKey());
 print_r($ac->registerEAB(true,'kid-1','zWNDZM6eQGHWpSRTPal5eIUYFTu7EajVIoguysqZ9wG44nMEtx3MUAsUDkMTQ12W'));
 close();
 
+open('Register');
 $ac=new ACMECert('https://pebble:14000/dir');
 $ac->setLogger(function($txt){
 	echo $txt,"\n";
@@ -22,6 +23,7 @@ $ac->setLogger(function($txt){
 
 $ac->loadAccountKey($ac->generateRSAKey());
 $ac->register(true);
+close();#
 
 // update
 open('Update Account');

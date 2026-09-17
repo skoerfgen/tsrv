@@ -41,7 +41,7 @@ jobs:
     services:
 
       pebble:
-        image: ghcr.io/${{ github.repository }}/pebble-no-eab:2.10.1
+        image: ghcr.io/${{ github.repository }}/pebble-no-eab:2.10.0
         command: -strict -dnsserver challtestsrv:8053
         env:
           PEBBLE_WFE_NONCEREJECT: 0
@@ -49,7 +49,7 @@ jobs:
           PEBBLE_AUTHZREUSE: 100
           
       pebble-eab:
-        image: ghcr.io/${{ github.repository }}/pebble-eab:2.10.1
+        image: ghcr.io/${{ github.repository }}/pebble-eab:2.10.0
         command: -strict -dnsserver challtestsrv:8053
         env:
           PEBBLE_WFE_NONCEREJECT: 0
@@ -57,7 +57,7 @@ jobs:
           PEBBLE_AUTHZREUSE: 100
           
       challtestsrv:
-        image: ghcr.io/letsencrypt/pebble-challtestsrv:2.10.1
+        image: ghcr.io/letsencrypt/pebble-challtestsrv:2.10.0
         command: -defaultIPv6 "" -defaultIPv4 "127.0.0.1" -tlsalpn01 ""
 
     steps:

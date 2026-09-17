@@ -129,7 +129,7 @@ foreach([2048,3072,4096] as $k=>$bits){
 		$ac->keyChange($key);
 	}
 	print_r($ac->getAccount());
-	genCert($key);
+	genCert($ac->generateRSAKey($bits));
 	close();
 }
 
@@ -145,7 +145,7 @@ if (PHP_VERSION_ID>=70100){
 			$ac->keyChange($key);
 		}
 		print_r($ac->getAccount());
-		genCert($key);
+		genCert($ac->generateECKey($curve));
 		close();
 	}
 }

@@ -100,7 +100,7 @@ jobs:
       
       
   test:
-    needs: build-pebble
+    needs: [build-pebble,setup]
     strategy:
       fail-fast: false
       matrix:

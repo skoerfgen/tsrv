@@ -6,22 +6,66 @@ echo 'PHP Version: '.PHP_VERSION,"\n";
 require 'ACMECert.php';
 use skoerfgen\ACMECert\ACMECert;
 
-
-
 open('EAB');
 $ac=new ACMECert('https://127.0.0.1:14000/dir');
-$ac->setLogger(function($txt){
-	//echo $txt,"\n";
-});
 $ac->loadAccountKey($ac->generateRSAKey());
 print_r($ac->registerEAB(true,'kid-1','zWNDZM6eQGHWpSRTPal5eIUYFTu7EajVIoguysqZ9wG44nMEtx3MUAsUDkMTQ12W'));
 close();
 
 $ac=new ACMECert('https://pebble:14000/dir');
 $ac->setLogger(function($txt){
-	//echo $txt,"\n";
+	echo $txt,"\n";
 });
 
+foreach([2048,3072,4096] as $k=>$bits){
+	open('Generate RSA '.$bits.' Key ('.($k===0?'Register':'Account Key Rollover').')');
+	$key=$ac->generateRSAKey($bits);
+	echo $key;
+	if ($k===0) {
+		$ac->loadAccountKey($key);
+		$ac->register(true);
+	}else{
+		$ac->keyChange($key);
+	}
+	print_r($ac->getAccount());
+	close();
+}
+
+if (PHP_VERSION_ID>=70100){
+	foreach(['P-256','P-384','P-521'] as $k=>$curve){
+		open('Generate EC '.$curve.' Key ('.($k===0?'Register':'Account Key Rollover').')');
+		$key=$ac->generateECKey($curve);
+		echo $key;
+		if ($k===0) {
+			$ac->loadAccountKey($key);
+			$ac->register(true);
+		}else{
+			$ac->keyChange($key);
+		}
+		print_r($ac->getAccount());
+		close();
+	}
+}
+
+// update
+open('Update Account');
+print_r($ac->getAccount());
+$ac->update('info@example.net');
+print_r($ac->getAccount());
+$ac->update(['info@example.net','info2@example.net']);
+print_r($ac->getAccount());
+close();
+
+open('Metadata');
+print_r([
+	'getTermsURL'=>$ac->getTermsURL(),
+	'getCAAIdentities'=>$ac->getCAAIdentities(),
+	'getProfiles'=>$ac->getProfiles(),
+]);
+close();
+
+// cert
+open('Generate Certificate');
 
 $domain_config=array(
 	'*.example.net'=>array('challenge'=>'dns-01'),
@@ -31,7 +75,8 @@ $domain_config=array(
 );
 $domain_config[gethostbyname('challtestsrv')]=array('challenge'=>'http-01');
 
-
+echo 'domain_config ';
+print_r($domain_config);
 
 $handler=function($opts) use ($ac){
 	switch($opts['config']['challenge']){
@@ -95,73 +140,23 @@ $handler=function($opts) use ($ac){
 	}
 };
 
+$fullchains=$ac->getCertificateChains($ac->generateRSAKey(),$domain_config,$handler);
+$ret=$ac->getSAN(reset($fullchains));
+echo 'Subject Alternative Names (SAN) ';
+print_r($ret);
 
-function genCert($key){
-	global $domain_config,$handler,$ac;
-	$fullchains=$ac->getCertificateChains($key,$domain_config,$handler);
-	$ret=$ac->getSAN(reset($fullchains));
-	echo 'Subject Alternative Names (SAN) '.implode(', ',$ret),"\n";
-	echo 'Chain(s): '.implode(', ',array_keys($fullchains))."\n";
-	foreach($ac->splitChain(reset($fullchains)) as $cert){
-		$ac->parseCertificate($cert);
-	}
-	$ac->getRemainingPercent(reset($fullchains));
-	$ac->getRemainingDays(reset($fullchains));
+foreach($fullchains as $issuer=>$chain){
+	echo 'Chain: '.$issuer.' ';
+	print_r($ac->splitChain($chain));	
 }
 
-
-foreach([2048,3072,4096] as $k=>$bits){
-	open('Generate RSA '.$bits.' Key ('.($k===0?'Register':'Account Key Rollover').')');
-	$key=$ac->generateRSAKey($bits);
-	if ($k===0) {
-		$ac->loadAccountKey($key);
-		$ac->register(true);
-	}else{
-		$ac->keyChange($key);
-	}
-	print_r($ac->getAccount());
-	$private=$ac->generateRSAKey($bits);
-	$csr=$ac->generateCSR($private,array_keys($domain_config));
-	genCert($csr);
-	genCert($ac->generateRSAKey($bits));
-	close();
-}
-
-if (PHP_VERSION_ID>=70100){
-	foreach(['P-256','P-384','P-521'] as $k=>$curve){
-		open('Generate EC '.$curve.' Key ('.($k===0?'Register':'Account Key Rollover').')');
-		$key=$ac->generateECKey($curve);
-		if ($k===0) {
-			$ac->loadAccountKey($key);
-			$ac->register(true);
-		}else{
-			$ac->keyChange($key);
-		}
-		print_r($ac->getAccount());
-		genCert($ac->generateECKey($curve));
-		close();
-	}
-}
-
-// update
-open('Update Account');
-print_r($ac->getAccount());
-$ac->update('info@example.net');
-print_r($ac->getAccount());
-$ac->update(['info@example.net','info2@example.net']);
-print_r($ac->getAccount());
-close();
-
-open('Metadata');
 print_r([
-	'getTermsURL'=>$ac->getTermsURL(),
-	'getCAAIdentities'=>$ac->getCAAIdentities(),
-	'getProfiles'=>$ac->getProfiles(),
+	'getRemainingPercent'=>$ac->getRemainingPercent(reset($fullchains)),
+	'getRemainingDays'=>$ac->getRemainingDays(reset($fullchains))
 ]);
+
 close();
 
-
-/*
 if (PHP_VERSION_ID>=70201){
 	open('ACME Renewal Information (ARI)');
 	$ari=$ac->getARI(reset($fullchains));
@@ -173,7 +168,6 @@ if (PHP_VERSION_ID>=70201){
 	print_r($fullchains);
 	close();
 }
-*/
 
 open('Profiles');
 foreach($ac->getProfiles() as $name=>$description){
@@ -183,11 +177,10 @@ foreach($ac->getProfiles() as $name=>$description){
 }
 close();
 
-/*
+
 open('Revoke Certificate');
 $ac->revoke(reset($fullchains));
 close();
-*/
 
 open('Using pre-generated CSR');
 $csr=$ac->generateCSR($ac->generateRSAKey(),array_keys($domain_config));

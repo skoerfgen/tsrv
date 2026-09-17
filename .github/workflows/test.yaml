@@ -122,6 +122,24 @@ jobs:
           done
 
           echo "Pebble ready!"
+					
+      - name: Wait for Pebble to startup II
+        run: |
+          timeout=60
+          elapsed=0
+
+          until wget --no-check-certificate -q --spider https://127.0.0.1:14000/dir; do
+            if [ "$elapsed" -ge "$timeout" ]; then
+              echo "Timed out waiting for Pebble after ${timeout}s"
+              exit 1
+            fi
+
+            echo "Waiting for Pebble... (${elapsed}s/${timeout}s)"
+            sleep 1
+            elapsed=$((elapsed + 1))
+          done
+
+          echo "Pebble2 ready!"
     
       - name: Proxy requests from 127.0.0.1:14000 to pebble-eab:14000
         run: |

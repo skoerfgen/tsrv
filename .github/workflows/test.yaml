@@ -81,6 +81,16 @@ jobs:
       #      -d "$(printf '{"ip":"%s"}' "$C_IP")" \
       #      http://challtestsrv:8055/set-default-ipv4
 
+      - name: Wait for Pebble to startup
+        run: |
+          timeout 60s bash -c '
+            until wget --no-check-certificate -q --spider https://pebble:14000/dir; do
+              echo "Waiting for Pebble..."
+              sleep 1
+            done
+          '
+          echo "Pebble ready!"
+
       - name: Proxy requests from 127.0.0.1:14000 to pebble-eab:14000
         run: |
           nohup socat TCP-LISTEN:14000,bind=127.0.0.1,reuseaddr,fork TCP:pebble-eab:14000 &

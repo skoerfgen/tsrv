@@ -196,7 +196,7 @@ if (PHP_VERSION_ID>=70100){
 			$ac->keyChange($key);
 		}
 		print_r($ac->getAccount());
-		$fullchains=$ac->getCertificateChains($ac->generateECKey($bits),$domain_config,$handler);
+		$fullchains=$ac->getCertificateChains($ac->generateECKey($curve),$domain_config,$handler);
 		print_r($fullchains);
 		close();
 	}

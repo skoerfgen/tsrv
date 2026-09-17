@@ -1,4 +1,4 @@
-name: X
+name: tstrun
 
 
 on:
@@ -19,7 +19,7 @@ jobs:
 
     steps:
       - name: docker test
-          run: |
-            docker run -p 14000:14000 -p 15000:15000 ghcr.io/letsencrypt/pebble:latest
+        run: |
+          docker run -p 14000:14000 -p 15000:15000 ghcr.io/letsencrypt/pebble:latest
       
       

@@ -1,7 +1,6 @@
 name: ACMECert Test
 
-env:
-  PEBBLE_VERSION: "2.10.1"
+
 
 on:
   workflow_dispatch:
@@ -10,7 +9,8 @@ on:
   
 permissions:
   contents: read
-
+env:
+  PEBBLE_VERSION: "2.10.1"
 jobs:
   test-required:
     name: All ACMECert Tests

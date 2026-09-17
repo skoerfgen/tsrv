@@ -211,10 +211,10 @@ jobs:
           fi
           
       - uses: actions/checkout@v7
-        if: steps.check-eab.outputs.exists != 'true' &&  steps.check-no-eab.outputs.exists != 'true'
+        if: steps.check-eab.outputs.exists != 'true' ||  steps.check-no-eab.outputs.exists != 'true'
         
       - uses: docker/login-action@v4
-        if: steps.check-eab.outputs.exists != 'true' &&  steps.check-no-eab.outputs.exists != 'true'
+        if: steps.check-eab.outputs.exists != 'true' ||  steps.check-no-eab.outputs.exists != 'true'
         with:
           registry: ghcr.io
           username: ${{ github.actor }}

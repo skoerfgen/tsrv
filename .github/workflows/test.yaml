@@ -9,8 +9,7 @@ on:
   
 permissions:
   contents: read
-env:
-  PEBBLE_VERSION: "2.10.1"
+
 jobs:
   test-required:
     name: All ACMECert Tests
@@ -42,7 +41,7 @@ jobs:
     services:
 
       pebble:
-        image: ghcr.io/${{ github.repository }}/pebble-no-eab:${{ env.PEBBLE_VERSION }}
+        image: ghcr.io/${{ github.repository }}/pebble-no-eab:2.10.1
         command: -strict -dnsserver challtestsrv:8053
         env:
           PEBBLE_WFE_NONCEREJECT: 0
@@ -50,7 +49,7 @@ jobs:
           PEBBLE_AUTHZREUSE: 100
           
       pebble-eab:
-        image: ghcr.io/${{ github.repository }}/pebble-eab:${{ env.PEBBLE_VERSION }}
+        image: ghcr.io/${{ github.repository }}/pebble-eab:2.10.1
         command: -strict -dnsserver challtestsrv:8053
         env:
           PEBBLE_WFE_NONCEREJECT: 0

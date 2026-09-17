@@ -122,9 +122,6 @@ jobs:
           done
 
           echo "Pebble ready!"
-          
-      - name: Wait for Pebble to startup II
-        run: |
           timeout=60
           elapsed=0
 
@@ -139,7 +136,8 @@ jobs:
             elapsed=$((elapsed + 1))
           done
 
-          echo "Pebble2 ready!"
+          echo "Pebble2 ready!"         
+
     
       - name: Proxy requests from 127.0.0.1:14000 to pebble-eab:14000
         run: |

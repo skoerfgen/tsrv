@@ -19,7 +19,8 @@ jobs:
         run: echo "pebble-version=2.10.1" >> "$GITHUB_OUTPUT"
         
   build-pebble:
-    name: Build Pebble Containers
+    needs: setup
+		name: Build Pebble Containers
     runs-on: ubuntu-latest
     permissions:
       contents: read

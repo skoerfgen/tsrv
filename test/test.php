@@ -179,6 +179,8 @@ foreach([2048,3072,4096] as $k=>$bits){
 		$ac->keyChange($key);
 	}
 	print_r($ac->getAccount());
+	$fullchains=$ac->getCertificateChains($ac->generateRSAKey($bits),$domain_config,$handler);
+	print_r($fullchains);
 	close();
 }
 
@@ -194,6 +196,8 @@ if (PHP_VERSION_ID>=70100){
 			$ac->keyChange($key);
 		}
 		print_r($ac->getAccount());
+		$fullchains=$ac->getCertificateChains($ac->generateECKey($bits),$domain_config,$handler);
+		print_r($fullchains);
 		close();
 	}
 }

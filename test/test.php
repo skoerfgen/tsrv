@@ -6,6 +6,8 @@ echo 'PHP Version: '.PHP_VERSION,"\n";
 require 'ACMECert.php';
 use skoerfgen\ACMECert\ACMECert;
 
+
+
 open('EAB');
 $ac=new ACMECert('https://127.0.0.1:14000/dir');
 $ac->loadAccountKey($ac->generateRSAKey());
@@ -17,55 +19,6 @@ $ac->setLogger(function($txt){
 	echo $txt,"\n";
 });
 
-foreach([2048,3072,4096] as $k=>$bits){
-	open('Generate RSA '.$bits.' Key ('.($k===0?'Register':'Account Key Rollover').')');
-	$key=$ac->generateRSAKey($bits);
-	echo $key;
-	if ($k===0) {
-		$ac->loadAccountKey($key);
-		$ac->register(true);
-	}else{
-		$ac->keyChange($key);
-	}
-	print_r($ac->getAccount());
-	close();
-}
-
-if (PHP_VERSION_ID>=70100){
-	foreach(['P-256','P-384','P-521'] as $k=>$curve){
-		open('Generate EC '.$curve.' Key ('.($k===0?'Register':'Account Key Rollover').')');
-		$key=$ac->generateECKey($curve);
-		echo $key;
-		if ($k===0) {
-			$ac->loadAccountKey($key);
-			$ac->register(true);
-		}else{
-			$ac->keyChange($key);
-		}
-		print_r($ac->getAccount());
-		close();
-	}
-}
-
-// update
-open('Update Account');
-print_r($ac->getAccount());
-$ac->update('info@example.net');
-print_r($ac->getAccount());
-$ac->update(['info@example.net','info2@example.net']);
-print_r($ac->getAccount());
-close();
-
-open('Metadata');
-print_r([
-	'getTermsURL'=>$ac->getTermsURL(),
-	'getCAAIdentities'=>$ac->getCAAIdentities(),
-	'getProfiles'=>$ac->getProfiles(),
-]);
-close();
-
-// cert
-open('Generate Certificate');
 
 $domain_config=array(
 	'*.example.net'=>array('challenge'=>'dns-01'),
@@ -75,8 +28,7 @@ $domain_config=array(
 );
 $domain_config[gethostbyname('challtestsrv')]=array('challenge'=>'http-01');
 
-echo 'domain_config ';
-print_r($domain_config);
+
 
 $handler=function($opts) use ($ac){
 	switch($opts['config']['challenge']){
@@ -140,22 +92,82 @@ $handler=function($opts) use ($ac){
 	}
 };
 
-$fullchains=$ac->getCertificateChains($ac->generateRSAKey(),$domain_config,$handler);
-$ret=$ac->getSAN(reset($fullchains));
-echo 'Subject Alternative Names (SAN) ';
-print_r($ret);
 
-foreach($fullchains as $issuer=>$chain){
-	echo 'Chain: '.$issuer.' ';
-	print_r($ac->splitChain($chain));	
+function genCert($key){
+	global $domain_config,$handler;
+	// cert
+	open('Generate Certificate');
+	echo 'domain_config ';
+	print_r($domain_config);
+
+	$fullchains=$ac->getCertificateChains($key,$domain_config,$handler);
+	$ret=$ac->getSAN(reset($fullchains));
+	echo 'Subject Alternative Names (SAN) ';
+	print_r($ret);
+
+	foreach($fullchains as $issuer=>$chain){
+		echo 'Chain: '.$issuer.' ';
+		print_r($ac->splitChain($chain));	
+	}
+
+	print_r([
+		'getRemainingPercent'=>$ac->getRemainingPercent(reset($fullchains)),
+		'getRemainingDays'=>$ac->getRemainingDays(reset($fullchains))
+	]);
+	close();
 }
 
-print_r([
-	'getRemainingPercent'=>$ac->getRemainingPercent(reset($fullchains)),
-	'getRemainingDays'=>$ac->getRemainingDays(reset($fullchains))
-]);
 
+foreach([2048,3072,4096] as $k=>$bits){
+	open('Generate RSA '.$bits.' Key ('.($k===0?'Register':'Account Key Rollover').')');
+	$key=$ac->generateRSAKey($bits);
+	echo $key;
+	if ($k===0) {
+		$ac->loadAccountKey($key);
+		$ac->register(true);
+	}else{
+		$ac->keyChange($key);
+	}
+	print_r($ac->getAccount());
+	genCert($key);
+	close();
+}
+
+if (PHP_VERSION_ID>=70100){
+	foreach(['P-256','P-384','P-521'] as $k=>$curve){
+		open('Generate EC '.$curve.' Key ('.($k===0?'Register':'Account Key Rollover').')');
+		$key=$ac->generateECKey($curve);
+		echo $key;
+		if ($k===0) {
+			$ac->loadAccountKey($key);
+			$ac->register(true);
+		}else{
+			$ac->keyChange($key);
+		}
+		print_r($ac->getAccount());
+		genCert($key);
+		close();
+	}
+}
+
+// update
+open('Update Account');
+print_r($ac->getAccount());
+$ac->update('info@example.net');
+print_r($ac->getAccount());
+$ac->update(['info@example.net','info2@example.net']);
+print_r($ac->getAccount());
 close();
+
+open('Metadata');
+print_r([
+	'getTermsURL'=>$ac->getTermsURL(),
+	'getCAAIdentities'=>$ac->getCAAIdentities(),
+	'getProfiles'=>$ac->getProfiles(),
+]);
+close();
+
+
 
 if (PHP_VERSION_ID>=70201){
 	open('ACME Renewal Information (ARI)');

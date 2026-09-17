@@ -29,6 +29,8 @@ jobs:
       - name: docker test
         run: |
           docker run -d --name humanname -p 127.0.0.1:14000:14000 -p 15000:15000 ghcr.io/letsencrypt/pebble:latest
+          sleep 10
+          php -r "echo file_get_contents('https://127.0.0.1:14000/dir');"
           
       - name: run
         run: |

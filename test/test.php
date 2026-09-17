@@ -17,35 +17,8 @@ $ac->setLogger(function($txt){
 	echo $txt,"\n";
 });
 
-foreach([2048,3072,4096] as $k=>$bits){
-	open('Generate RSA '.$bits.' Key ('.($k===0?'Register':'Account Key Rollover').')');
-	$key=$ac->generateRSAKey($bits);
-	echo $key;
-	if ($k===0) {
-		$ac->loadAccountKey($key);
-		$ac->register(true);
-	}else{
-		$ac->keyChange($key);
-	}
-	print_r($ac->getAccount());
-	close();
-}
-
-if (PHP_VERSION_ID>=70100){
-	foreach(['P-256','P-384','P-521'] as $k=>$curve){
-		open('Generate EC '.$curve.' Key ('.($k===0?'Register':'Account Key Rollover').')');
-		$key=$ac->generateECKey($curve);
-		echo $key;
-		if ($k===0) {
-			$ac->loadAccountKey($key);
-			$ac->register(true);
-		}else{
-			$ac->keyChange($key);
-		}
-		print_r($ac->getAccount());
-		close();
-	}
-}
+$ac->loadAccountKey($ac->generateRSAKey());
+$ac->register(true);
 
 // update
 open('Update Account');
@@ -188,6 +161,38 @@ echo 'CSR '.$csr,"\n";
 $fullchains=$ac->getCertificateChains($csr,$domain_config,$handler);
 print_r($fullchains);
 close();
+
+
+foreach([2048,3072,4096] as $k=>$bits){
+	open('Generate RSA '.$bits.' Key ('.($k===0?'Register':'Account Key Rollover').')');
+	$key=$ac->generateRSAKey($bits);
+	echo $key;
+	if ($k===0) {
+		$ac->loadAccountKey($key);
+		$ac->register(true);
+	}else{
+		$ac->keyChange($key);
+	}
+	print_r($ac->getAccount());
+	close();
+}
+
+if (PHP_VERSION_ID>=70100){
+	foreach(['P-256','P-384','P-521'] as $k=>$curve){
+		open('Generate EC '.$curve.' Key ('.($k===0?'Register':'Account Key Rollover').')');
+		$key=$ac->generateECKey($curve);
+		echo $key;
+		if ($k===0) {
+			$ac->loadAccountKey($key);
+			$ac->register(true);
+		}else{
+			$ac->keyChange($key);
+		}
+		print_r($ac->getAccount());
+		close();
+	}
+}
+
 
 open('Deactivate Account');
 print_r($ac->deactivateAccount());

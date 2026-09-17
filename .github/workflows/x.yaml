@@ -28,7 +28,7 @@ jobs:
           
       - name: docker test
         run: |
-          docker run --name humanname -p 14000:14000 -p 15000:15000 ghcr.io/letsencrypt/pebble:latest
+          docker run -d --name humanname -p 14000:14000 -p 15000:15000 ghcr.io/letsencrypt/pebble:latest
           
       - name: run
         run: |

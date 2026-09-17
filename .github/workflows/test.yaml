@@ -2,7 +2,7 @@ name: ACMECert Test
 
 on:
   workflow_dispatch:
-  ##pull_request:
+  #pull_request:
   push:
   
 permissions:
@@ -24,8 +24,23 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Check Pebble EAB image
+        id: check-eab
+        run: |
+          IMAGE="ghcr.io/${{ github.repository }}/pebble-eab:2.10.1"
 
+          if docker manifest inspect "$IMAGE" > /dev/null 2>&1; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+            echo "$IMAGE already exists"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+            echo "$IMAGE does not exist"
+          fi
+          
+          
       - name: Build Pebble EAB
+        if: steps.check-eab.outputs.exists != 'true'
         uses: docker/build-push-action@v7
         with:
           context: .
@@ -33,9 +48,23 @@ jobs:
           build-args: |
             CONFIG=pebble-config-eab.json
           push: true
-          tags: ghcr.io/${{ github.repository }}/pebble-eab:${{ github.sha }}
+          tags: ghcr.io/${{ github.repository }}/pebble-eab:2.10.1
+
+      - name: Check Pebble non-EAB image
+        id: check-no-eab
+        run: |
+          IMAGE="ghcr.io/${{ github.repository }}/pebble-no-eab:2.10.1"
+
+          if docker manifest inspect "$IMAGE" > /dev/null 2>&1; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+            echo "$IMAGE already exists"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+            echo "$IMAGE does not exist"
+          fi
 
       - name: Build Pebble non-EAB
+        if: steps.check-no-eab.outputs.exists != 'true'
         uses: docker/build-push-action@v7
         with:
           context: .
@@ -43,7 +72,7 @@ jobs:
           build-args: |
             CONFIG=pebble-config-no-eab.json
           push: true
-          tags: ghcr.io/${{ github.repository }}/pebble-no-eab:${{ github.sha }}
+          tags: ghcr.io/${{ github.repository }}/pebble-no-eab:2.10.1
 
   test-required:
     name: All ACMECert Tests
@@ -75,7 +104,7 @@ jobs:
     services:
 
       pebble:
-        image: ghcr.io/${{ github.repository }}/pebble-no-eab:${{ github.sha }}
+        image: ghcr.io/${{ github.repository }}/pebble-no-eab:2.10.1
         command: -strict -dnsserver challtestsrv:8053
         env:
           PEBBLE_WFE_NONCEREJECT: 0
@@ -83,7 +112,7 @@ jobs:
           PEBBLE_AUTHZREUSE: 100
           
       pebble-eab:
-        image: ghcr.io/${{ github.repository }}/pebble-eab:${{ github.sha }}
+        image: ghcr.io/${{ github.repository }}/pebble-eab:2.10.1
         command: -strict -dnsserver challtestsrv:8053
         env:
           PEBBLE_WFE_NONCEREJECT: 0

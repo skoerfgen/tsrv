@@ -11,7 +11,7 @@ use skoerfgen\ACMECert\ACMECert;
 open('EAB');
 $ac=new ACMECert('https://127.0.0.1:14000/dir');
 $ac->setLogger(function($txt){
-	//echo $txt,"\n";
+	echo $txt,"\n";
 });
 $ac->loadAccountKey($ac->generateRSAKey());
 print_r($ac->registerEAB(true,'kid-1','zWNDZM6eQGHWpSRTPal5eIUYFTu7EajVIoguysqZ9wG44nMEtx3MUAsUDkMTQ12W'));
@@ -19,7 +19,7 @@ close();
 
 $ac=new ACMECert('https://pebble:14000/dir');
 $ac->setLogger(function($txt){
-	//echo $txt,"\n";
+	echo $txt,"\n";
 });
 
 
@@ -98,26 +98,15 @@ $handler=function($opts) use ($ac){
 
 function genCert($key){
 	global $domain_config,$handler,$ac;
-	// cert
-	
-	echo 'domain_config ';
-	print_r($domain_config);
-
 	$fullchains=$ac->getCertificateChains($key,$domain_config,$handler);
 	$ret=$ac->getSAN(reset($fullchains));
-	echo 'Subject Alternative Names (SAN) ';
-	print_r($ret);
-
-	foreach($fullchains as $issuer=>$chain){
-		echo 'Chain: '.$issuer.' ';
-		print_r($ac->splitChain($chain));	
+	echo 'Subject Alternative Names (SAN) '.implode(', ',$ret),"\n";
+	echo 'Chain(s): '.implode(', ',array_keys($fullchains))."\n";
+	foreach($ac->splitChain(reset($fullchains)) as $cert){
+		$ac->parseCertificate($cert);
 	}
-
-	print_r([
-		'getRemainingPercent'=>$ac->getRemainingPercent(reset($fullchains)),
-		'getRemainingDays'=>$ac->getRemainingDays(reset($fullchains))
-	]);
-	
+	$ac->getRemainingPercent(reset($fullchains));
+	$ac->getRemainingDays(reset($fullchains));
 }
 
 

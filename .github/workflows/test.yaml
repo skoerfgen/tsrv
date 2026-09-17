@@ -24,7 +24,7 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-					
+          
       - name: Check Pebble EAB image
         id: check-eab
         run: |
@@ -37,10 +37,10 @@ jobs:
             echo "exists=false" >> "$GITHUB_OUTPUT"
             echo "$IMAGE does not exist"
           fi
-					
-					
+          
+          
       - name: Build Pebble EAB
-				if: steps.check-eab.outputs.exists != 'true'
+        if: steps.check-eab.outputs.exists != 'true'
         uses: docker/build-push-action@v7
         with:
           context: .
@@ -65,7 +65,7 @@ jobs:
 
       - name: Build Pebble non-EAB
         if: steps.check-no-eab.outputs.exists != 'true'
-				uses: docker/build-push-action@v7
+        uses: docker/build-push-action@v7
         with:
           context: .
           file: test/pebble/Dockerfile

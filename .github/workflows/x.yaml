@@ -21,6 +21,11 @@ jobs:
     container:
       image: php:8.5-cli-alpine
     steps:
+      - name: Install dependencies
+        #if: matrix.version == '5.6'
+        run: |
+          command -v docker >/dev/null 2>&1 || apk add --no-cache docker    
+          
       - name: docker test
         run: |
           docker run --name humanname -p 14000:14000 -p 15000:15000 ghcr.io/letsencrypt/pebble:latest

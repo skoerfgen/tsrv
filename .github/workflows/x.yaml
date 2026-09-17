@@ -32,7 +32,7 @@ jobs:
           
       - name: run
         run: |
-          php -r "echo file_get_contents('https://localhost:14000/dir');"
+          php -r "echo file_get_contents('https://127.0.0.1:14000/dir');"
           
       - name: stop docker
         run: |

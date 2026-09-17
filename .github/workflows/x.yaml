@@ -1,0 +1,25 @@
+name: X
+
+
+on:
+  workflow_dispatch:
+  #pull_request:
+  #push:
+  
+permissions:
+  contents: read
+
+jobs:
+  build-pebble:
+    name: Build Pebble Containers
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: docker test
+          run: |
+            docker run -p 14000:14000 -p 15000:15000 ghcr.io/letsencrypt/pebble:latest
+      
+      

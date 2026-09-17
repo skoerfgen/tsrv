@@ -9,6 +9,9 @@ on:
 permissions:
   contents: read
 
+env:
+  PEBBLE_VERSION: "2.10.1"
+
 jobs:
   build-pebble:
     name: Build Pebble Containers
@@ -29,7 +32,7 @@ jobs:
       - name: Check Pebble EAB image
         id: check-eab
         run: |
-          IMAGE="ghcr.io/${{ github.repository }}/pebble-eab:2.10.1"
+          IMAGE="ghcr.io/${{ github.repository }}/pebble-eab:${{ env.PEBBLE_VERSION }}"
 
           if docker manifest inspect "$IMAGE" > /dev/null 2>&1; then
             echo "exists=true" >> "$GITHUB_OUTPUT"
@@ -49,12 +52,12 @@ jobs:
           build-args: |
             CONFIG=pebble-config-eab.json
           push: true
-          tags: ghcr.io/${{ github.repository }}/pebble-eab:2.10.1
+          tags: ghcr.io/${{ github.repository }}/pebble-eab:${{ env.PEBBLE_VERSION }}
 
       - name: Check Pebble non-EAB image
         id: check-no-eab
         run: |
-          IMAGE="ghcr.io/${{ github.repository }}/pebble-no-eab:2.10.1"
+          IMAGE="ghcr.io/${{ github.repository }}/pebble-no-eab:${{ env.PEBBLE_VERSION }}"
 
           if docker manifest inspect "$IMAGE" > /dev/null 2>&1; then
             echo "exists=true" >> "$GITHUB_OUTPUT"
@@ -73,7 +76,7 @@ jobs:
           build-args: |
             CONFIG=pebble-config-no-eab.json
           push: true
-          tags: ghcr.io/${{ github.repository }}/pebble-no-eab:2.10.1
+          tags: ghcr.io/${{ github.repository }}/pebble-no-eab:${{ env.PEBBLE_VERSION }}
 
   test-required:
     name: All ACMECert Tests
@@ -105,7 +108,7 @@ jobs:
     services:
 
       pebble:
-        image: ghcr.io/${{ github.repository }}/pebble-no-eab:2.10.1
+        image: ghcr.io/${{ github.repository }}/pebble-no-eab:${{ env.PEBBLE_VERSION }}
         command: -strict -dnsserver challtestsrv:8053
         env:
           PEBBLE_WFE_NONCEREJECT: 0
@@ -113,7 +116,7 @@ jobs:
           PEBBLE_AUTHZREUSE: 100
           
       pebble-eab:
-        image: ghcr.io/${{ github.repository }}/pebble-eab:2.10.1
+        image: ghcr.io/${{ github.repository }}/pebble-eab:${{ env.PEBBLE_VERSION }}
         command: -strict -dnsserver challtestsrv:8053
         env:
           PEBBLE_WFE_NONCEREJECT: 0
@@ -121,7 +124,7 @@ jobs:
           PEBBLE_AUTHZREUSE: 100
           
       challtestsrv:
-        image: ghcr.io/letsencrypt/pebble-challtestsrv:2.10.1
+        image: ghcr.io/letsencrypt/pebble-challtestsrv:${{ env.PEBBLE_VERSION }}
         command: -defaultIPv6 "" -defaultIPv4 "127.0.0.1" -tlsalpn01 ""
 
     steps:

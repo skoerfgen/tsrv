@@ -9,96 +9,6 @@ permissions:
   contents: read
 
 jobs:
-  setup:
-    name: Set Pebble Version
-    runs-on: ubuntu-latest
-    outputs:
-      pebble-version: ${{ steps.version.outputs.pebble-version }}
-
-    steps:
-      - id: version
-        run: echo "pebble-version=2.10.1" >> "$GITHUB_OUTPUT"
-        
-  build-pebble:
-    needs: setup
-    name: Build Pebble Containers
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
-
-    steps:
-      - uses: actions/checkout@v7
-
-      - uses: docker/login-action@v4
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-          
-      - name: Check Pebble EAB image
-        id: check-eab
-        run: |
-          IMAGE="ghcr.io/${{ github.repository }}/pebble-eab:${{ needs.setup.outputs.pebble-version }}"
-
-          if docker manifest inspect "$IMAGE" > /dev/null 2>&1; then
-            echo "exists=true" >> "$GITHUB_OUTPUT"
-            echo "$IMAGE already exists"
-          else
-            echo "exists=false" >> "$GITHUB_OUTPUT"
-            echo "$IMAGE does not exist"
-          fi
-          
-          
-      - name: Build Pebble EAB
-        if: steps.check-eab.outputs.exists != 'true'
-        uses: docker/build-push-action@v7
-        with:
-          context: .
-          file: test/pebble/Dockerfile
-          build-args: |
-            CONFIG=pebble-config-eab.json
-          push: true
-          tags: ghcr.io/${{ github.repository }}/pebble-eab:${{ needs.setup.outputs.pebble-version }}
-
-      - name: Check Pebble non-EAB image
-        id: check-no-eab
-        run: |
-          IMAGE="ghcr.io/${{ github.repository }}/pebble-no-eab:${{ needs.setup.outputs.pebble-version }}"
-
-          if docker manifest inspect "$IMAGE" > /dev/null 2>&1; then
-            echo "exists=true" >> "$GITHUB_OUTPUT"
-            echo "$IMAGE already exists"
-          else
-            echo "exists=false" >> "$GITHUB_OUTPUT"
-            echo "$IMAGE does not exist"
-          fi
-
-      - name: Build Pebble non-EAB
-        if: steps.check-no-eab.outputs.exists != 'true'
-        uses: docker/build-push-action@v7
-        with:
-          context: .
-          file: test/pebble/Dockerfile
-          build-args: |
-            CONFIG=pebble-config-no-eab.json
-          push: true
-          tags: ghcr.io/${{ github.repository }}/pebble-no-eab:${{ needs.setup.outputs.pebble-version }}
-
-  test-required:
-    name: All ACMECert Tests
-    if: always()
-    needs: [test]
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Check test matrix
-        if: ${{ needs.test.result != 'success' }}
-        run: exit 1
-
-      - run: echo "All tests passed"
-      
-      
   test:
     needs: [build-pebble,setup]
     strategy:
@@ -201,3 +111,97 @@ jobs:
           
       - name: Run ACMECert Tests
         run: php -d curl.cainfo=pebble.crt -d openssl.cafile=pebble.crt test/test.php
+        
+  test-required:
+    name: All ACMECert Tests
+    if: always()
+    needs: [test]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check test matrix
+        if: ${{ needs.test.result != 'success' }}
+        run: exit 1
+
+      - run: echo "All tests passed"
+
+
+
+
+  setup:
+    name: Setup
+    runs-on: ubuntu-latest
+    outputs:
+      pebble-version: ${{ steps.version.outputs.pebble-version }}
+
+    steps:
+      - id: version
+        run: echo "pebble-version=2.10.1" >> "$GITHUB_OUTPUT"
+        
+  build-pebble:
+    needs: setup
+    name: Build Pebble Containers
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Check Pebble EAB image
+        id: check-eab
+        run: |
+          IMAGE="ghcr.io/${{ github.repository }}/pebble-eab:${{ needs.setup.outputs.pebble-version }}"
+
+          if docker manifest inspect "$IMAGE" > /dev/null 2>&1; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+            echo "$IMAGE already exists"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+            echo "$IMAGE does not exist"
+          fi
+          
+          
+      - name: Build Pebble EAB
+        if: steps.check-eab.outputs.exists != 'true'
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: test/pebble/Dockerfile
+          build-args: |
+            CONFIG=pebble-config-eab.json
+          push: true
+          tags: ghcr.io/${{ github.repository }}/pebble-eab:${{ needs.setup.outputs.pebble-version }}
+
+      - name: Check Pebble non-EAB image
+        id: check-no-eab
+        run: |
+          IMAGE="ghcr.io/${{ github.repository }}/pebble-no-eab:${{ needs.setup.outputs.pebble-version }}"
+
+          if docker manifest inspect "$IMAGE" > /dev/null 2>&1; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+            echo "$IMAGE already exists"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+            echo "$IMAGE does not exist"
+          fi
+
+      - name: Build Pebble non-EAB
+        if: steps.check-no-eab.outputs.exists != 'true'
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: test/pebble/Dockerfile
+          build-args: |
+            CONFIG=pebble-config-no-eab.json
+          push: true
+          tags: ghcr.io/${{ github.repository }}/pebble-no-eab:${{ needs.setup.outputs.pebble-version }}
+
+

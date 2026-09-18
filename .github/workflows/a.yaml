@@ -76,7 +76,7 @@ jobs:
 
             sleep 1
           done
-					curl -sk http://127.0.0.1:8055/          
+          curl -sk http://127.0.0.1:8055/          
         
       - name: Init PHP ${{ matrix.version }} + NodeJS
         run: |

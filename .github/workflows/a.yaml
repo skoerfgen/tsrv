@@ -16,5 +16,8 @@ jobs:
         run: |
           apk add docker-cli
           docker run --rm -d -p 14000:14000 -p 15000:15000 ghcr.io/letsencrypt/pebble:latest
+          
           php -v
+          
+          wget https://127.0.0.1:14000/dir
       

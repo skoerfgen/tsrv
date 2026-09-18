@@ -23,10 +23,6 @@ jobs:
       - name: Step 1
         run: |
           sudo apt install nodejs
-          #echo "127.0.0.1 pebble" | sudo tee -a /etc/hosts
-          #echo "127.0.0.1 challtestsrv" | sudo tee -a /etc/hosts
-          #echo "127.0.0.1 php" | sudo tee -a /etc/hosts
-          #docker network create pebble-net
           docker run --network=host --hostname pebble --rm -d -e PEBBLE_WFE_NONCEREJECT=0 -p 14000:14000 -p 15000:15000 ghcr.io/letsencrypt/pebble:latest -strict -dnsserver 127.0.0.1:8053
           docker run --network=host --hostname challtestsrv --rm -d -p 5002:5002 -p 5003:5003 -p 8053:8053 -p 8055:8055 -p 8443:8443 ghcr.io/letsencrypt/pebble-challtestsrv:latest -defaultIPv6 "" -defaultIPv4 "127.0.0.1" -tlsalpn01 ""
           cat > pebble.crt << 'EOF'
@@ -53,9 +49,5 @@ jobs:
           EOF
           sleep 5
           docker run --rm --network=host --hostname php -v "$GITHUB_WORKSPACE:/workspace" -w /workspace php:8.5-cli-alpine apk add nodejs;php -d curl.cainfo=pebble.crt -d openssl.cafile=pebble.crt test/test.php
-          
-      
-          #wget --no-check-certificate https://127.0.0.1:14000/dir -O -
-          
-          
+
       

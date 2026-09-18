@@ -15,7 +15,7 @@ jobs:
       - name: Step 1
         run: |
           apk add docker-cli
-          docker run --hostname pebble --rm -d -p 14000:14000 -p 15000:15000 ghcr.io/letsencrypt/pebble:latest
+          docker run --network=host --hostname pebble --rm -d -p 14000:14000 -p 15000:15000 ghcr.io/letsencrypt/pebble:latest
           
           
           

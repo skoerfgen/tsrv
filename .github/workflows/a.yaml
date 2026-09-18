@@ -62,7 +62,7 @@ jobs:
       - name: Pull 
         run: docker pull php:${{ matrix.version }}-cli-alpine
         
-      - name: PHP + NodeJS
+      - name: Init PHP ${{ matrix.version }} + NodeJS
         run: |
           docker run -d --name php --network=host \
             -v "$GITHUB_WORKSPACE:/workspace" \
@@ -71,11 +71,8 @@ jobs:
             tail -f /dev/null
 
           docker exec php apk add --no-cache nodejs
-
-
-
-              
-      - name: Run Tests ${{ matrix.version }}
+          
+      - name: Run PHP ${{ matrix.version }} Tests 
         run: |
           docker exec php \
             php -d curl.cainfo=pebble.crt \

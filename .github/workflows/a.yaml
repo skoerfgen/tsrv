@@ -49,6 +49,7 @@ jobs:
           docker run --rm --network pebble-net -v "$GITHUB_WORKSPACE:/workspace" -w /workspace php:8.5-cli-alpine php -d curl.cainfo=pebble.crt -d openssl.cafile=pebble.crt test/test.php
           
       
+			
           #wget --no-check-certificate https://127.0.0.1:14000/dir -O -
           
           

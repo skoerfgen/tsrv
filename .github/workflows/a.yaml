@@ -32,19 +32,19 @@ jobs:
           docker run --network=host --rm -d ghcr.io/letsencrypt/pebble-challtestsrv:latest -defaultIPv6 "" -defaultIPv4 "127.0.0.1" -tlsalpn01 ""
           docker cp pebble:/test/certs/pebble.minica.pem pebble.crt
 
-					for i in {1..30}; do
-						if curl -sk https://127.0.0.1:14000/dir >/dev/null; then
-							break
-						fi
+          for i in {1..30}; do
+            if curl -sk https://127.0.0.1:14000/dir >/dev/null; then
+              break
+            fi
 
-						if [ "$i" -eq 30 ]; then
-							echo "Pebble did not become ready"
-							docker logs pebble
-							exit 1
-						fi
+            if [ "$i" -eq 30 ]; then
+              echo "Pebble did not become ready"
+              docker logs pebble
+              exit 1
+            fi
 
-						sleep 1
-					done
+            sleep 1
+          done
 
           docker run --rm --network=host -v "$GITHUB_WORKSPACE:/workspace" -w /workspace php:5.6-cli-alpine sh -c 'apk add --no-cache nodejs && php -d curl.cainfo=pebble.crt -d openssl.cafile=pebble.crt test/test.php'
 

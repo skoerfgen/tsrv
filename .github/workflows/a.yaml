@@ -13,9 +13,11 @@ jobs:
     steps:
       - name: Step 1
         run: |
-          docker run --rm -d -p 14000:14000 -p 15000:15000 ghcr.io/letsencrypt/pebble:latest
+          docker run --hostname pebble --rm -d -p 14000:14000 -p 15000:15000 ghcr.io/letsencrypt/pebble:latest
           
           
           
-          wget --no-check-certificate https://127.0.0.1:14000/dir -O -
+          wget --no-check-certificate https://pebble:14000/dir -O -
+          
+          php -v
       

@@ -98,6 +98,6 @@ jobs:
         run: docker rm -f php
           
       - name: log
-        run: curl -d '{"host":"*"}' http://127.0.0.1:8055/http-request-history
+        run: curl -d '{"host":"example.net"}' http://127.0.0.1:8055/http-request-history
           
      

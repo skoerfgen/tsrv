@@ -59,6 +59,19 @@ jobs:
 
             sleep 1
           done        
+          for i in {1..30}; do
+            if curl -sk https://127.0.0.1:8055/ >/dev/null; then
+              break
+            fi
+
+            if [ "$i" -eq 30 ]; then
+              echo "Pebble did not become ready"
+              docker logs pebble
+              exit 1
+            fi
+
+            sleep 1
+          done        
       - name: Pull 
         run: docker pull php:${{ matrix.version }}-cli-alpine
         

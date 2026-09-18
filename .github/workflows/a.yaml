@@ -1,18 +1,65 @@
-name: AAA
+name: ACMECert Test
 
 on:
-  workflow_dispatch:
+  #workflow_dispatch:
+  push:
  
 permissions:
   contents: read
 
 jobs:
-  job1:
+  test-required:
+    name: All ACMECert Tests
+    if: always()
+    needs: [test]
     runs-on: ubuntu-latest
-    name: Job 1
-    container: php:8.5-cli-alpine
+
     steps:
-      - name: Step 1
+      - name: Check test matrix
+        if: ${{ needs.test.result != 'success' }}
+        run: exit 1
+
+      - run: echo "All tests passed"
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        version: ['5.6','7.0','7.4','8.0','8.5']
+    runs-on: ubuntu-latest
+    name: PHP ${{ matrix.version }}
+    steps:
+      - name: Checkout@v7
+        uses: actions/checkout@v7
+        
+      - name: Replace
+        run: sed -i 's/listen(443)/listen(5001)/g' alpn_responder.js
+        
+      - name: Pebble
         run: |
-          php -V
+          docker run --name pebble --network=host --rm -d -v "$GITHUB_WORKSPACE/test/pebble/pebble-config-no-eab.json:/test/config/pebble-config.json:ro" -e PEBBLE_AUTHZREUSE=100 -e PEBBLE_VA_NOSLEEP=1 -e PEBBLE_WFE_NONCEREJECT=0 ghcr.io/letsencrypt/pebble:latest -strict -dnsserver 127.0.0.1:8053         
+          
+      - name: Challtestsrv
+        run: docker run --network=host --rm -d ghcr.io/letsencrypt/pebble-challtestsrv:latest -defaultIPv6 "" -defaultIPv4 "127.0.0.1" -tlsalpn01 ""
       
+      - name: Copy Pebble CA Cert
+        run: docker cp pebble:/test/certs/pebble.minica.pem pebble.crt
+        
+      - name: Wait for Pebble
+        run: |
+          for i in {1..30}; do
+            if curl -sk https://127.0.0.1:14000/dir >/dev/null; then
+              break
+            fi
+
+            if [ "$i" -eq 30 ]; then
+              echo "Pebble did not become ready"
+              docker logs pebble
+              exit 1
+            fi
+
+            sleep 1
+          done        
+          
+      - name: Run  Tests
+        run: docker run --rm --network=host -v "$GITHUB_WORKSPACE:/workspace" -w /workspace php:${{ matrix.version }}-cli-alpine sh -c 'apk add --no-cache nodejs && php -d curl.cainfo=pebble.crt -d openssl.cafile=pebble.crt test/test.php'
+     

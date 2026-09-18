@@ -5,14 +5,14 @@ echo 'PHP Version: '.PHP_VERSION,"\n";
 
 require 'ACMECert.php';
 use skoerfgen\ACMECert\ACMECert;
-
+/*
 open('EAB');
 $ac=new ACMECert('https://127.0.0.1:14000/dir');
 $ac->loadAccountKey($ac->generateRSAKey());
 print_r($ac->registerEAB(true,'kid-1','zWNDZM6eQGHWpSRTPal5eIUYFTu7EajVIoguysqZ9wG44nMEtx3MUAsUDkMTQ12W'));
 close();
-
-$ac=new ACMECert('https://pebble:14000/dir');
+*/
+$ac=new ACMECert('https://127.0.0.1:14000/dir');
 $ac->setLogger(function($txt){
 	echo $txt,"\n";
 });
@@ -73,7 +73,7 @@ $domain_config=array(
 	'sub2.other.example.net'=>array('challenge'=>'tls-alpn-01'),
 	'example.net'=>array('challenge'=>'http-01'),
 );
-$domain_config[gethostbyname('challtestsrv')]=array('challenge'=>'http-01');
+$domain_config['127.0.0.1']=array('challenge'=>'http-01');
 
 echo 'domain_config ';
 print_r($domain_config);
@@ -96,7 +96,6 @@ $handler=function($opts) use ($ac){
 		break;
 		case 'http-01':
 			$ac->log('-> Set file '.$opts['key'].' -> '.$opts['value']);
-			setA($opts['domain'],gethostbyname('challtestsrv'));
 			req('add-http01',array(
 				'token'=>basename($opts['key']),
 				'content'=>$opts['value']
@@ -110,8 +109,6 @@ $handler=function($opts) use ($ac){
 			};
 		break;
     case 'tls-alpn-01':
-			setA($opts['domain']);
-
 			file_put_contents('some_private_key.pem',$ac->generateRSAKey());
 			$cert=$ac->generateALPNCertificate('file://'.'some_private_key.pem',$opts['domain'],$opts['value']);
       $ac->log('-> Set ALPN certificate -> '.$opts['value']);
@@ -202,23 +199,11 @@ function req($path,$arr){
 		$ch=curl_init();
 	}
 	curl_setopt_array($ch,array(
-		CURLOPT_URL=>'http://challtestsrv:8055/'.$path,
+		CURLOPT_URL=>'http://127.0.0.1:8055/'.$path,
 		CURLOPT_RETURNTRANSFER=>true,
 		CURLOPT_POSTFIELDS=>json_encode($arr),
 	));
 	curl_exec($ch);
-}
-
-function setIP($ip=null){
-	req('set-default-ipv4',array(
-		'ip'=>$ip===null?gethostbyname(gethostname()):$ip
-	));	
-}
-function setA($host,$ip=null){
-	req('add-a',array(
-		'host'=>$host,
-		'addresses'=>array($ip===null?gethostbyname(gethostname()):$ip)
-	));	
 }
 
 function open($txt){

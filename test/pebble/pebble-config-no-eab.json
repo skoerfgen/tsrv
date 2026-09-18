@@ -5,13 +5,13 @@
     "certificate": "test/certs/localhost/cert.pem",
     "privateKey": "test/certs/localhost/key.pem",
     "httpPort": 5002,
-    "tlsPort": 443,
+    "tlsPort": 5001,
     "ocspResponderURL": "",
     "externalAccountBindingRequired": false,
     "domainBlocklist": ["blocked-domain.example"],
     "retryAfter": {
-        "authz": 1,
-        "order": 1
+        "authz": 0,
+        "order": 0
     },
     "keyAlgorithm": "ecdsa",
     "profiles": {

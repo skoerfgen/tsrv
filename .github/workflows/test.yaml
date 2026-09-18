@@ -1,9 +1,9 @@
-name: ACMECert Test
+name: OLD ACMECert Test
 
 on:
   workflow_dispatch:
   #pull_request:
-  push:
+  #push:
   
 permissions:
   contents: read

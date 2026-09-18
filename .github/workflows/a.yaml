@@ -20,7 +20,7 @@ jobs:
         run: |
           sudo apt install nodejs
           echo "127.0.0.1 pebble" | sudo tee -a /etc/hosts
-          echo "127.0.0.1 challtestsrv" | sudo tee -a /etc/hosts
+          #echo "127.0.0.1 challtestsrv" | sudo tee -a /etc/hosts
           docker network create pebble-net
           docker run --network pebble-net --hostname pebble --rm -d -p 14000:14000 -p 15000:15000 ghcr.io/letsencrypt/pebble:latest -strict -dnsserver challtestsrv:8053
           docker run --network pebble-net --hostname challtestsrv --rm -d -p 5002:5002 -p 5003:5003 -p 8053:8053 -p 8055:8055 -p 8443:8443 ghcr.io/letsencrypt/pebble-challtestsrv:latest -defaultIPv6 "" -defaultIPv4 "127.0.0.1" -tlsalpn01 ""

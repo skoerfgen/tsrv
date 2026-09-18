@@ -11,7 +11,7 @@ jobs:
   test-required:
     name: All ACMECert Tests
     if: always()
-    needs: [test]
+    needs: test
     runs-on: ubuntu-latest
 
     steps:

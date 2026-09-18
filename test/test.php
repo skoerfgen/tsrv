@@ -210,11 +210,13 @@ function req($path,$arr){
 }
 
 function setIP($ip=null){
+	return;
 	req('set-default-ipv4',array(
 		'ip'=>$ip===null?gethostbyname(gethostname()):$ip
 	));	
 }
 function setA($host,$ip=null){
+	return;
 	req('add-a',array(
 		'host'=>$host,
 		'addresses'=>array($ip===null?gethostbyname(gethostname()):$ip)

@@ -96,7 +96,7 @@ $handler=function($opts) use ($ac){
 		break;
 		case 'http-01':
 			$ac->log('-> Set file '.$opts['key'].' -> '.$opts['value']);
-			setA($opts['domain'],gethostbyname('challtestsrv'));
+			setA($opts['domain'],'127.0.0.1');
 			req('add-http01',array(
 				'token'=>basename($opts['key']),
 				'content'=>$opts['value']

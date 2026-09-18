@@ -13,12 +13,12 @@ jobs:
     steps:
       - name: Step 1
         run: |
-          echo "127.0.0.1 pebble" | sudo tee -a /etc/hosts
+          #echo "127.0.0.1 pebble" | sudo tee -a /etc/hosts
           docker run --hostname pebble --rm -d -p 14000:14000 -p 15000:15000 ghcr.io/letsencrypt/pebble:latest
           
           
           
-          wget --no-check-certificate https://pebble:14000/dir -O -
+          wget --no-check-certificate https://127.0.0.1:14000/dir -O -
           
           php -v
       

@@ -62,26 +62,27 @@ jobs:
       - name: Pull 
         run: docker pull php:${{ matrix.version }}-cli-alpine
         
-      - name: Run Tests
+      - name: PHP + NodeJS
         run: |
-          docker run -d --name lol --network=host \
+          docker run -d --name php --network=host \
             -v "$GITHUB_WORKSPACE:/workspace" \
             -w /workspace \
             php:${{ matrix.version }}-cli-alpine \
             tail -f /dev/null
 
-          docker exec lol apk add --no-cache nodejs
+          docker exec php apk add --no-cache nodejs
 
 
 
               
-      - name: jnot
+      - name: Run Tests
         run: |
-          docker exec lol \
+          docker exec php \
             php -d curl.cainfo=pebble.crt \
                 -d openssl.cafile=pebble.crt \
-                test/test.php       
-      - name: jat
-        run: docker rm -f lol
+                test/test.php
+                
+      - name: End Tests
+        run: docker rm -f php
           
      

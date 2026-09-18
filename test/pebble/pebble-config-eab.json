@@ -15,8 +15,8 @@
     },
     "domainBlocklist": ["blocked-domain.example"],
     "retryAfter": {
-        "authz": 1,
-        "order": 1
+        "authz": 0,
+        "order": 0
     },
     "keyAlgorithm": "ecdsa",
     "profiles": {

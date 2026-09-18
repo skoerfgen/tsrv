@@ -202,7 +202,7 @@ function req($path,$arr){
 		$ch=curl_init();
 	}
 	curl_setopt_array($ch,array(
-		CURLOPT_URL=>'http://challtestsrv:8055/'.$path,
+		CURLOPT_URL=>'http://127.0.0.1:8055/'.$path,
 		CURLOPT_RETURNTRANSFER=>true,
 		CURLOPT_POSTFIELDS=>json_encode($arr),
 	));

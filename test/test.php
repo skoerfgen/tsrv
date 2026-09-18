@@ -110,7 +110,7 @@ $handler=function($opts) use ($ac){
 			};
 		break;
     case 'tls-alpn-01':
-			setA($opts['domain'],'127.0.0.1');
+			setA($opts['domain']);
 
 			file_put_contents('some_private_key.pem',$ac->generateRSAKey());
 			$cert=$ac->generateALPNCertificate('file://'.'some_private_key.pem',$opts['domain'],$opts['value']);

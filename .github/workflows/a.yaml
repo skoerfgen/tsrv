@@ -72,10 +72,16 @@ jobs:
 
           docker exec lol apk add --no-cache nodejs
 
+
+
+              
+      - name: jnot
+        run: |
           docker exec lol \
             php -d curl.cainfo=pebble.crt \
                 -d openssl.cafile=pebble.crt \
-                test/test.php
-
-          docker rm -f lol        
+                test/test.php       
+      - name: jat
+        run: docker rm -f lol
+          
      

@@ -14,5 +14,5 @@ jobs:
     steps:
       - name: Step 1
         run: |
-          php -V
+          php -v
       

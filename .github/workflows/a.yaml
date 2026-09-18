@@ -10,7 +10,7 @@ jobs:
   job1:
     runs-on: ubuntu-latest
     name: Job 1
-    #container: php:8.5-cli-alpine
+    container: php:8.5-cli-alpine
     steps:
       - name: Step 1
         run: |

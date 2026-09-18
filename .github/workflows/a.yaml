@@ -60,7 +60,7 @@ jobs:
             sleep 1
           done        
           for i in {1..30}; do
-            if curl -sk http://127.0.0.1:5002/ >/dev/null; then
+            if curl -sk http://127.0.0.1:8055/ >/dev/null; then
               break
             fi
 

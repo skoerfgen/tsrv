@@ -75,7 +75,7 @@ jobs:
 
 
               
-      - name: Run Tests
+      - name: Run Tests ${{ matrix.version }}
         run: |
           docker exec php \
             php -d curl.cainfo=pebble.crt \

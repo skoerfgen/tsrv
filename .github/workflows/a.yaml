@@ -8,7 +8,19 @@ permissions:
   contents: read
 
 jobs:
-  job1:
+  test-required:
+    name: All ACMECert Tests
+    if: always()
+    needs: [test]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check test matrix
+        if: ${{ needs.test.result != 'success' }}
+        run: exit 1
+
+      - run: echo "All tests passed"
+  test:
     strategy:
       fail-fast: false
       matrix:

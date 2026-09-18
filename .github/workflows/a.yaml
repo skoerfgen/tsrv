@@ -14,5 +14,6 @@ jobs:
     steps:
       - name: Step 1
         run: |
-          php -v
+          docker run --rm -d -p 14000:14000 -p 15000:15000 ghcr.io/letsencrypt/pebble:latest
+					php -v
       

@@ -17,9 +17,6 @@ jobs:
         
       - name: Replace
         run: sed -i 's/listen(443)/listen(5001)/g' alpn_responder.js
-      
-      - name: Install NodeJS
-        run: sudo apt install nodejs
         
       - name: Pebble
         run: |
@@ -47,5 +44,13 @@ jobs:
             sleep 1
           done        
         
-      - name: Run Tests
+      - name: Run PHP 5.6 Tests
         run: docker run --rm --network=host -v "$GITHUB_WORKSPACE:/workspace" -w /workspace php:5.6-cli-alpine sh -c 'apk add --no-cache nodejs && php -d curl.cainfo=pebble.crt -d openssl.cafile=pebble.crt test/test.php'
+      - name: Run PHP 7.0 Tests
+        run: docker run --rm --network=host -v "$GITHUB_WORKSPACE:/workspace" -w /workspace php:7.0-cli-alpine sh -c 'apk add --no-cache nodejs && php -d curl.cainfo=pebble.crt -d openssl.cafile=pebble.crt test/test.php'
+      - name: Run PHP 7.4 Tests
+        run: docker run --rm --network=host -v "$GITHUB_WORKSPACE:/workspace" -w /workspace php:7.4-cli-alpine sh -c 'apk add --no-cache nodejs && php -d curl.cainfo=pebble.crt -d openssl.cafile=pebble.crt test/test.php'
+      - name: Run PHP 8.0 Tests
+        run: docker run --rm --network=host -v "$GITHUB_WORKSPACE:/workspace" -w /workspace php:8.0-cli-alpine sh -c 'apk add --no-cache nodejs && php -d curl.cainfo=pebble.crt -d openssl.cafile=pebble.crt test/test.php'
+      - name: Run PHP 8.5 Tests
+        run: docker run --rm --network=host -v "$GITHUB_WORKSPACE:/workspace" -w /workspace php:8.5-cli-alpine sh -c 'apk add --no-cache nodejs && php -d curl.cainfo=pebble.crt -d openssl.cafile=pebble.crt test/test.php'

@@ -98,4 +98,7 @@ jobs:
       - name: End Tests
         run: docker rm -f php
           
+      - name: log
+        run: curl -d '{"host":"example.com"}' http://127.0.0.1:8055/http-request-history
+          
      

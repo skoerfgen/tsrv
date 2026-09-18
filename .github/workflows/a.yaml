@@ -9,8 +9,12 @@ permissions:
 
 jobs:
   job1:
+    strategy:
+      fail-fast: false
+      matrix:
+        version: ['5.6','7.0','7.4','8.0','8.5']
     runs-on: ubuntu-latest
-    name: Job 1
+    name: PHP ${{ matrix.version }}
     steps:
       - name: Checkout@v7
         uses: actions/checkout@v7
@@ -44,23 +48,6 @@ jobs:
             sleep 1
           done        
           
-      #- name: Run PHP 5.6 Tests
-      #  run: docker run --rm --network=host -v "$GITHUB_WORKSPACE:/workspace" -w /workspace php:5.6-cli-alpine sh -c 'apk add --no-cache nodejs && php -d curl.cainfo=pebble.crt -d openssl.cafile=pebble.crt test/test.php' &
-      #- name: Run PHP 7.0 Tests
-      #  run: docker run --rm --network=host -v "$GITHUB_WORKSPACE:/workspace" -w /workspace php:7.0-cli-alpine sh -c 'apk add --no-cache nodejs && php -d curl.cainfo=pebble.crt -d openssl.cafile=pebble.crt test/test.php' &
-      #- name: Run PHP 7.4 Tests
-      #  run: docker run --rm --network=host -v "$GITHUB_WORKSPACE:/workspace" -w /workspace php:7.4-cli-alpine sh -c 'apk add --no-cache nodejs && php -d curl.cainfo=pebble.crt -d openssl.cafile=pebble.crt test/test.php' &
-      #- name: Run PHP 8.0 Tests
-      #  run: docker run --rm --network=host -v "$GITHUB_WORKSPACE:/workspace" -w /workspace php:8.0-cli-alpine sh -c 'apk add --no-cache nodejs && php -d curl.cainfo=pebble.crt -d openssl.cafile=pebble.crt test/test.php' &
-      #- name: Run PHP 8.5 Tests
-      #  run: docker run --rm --network=host -v "$GITHUB_WORKSPACE:/workspace" -w /workspace php:8.5-cli-alpine sh -c 'apk add --no-cache nodejs && php -d curl.cainfo=pebble.crt -d openssl.cafile=pebble.crt test/test.php' &
-      - name: Run
-        run: |
-          docker run --rm --network=host -v "$GITHUB_WORKSPACE:/workspace" -w /workspace php:5.6-cli-alpine sh -c 'apk add --no-cache nodejs && php -d curl.cainfo=pebble.crt -d openssl.cafile=pebble.crt test/test.php' &
-          docker run --rm --network=host -v "$GITHUB_WORKSPACE:/workspace" -w /workspace php:7.0-cli-alpine sh -c 'apk add --no-cache nodejs && php -d curl.cainfo=pebble.crt -d openssl.cafile=pebble.crt test/test.php' &
-          docker run --rm --network=host -v "$GITHUB_WORKSPACE:/workspace" -w /workspace php:7.4-cli-alpine sh -c 'apk add --no-cache nodejs && php -d curl.cainfo=pebble.crt -d openssl.cafile=pebble.crt test/test.php' &
-          docker run --rm --network=host -v "$GITHUB_WORKSPACE:/workspace" -w /workspace php:8.0-cli-alpine sh -c 'apk add --no-cache nodejs && php -d curl.cainfo=pebble.crt -d openssl.cafile=pebble.crt test/test.php' &
-          docker run --rm --network=host -v "$GITHUB_WORKSPACE:/workspace" -w /workspace php:8.5-cli-alpine sh -c 'apk add --no-cache nodejs && php -d curl.cainfo=pebble.crt -d openssl.cafile=pebble.crt test/test.php' &
-          wait
-      - name: Wait
-        run: 
+      - name: Run  Tests
+        run: docker run --rm --network=host -v "$GITHUB_WORKSPACE:/workspace" -w /workspace php:${{ matrix.version }}-cli-alpine sh -c 'apk add --no-cache nodejs && php -d curl.cainfo=pebble.crt -d openssl.cafile=pebble.crt test/test.php'
+     

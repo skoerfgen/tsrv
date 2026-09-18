@@ -19,5 +19,5 @@ jobs:
           
           
           
-          wget https://127.0.0.1:14000/dir
+          wget --no-check-certificate https://127.0.0.1:14000/dir
       

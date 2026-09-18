@@ -48,7 +48,7 @@ jobs:
           -----END CERTIFICATE-----
           EOF
           sleep 5
-          docker run --rm --network=host --hostname php -v "$GITHUB_WORKSPACE:/workspace" -w /workspace php:8.5-cli-alpine apk add nodejs;php -d curl.cainfo=pebble.crt -d openssl.cafile=pebble.crt test/test.php
+          docker run --rm --network=host --hostname php --user 0 --cap-add NET_BIND_SERVICE -v "$GITHUB_WORKSPACE:/workspace" -w /workspace php:8.5-cli-alpine apk add nodejs;php -d curl.cainfo=pebble.crt -d openssl.cafile=pebble.crt test/test.php
           
       
           #wget --no-check-certificate https://127.0.0.1:14000/dir -O -

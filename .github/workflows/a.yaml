@@ -17,7 +17,7 @@ jobs:
         
       - name: Step 1
         run: |
-          apt install nodejs
+          sudo apt install nodejs
           echo "127.0.0.1 pebble" | sudo tee -a /etc/hosts
           echo "127.0.0.1 challtestsrv" | sudo tee -a /etc/hosts
           docker network create pebble-net

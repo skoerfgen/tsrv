@@ -23,8 +23,8 @@ jobs:
       - name: Step 1
         run: |
           sudo apt install nodejs
-          docker run --network=host --hostname pebble --rm -d -e PEBBLE_WFE_NONCEREJECT=0 -p 14000:14000 -p 15000:15000 ghcr.io/letsencrypt/pebble:latest -strict -dnsserver 127.0.0.1:8053
-          docker run --network=host --hostname challtestsrv --rm -d -p 5002:5002 -p 5003:5003 -p 8053:8053 -p 8055:8055 -p 8443:8443 ghcr.io/letsencrypt/pebble-challtestsrv:latest -defaultIPv6 "" -defaultIPv4 "127.0.0.1" -tlsalpn01 ""
+          docker run --network=host --hostname pebble --rm -d -e PEBBLE_WFE_NONCEREJECT=0 ghcr.io/letsencrypt/pebble:latest -strict -dnsserver 127.0.0.1:8053
+          docker run --network=host --hostname challtestsrv --rm -d ghcr.io/letsencrypt/pebble-challtestsrv:latest -defaultIPv6 "" -defaultIPv4 "127.0.0.1" -tlsalpn01 ""
           cat > pebble.crt << 'EOF'
           -----BEGIN CERTIFICATE-----
           MIIDPzCCAiegAwIBAgIIU0Xm9UFdQxUwDQYJKoZIhvcNAQELBQAwIDEeMBwGA1UE

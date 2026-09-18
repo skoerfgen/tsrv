@@ -39,7 +39,7 @@ jobs:
           docker run --name pebble --network=host --rm -d -v "$GITHUB_WORKSPACE/test/pebble/pebble-config-no-eab.json:/test/config/pebble-config.json:ro" -e PEBBLE_AUTHZREUSE=100 -e PEBBLE_VA_NOSLEEP=1 -e PEBBLE_WFE_NONCEREJECT=0 ghcr.io/letsencrypt/pebble:latest -strict -dnsserver 127.0.0.1:8053         
           
       - name: Challtestsrv
-        run: docker run --network=host --rm -d ghcr.io/letsencrypt/pebble-challtestsrv:latest -defaultIPv6 "" -defaultIPv4 "127.0.0.1" -tlsalpn01 ""
+        run: docker run --name=challtestsrv --network=host --rm -d ghcr.io/letsencrypt/pebble-challtestsrv:latest -defaultIPv6 "" -defaultIPv4 "127.0.0.1" -tlsalpn01 ""
       
       - name: Copy Pebble CA Cert
         run: docker cp pebble:/test/certs/pebble.minica.pem pebble.crt
@@ -94,10 +94,7 @@ jobs:
                 -d openssl.cafile=pebble.crt \
                 test/test.php
                 
-      - name: End Tests
-        run: docker rm -f php
-          
-      - name: log
-        run: curl -d '{"host":"example.net"}' http://127.0.0.1:8055/http-request-history
+      - name: Stop Containers
+        run: docker rm -f php pebble challtestsrv
           
      

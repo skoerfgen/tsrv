@@ -13,6 +13,7 @@ jobs:
     steps:
       - name: Step 1
         run: |
+          echo "127.0.0.1 pebble" | sudo tee -a /etc/hosts
           docker run --hostname pebble --rm -d -p 14000:14000 -p 15000:15000 ghcr.io/letsencrypt/pebble:latest
           
           

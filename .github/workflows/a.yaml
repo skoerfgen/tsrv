@@ -22,7 +22,7 @@ jobs:
           echo "127.0.0.1 challtestsrv" | sudo tee -a /etc/hosts
           docker network create pebble-net
           docker run --network pebble-net --hostname pebble --rm -d -p 14000:14000 -p 15000:15000 ghcr.io/letsencrypt/pebble:latest -strict -dnsserver challtestsrv:8053
-          docker run --network pebble-net --hostname challtestsrv --rm -d -p 5002:5002 -p 5003:5003 -p 8053:8053 -p 8055:8055 -p 8443:8443 ghcr.io/letsencrypt/pebble-challtestsrv:latest -defaultIPv6 "" -defaultIPv4 "127.0.0.1" -tlsalpn01 ""
+          docker run --network pebble-net --hostname challtestsrv --rm -d -p 5001:5001 -p 5002:5002 -p 5003:5003 -p 8053:8053 -p 8055:8055 -p 8443:8443 ghcr.io/letsencrypt/pebble-challtestsrv:latest -defaultIPv6 "" -defaultIPv4 "127.0.0.1" -tlsalpn01 ""
           cat > pebble.crt << 'EOF'
           -----BEGIN CERTIFICATE-----
           MIIDPzCCAiegAwIBAgIIU0Xm9UFdQxUwDQYJKoZIhvcNAQELBQAwIDEeMBwGA1UE
@@ -46,7 +46,7 @@ jobs:
           -----END CERTIFICATE-----
           EOF
           sleep 5
-          docker run --rm --network=host -v "$GITHUB_WORKSPACE:/workspace" -w /workspace php:8.5-cli-alpine apk add nodejs;php -d curl.cainfo=pebble.crt -d openssl.cafile=pebble.crt test/test.php
+          docker run --rm --network pebble-net --user 0 --cap-add NET_BIND_SERVICE -v "$GITHUB_WORKSPACE:/workspace" -w /workspace php:8.5-cli-alpine apk add nodejs;php -d curl.cainfo=pebble.crt -d openssl.cafile=pebble.crt test/test.php
           
       
           #wget --no-check-certificate https://127.0.0.1:14000/dir -O -

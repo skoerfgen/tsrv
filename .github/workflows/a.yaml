@@ -24,10 +24,10 @@ jobs:
         run: |
           set -xe
           sudo apt install nodejs
-          docker run --name pebble --network=host --rm -d -v "$GITHUB_WORKSPACE/test/pebble/pebble-config-no-eab.json:/test/config/pebble-config.json:ro" -e PEBBLE_AUTHZREUSE=100 -e PEBBLE_VA_NOSLEEP=1 -e PEBBLE_WFE_NONCEREJECT=0 ghcr.io/letsencrypt/pebble:latest -strict -dnsserver 127.0.0.1:8053
-          sleep 10
-          docker logs pebble
-          docker stop pebble
+          #docker run --name pebble --network=host --rm -d -v "$GITHUB_WORKSPACE/test/pebble/pebble-config-no-eab.json:/test/config/pebble-config.json:ro" -e PEBBLE_AUTHZREUSE=100 -e PEBBLE_VA_NOSLEEP=1 -e PEBBLE_WFE_NONCEREJECT=0 ghcr.io/letsencrypt/pebble:latest -strict -dnsserver 127.0.0.1:8053
+          #sleep 10
+          #docker logs pebble
+          #docker stop pebble
           docker run --name pebble --network=host --rm -d -v "$GITHUB_WORKSPACE/test/pebble/pebble-config-no-eab.json:/test/config/pebble-config.json:ro" -e PEBBLE_AUTHZREUSE=100 -e PEBBLE_VA_NOSLEEP=1 -e PEBBLE_WFE_NONCEREJECT=0 ghcr.io/letsencrypt/pebble:latest -strict -dnsserver 127.0.0.1:8053         
           docker run --network=host --rm -d ghcr.io/letsencrypt/pebble-challtestsrv:latest -defaultIPv6 "" -defaultIPv4 "127.0.0.1" -tlsalpn01 ""
           cat > pebble.crt << 'EOF'
@@ -53,6 +53,6 @@ jobs:
           -----END CERTIFICATE-----
           EOF
           sleep 5
-          docker run --rm --network=host -v "$GITHUB_WORKSPACE:/workspace" -w /workspace php:8.5-cli-alpine apk add nodejs;php -d curl.cainfo=pebble.crt -d openssl.cafile=pebble.crt test/test.php
+          docker run --rm --network=host -v "$GITHUB_WORKSPACE:/workspace" -w /workspace php:5.6-cli-alpine apk add nodejs;php -d curl.cainfo=pebble.crt -d openssl.cafile=pebble.crt test/test.php
 
       

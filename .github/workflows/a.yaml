@@ -43,7 +43,7 @@ jobs:
           v1lhy71EhBuXXwRQJry0lTdF+w==
           -----END CERTIFICATE-----
           EOF
-					sleep 5
+          sleep 5
           docker run --rm --network=host -v "$GITHUB_WORKSPACE:/workspace" -w /workspace php:8.5-cli-alpine php -d curl.cainfo=pebble.crt -d openssl.cafile=pebble.crt test/test.php
           
       

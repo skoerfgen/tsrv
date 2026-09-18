@@ -63,5 +63,19 @@ jobs:
         run: docker pull php:${{ matrix.version }}-cli-alpine
         
       - name: Run Tests
-        run: docker run --rm --network=host -v "$GITHUB_WORKSPACE:/workspace" -w /workspace php:${{ matrix.version }}-cli-alpine sh -c 'apk add --no-cache nodejs && php -d curl.cainfo=pebble.crt -d openssl.cafile=pebble.crt test/test.php'
+        run: |
+          docker run -d --name lol --network=host \
+            -v "$GITHUB_WORKSPACE:/workspace" \
+            -w /workspace \
+            php:${{ matrix.version }}-cli-alpine \
+            tail -f /dev/null
+
+          docker exec lol apk add --no-cache nodejs
+
+          docker exec lol \
+            php -d curl.cainfo=pebble.crt \
+                -d openssl.cafile=pebble.crt \
+                test/test.php
+
+          docker rm -f lol        
      

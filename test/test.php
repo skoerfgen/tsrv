@@ -96,7 +96,6 @@ $handler=function($opts) use ($ac){
 		break;
 		case 'http-01':
 			$ac->log('-> Set file '.$opts['key'].' -> '.$opts['value']);
-			setA($opts['domain'],'127.0.0.1');
 			req('add-http01',array(
 				'token'=>basename($opts['key']),
 				'content'=>$opts['value']
@@ -110,8 +109,6 @@ $handler=function($opts) use ($ac){
 			};
 		break;
     case 'tls-alpn-01':
-			setA($opts['domain']);
-
 			file_put_contents('some_private_key.pem',$ac->generateRSAKey());
 			$cert=$ac->generateALPNCertificate('file://'.'some_private_key.pem',$opts['domain'],$opts['value']);
       $ac->log('-> Set ALPN certificate -> '.$opts['value']);
@@ -194,34 +191,6 @@ print_r($ac->deactivateAccount());
 close();
 
 // ============================================================================
-
-function req($path,$arr){
-	static $ch=null;
-
-	if ($ch===null){
-		$ch=curl_init();
-	}
-	curl_setopt_array($ch,array(
-		CURLOPT_URL=>'http://127.0.0.1:8055/'.$path,
-		CURLOPT_RETURNTRANSFER=>true,
-		CURLOPT_POSTFIELDS=>json_encode($arr),
-	));
-	curl_exec($ch);
-}
-
-function setIP($ip=null){
-	return;
-	req('set-default-ipv4',array(
-		'ip'=>$ip===null?gethostbyname(gethostname()):$ip
-	));	
-}
-function setA($host,$ip=null){
-	return;
-	req('add-a',array(
-		'host'=>$host,
-		'addresses'=>array($ip===null?gethostbyname(gethostname()):$ip)
-	));	
-}
 
 function open($txt){
 	echo '::group::'.$txt,"\n";

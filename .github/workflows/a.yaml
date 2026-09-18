@@ -10,14 +10,13 @@ jobs:
   job1:
     runs-on: ubuntu-latest
     name: Job 1
-    container: php:8.5-cli-alpine
     steps:
       - name: Step 1
         run: |
           apk add docker-cli
-          docker run --network=host --rm -d -p 14000:14000 -p 15000:15000 ghcr.io/letsencrypt/pebble:latest
+          docker run --rm -d -p 14000:14000 -p 15000:15000 ghcr.io/letsencrypt/pebble:latest
           
           
           
-          wget --no-check-certificate https://127.0.0.1:14000/dir
+          wget --no-check-certificate https://127.0.0.1:14000/dir -O -
       

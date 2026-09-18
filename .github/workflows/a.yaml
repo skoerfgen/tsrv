@@ -44,7 +44,11 @@ jobs:
       - name: Copy Pebble CA Cert
         run: docker cp pebble:/test/certs/pebble.minica.pem pebble.crt
         
-      - name: Wait for Pebble
+      
+      - name: Pull 
+        run: docker pull php:${{ matrix.version }}-cli-alpine
+        
+      - name: Wait for Pebble and Challtestsrv
         run: |
           for i in {1..30}; do
             if curl -sk https://127.0.0.1:14000/dir >/dev/null; then
@@ -71,9 +75,8 @@ jobs:
             fi
 
             sleep 1
-          done        
-      - name: Pull 
-        run: docker pull php:${{ matrix.version }}-cli-alpine
+          done
+					curl -sk http://127.0.0.1:8055/          
         
       - name: Init PHP ${{ matrix.version }} + NodeJS
         run: |

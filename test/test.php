@@ -192,6 +192,20 @@ close();
 
 // ============================================================================
 
+function req($path,$arr){
+	static $ch=null;
+
+	if ($ch===null){
+		$ch=curl_init();
+	}
+	curl_setopt_array($ch,array(
+		CURLOPT_URL=>'http://127.0.0.1:8055/'.$path,
+		CURLOPT_RETURNTRANSFER=>true,
+		CURLOPT_POSTFIELDS=>json_encode($arr),
+	));
+	curl_exec($ch);
+}
+
 function open($txt){
 	echo '::group::'.$txt,"\n";
 }

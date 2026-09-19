@@ -9,7 +9,7 @@ use skoerfgen\ACMECert\ACMECert;
 
 class AC extends ACMECert {
 	function __construct(){
-		parent::construct();
+		parent::__construct();
 		$this->ch=false;
 	}
 }

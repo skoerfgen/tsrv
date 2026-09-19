@@ -8,8 +8,8 @@ use skoerfgen\ACMECert\ACMECert;
 
 
 class AC extends ACMECert {
-	function __construct(){
-		parent::__construct();
+	function __construct($dir){
+		parent::__construct($dir);
 		$this->ch=false;
 	}
 }

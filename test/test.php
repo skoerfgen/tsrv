@@ -24,7 +24,7 @@ foreach([2048,3072,4096] as $k=>$bits){
 	close();
 }
 
-if (1 || PHP_VERSION_ID>=70100){
+if (PHP_VERSION_ID>=70100){
 	foreach(['P-256','P-384','P-521'] as $k=>$curve){
 		open('Generate EC '.$curve.' Key ('.($k===0?'Register':'Account Key Rollover').')');
 		$key=$ac->generateECKey($curve);

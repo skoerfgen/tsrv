@@ -38,7 +38,7 @@ jobs:
         run: sed -i 's/listen(443)/listen(5001)/g' alpn_responder.js
         
       - name: Replace curl
-        run: sed -i "s/extension_loaded('curl')/listen(5001)/g" src/ACMEv2.php
+        run: sed -i "s/extension_loaded('curl')/false/g" src/ACMEv2.php
         
       - name: Run Pebble
         run: |

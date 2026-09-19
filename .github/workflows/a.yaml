@@ -28,9 +28,9 @@ jobs:
       fail-fast: false
       matrix:
         version: ['5.6','7.0','7.4','8.0','8.5']
-        curl: ['yes','no']
+        connect: ['using cURL','using fopen wrappers']
     runs-on: ubuntu-latest
-    name: PHP ${{ matrix.version }} cURL ${{ matrix.curl == 'yes' && 'using cURL' || 'using fopen wrappers' }}
+    name: PHP ${{ matrix.version }} cURL ${{ matrix.curl }}
     steps:
       - name: Checkout@v7
         uses: actions/checkout@v7
@@ -39,7 +39,7 @@ jobs:
         run: sed -i 's/listen(443)/listen(5001)/g' alpn_responder.js
         
       - name: Replace curl
-        if: ${{ matrix.curl == 'no' }}
+        if: ${{ matrix.curl != 'using cURL' }}
         run: sed -i "s/extension_loaded('curl')/false/g" src/ACMEv2.php
         
       - name: Run Pebble

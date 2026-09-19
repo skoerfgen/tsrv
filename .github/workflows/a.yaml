@@ -95,6 +95,6 @@ jobs:
           docker logs php
         
       - name: Stop Containers
-        run: docker rm -f php pebble challtestsrv
+        run: docker rm -f php pebble eab challtestsrv
           
      

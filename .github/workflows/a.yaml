@@ -68,14 +68,10 @@ jobs:
           
       - name: Run ACMECert Tests on PHP ${{ matrix.version }}
         run: |
-          docker exec php sh -c '
-            curl_ini=$(grep -Rl "extension=curl" /usr/local/etc/php/conf.d | head -n 1)
-            mv "$curl_ini" "$curl_ini.disabled"
-
+          docker exec php \
             php -d curl.cainfo=pebble.crt \
                 -d openssl.cafile=pebble.crt \
                 test/test.php
-          '
                 
       - name: Container Pebble log
         run: |

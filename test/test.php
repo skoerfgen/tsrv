@@ -3,6 +3,8 @@
 echo 'PHP Version: '.PHP_VERSION,"\n";
 // echo "Own IP: " . gethostbyname(gethostname()) . "\n";
 
+phpinfo();
+
 require 'ACMECert.php';
 use skoerfgen\ACMECert\ACMECert;
 $ac=new ACMECert('https://127.0.0.1:14000/dir');

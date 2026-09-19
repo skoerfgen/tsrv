@@ -71,7 +71,7 @@ jobs:
           docker exec php \
             php -d curl.cainfo=pebble.crt \
                 -d openssl.cafile=pebble.crt \
-                test/test.php
+                -n test/test.php
                 
       - name: Container Pebble log
         run: |

@@ -7,6 +7,9 @@ on:
 permissions:
   contents: read
 
+env:
+  PEBBLE_VERSION: "2.10.1"
+
 jobs:
   test-required:
     name: All ACMECert Tests
@@ -36,10 +39,10 @@ jobs:
         
       - name: Run Pebble
         run: |
-          docker run --name pebble --network=host --rm -d -v "$GITHUB_WORKSPACE/test/pebble/pebble-config-no-eab.json:/test/config/pebble-config.json:ro" -e PEBBLE_AUTHZREUSE=100 -e PEBBLE_VA_NOSLEEP=1 -e PEBBLE_WFE_NONCEREJECT=0 ghcr.io/letsencrypt/pebble:latest -strict -dnsserver 127.0.0.1:8053         
+          docker run --name pebble --network=host --rm -d -v "$GITHUB_WORKSPACE/test/pebble/pebble-config-no-eab.json:/test/config/pebble-config.json:ro" -e PEBBLE_AUTHZREUSE=100 -e PEBBLE_VA_NOSLEEP=1 -e PEBBLE_WFE_NONCEREJECT=0 ghcr.io/letsencrypt/pebble:${{ env.PEBBLE_VERSION }} -strict -dnsserver 127.0.0.1:8053         
           
       - name: Run challtestsrv
-        run: docker run --name=challtestsrv --network=host --rm -d ghcr.io/letsencrypt/pebble-challtestsrv:latest -defaultIPv6 "" -defaultIPv4 "127.0.0.1" -tlsalpn01 ""
+        run: docker run --name=challtestsrv --network=host --rm -d ghcr.io/letsencrypt/pebble-challtestsrv:${{ env.PEBBLE_VERSION }} -defaultIPv6 "" -defaultIPv4 "127.0.0.1" -tlsalpn01 ""
       
       - name: Copy Pebble CA Cert into Workspace
         run: docker cp pebble:/test/certs/pebble.minica.pem pebble.crt

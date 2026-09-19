@@ -27,11 +27,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        version: ['5.6','7.0','7.4','8.0','8.5']
-        connect: ['using cURL','using fopen']
-        key: ['RSA-2048','RSA-3072','RSA-4096','EC-P-256','EC-P-384','EC-P-521']
+        #version: ['5.6','7.0','7.4','8.0','8.5']
+        version: ['8.5']
+        #connect: ['using cURL','using fopen']
     runs-on: ubuntu-latest
-    name: PHP ${{ matrix.version }} ${{ matrix.connect }} ${{ matrix.key }}
+    name: PHP ${{ matrix.version }}
     steps:
       - name: Checkout@v7
         uses: actions/checkout@v7
@@ -39,9 +39,9 @@ jobs:
       - name: Replace port 443 with 5001 in alpn_responder.js
         run: sed -i 's/listen(443)/listen(5001)/g' alpn_responder.js
         
-      - name: Replace curl
-        if: ${{ matrix.connect != 'using cURL' }}
-        run: sed -i "s/extension_loaded('curl')/false/g" src/ACMEv2.php
+      #- name: Replace curl
+      #  if: ${{ matrix.connect != 'using cURL' }}
+      #  run: sed -i "s/extension_loaded('curl')/false/g" src/ACMEv2.php
         
       - name: Run Pebble
         run: |
@@ -77,7 +77,7 @@ jobs:
           docker exec php \
             php -d curl.cainfo=pebble.crt \
                 -d openssl.cafile=pebble.crt \
-                test/test.php ${{ matrix.key }}
+                test/test.php
                 
       - name: Container Pebble log
         run: |

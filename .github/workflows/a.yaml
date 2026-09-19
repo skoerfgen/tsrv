@@ -29,7 +29,7 @@ jobs:
       matrix:
         version: ['5.6','7.0','7.4','8.0','8.5']
         connect: ['using cURL','using fopen']
-				key: ['RSA-2048','RSA-3072','RSA-4096','EC-P-256','EC-P-384','EC-P-521']
+        key: ['RSA-2048','RSA-3072','RSA-4096','EC-P-256','EC-P-384','EC-P-521']
     runs-on: ubuntu-latest
     name: PHP ${{ matrix.version }} ${{ matrix.connect }} ${{ matrix.key }}
     steps:

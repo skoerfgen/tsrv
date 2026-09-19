@@ -69,10 +69,16 @@ jobs:
                 -d openssl.cafile=pebble.crt \
                 test/test.php
                 
-      - name: Log Containers
+      - name: Container PHP log
         run: |
           docker logs php
+          
+      - name: Container Pebble log
+        run: |
           docker logs pebble
+          
+      - name: Container challtestsrv log
+        run: |
           docker logs challtestsrv
         
       - name: Stop Containers

@@ -70,7 +70,10 @@ jobs:
                 test/test.php
                 
       - name: Log Containers
-        run: docker logs php pebble challtestsrv
+        run: |
+          docker logs php
+          docker logs pebble
+          docker logs challtestsrv
         
       - name: Stop Containers
         run: docker rm -f php pebble challtestsrv

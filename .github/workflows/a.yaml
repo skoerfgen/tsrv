@@ -37,11 +37,10 @@ jobs:
       - name: Replace port 443 with 5001 in alpn_responder.js
         run: sed -i 's/listen(443)/listen(5001)/g' alpn_responder.js
         
-      - name: Run Pebble on EAB
-        run: docker run --name pebble --network=host --rm -d -v "$GITHUB_WORKSPACE/test/pebble/pebble-config-no-eab.json:/test/config/pebble-config.json:ro" -e PEBBLE_AUTHZREUSE=100 -e PEBBLE_VA_NOSLEEP=1 -e PEBBLE_WFE_NONCEREJECT=0 ghcr.io/letsencrypt/pebble:${{ env.PEBBLE_VERSION }} -strict -dnsserver 127.0.0.1:8053         
-
-      - name: Run Pebble EAB
-        run: docker run --name eab --network=host --rm -d -v "$GITHUB_WORKSPACE/test/pebble/pebble-config-eab.json:/test/config/pebble-config.json:ro" -e PEBBLE_AUTHZREUSE=100 -e PEBBLE_VA_NOSLEEP=1 -e PEBBLE_WFE_NONCEREJECT=0 ghcr.io/letsencrypt/pebble:${{ env.PEBBLE_VERSION }} -strict -dnsserver 127.0.0.1:8053         
+      - name: Run Pebble
+        run: |
+          docker run --name pebble --network=host --rm -d -v "$GITHUB_WORKSPACE/test/pebble/pebble-config-no-eab.json:/test/config/pebble-config.json:ro" -e PEBBLE_AUTHZREUSE=100 -e PEBBLE_VA_NOSLEEP=1 -e PEBBLE_WFE_NONCEREJECT=0 ghcr.io/letsencrypt/pebble:${{ env.PEBBLE_VERSION }} -strict -dnsserver 127.0.0.1:8053         
+          docker run --name eab --network=host --rm -d -v "$GITHUB_WORKSPACE/test/pebble/pebble-config-eab.json:/test/config/pebble-config.json:ro" -e PEBBLE_AUTHZREUSE=100 -e PEBBLE_VA_NOSLEEP=1 -e PEBBLE_WFE_NONCEREJECT=0 ghcr.io/letsencrypt/pebble:${{ env.PEBBLE_VERSION }} -strict -dnsserver 127.0.0.1:8053         
           
       - name: Run challtestsrv
         run: docker run --name=challtestsrv --network=host --rm -d ghcr.io/letsencrypt/pebble-challtestsrv:${{ env.PEBBLE_VERSION }} -defaultIPv6 "" -defaultIPv4 "127.0.0.1" -tlsalpn01 ""

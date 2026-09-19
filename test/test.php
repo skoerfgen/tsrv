@@ -6,12 +6,20 @@ echo 'PHP Version: '.PHP_VERSION,"\n";
 require 'ACMECert.php';
 use skoerfgen\ACMECert\ACMECert;
 
-$ac=new ACMECert('https://127.0.0.1:14000/dir');
+
+class AC extends ACMECert {
+	function __construct(){
+		parent::construct();
+		$this->ch=false;
+	}
+}
+
+$ac=new AC('https://127.0.0.1:14000/dir');
 $ac->setLogger(function($txt){
 	echo $txt,"\n";
 });
 
-$ac2=new ACMECert('https://127.0.0.1:14001/dir');
+$ac2=new AC('https://127.0.0.1:14001/dir');
 $ac2->setLogger(function($txt){
 	echo $txt,"\n";
 });

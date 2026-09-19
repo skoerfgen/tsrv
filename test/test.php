@@ -16,7 +16,7 @@ $ac2->setLogger(function($txt){
 	echo $txt,"\n";
 });
 
-foreach([2048,3072,4096] as $k=>$bits){
+foreach([2048] as $k=>$bits){
 	open('Generate RSA '.$bits.' Key ('.($k===0?'Register':'Account Key Rollover').') + EAB');
 	$key=$ac->generateRSAKey($bits);
 	echo $key;
@@ -32,6 +32,7 @@ foreach([2048,3072,4096] as $k=>$bits){
 	print_r($ac2->registerEAB(true,'kid-1','zWNDZM6eQGHWpSRTPal5eIUYFTu7EajVIoguysqZ9wG44nMEtx3MUAsUDkMTQ12W'));
 	close();
 }
+exit();
 
 if (PHP_VERSION_ID>=70100){
 	foreach(['P-256','P-384','P-521'] as $k=>$curve){

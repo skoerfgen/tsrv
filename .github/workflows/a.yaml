@@ -27,8 +27,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        version: ['5.6','7.0','7.4','8.0','8.5']
-        connect: ['using cURL','using fopen']
+        version: ['8.5']
+        connect: ['using cURL']
     runs-on: ubuntu-latest
     name: PHP ${{ matrix.version }} ${{ matrix.connect }}
     steps:

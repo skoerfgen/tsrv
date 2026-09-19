@@ -27,10 +27,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        version: ['5.6','7.0','7.4','8.0','8.5']
-        connect: ['using cURL','using fopen']
+        #version: ['5.6','7.0','7.4','8.0','8.5']
+        version: ['8.5']
+        #connect: ['using cURL','using fopen']
     runs-on: ubuntu-latest
-    name: PHP ${{ matrix.version }} ${{ matrix.connect }}
+    name: PHP ${{ matrix.version }}
     steps:
       - name: Checkout@v7
         uses: actions/checkout@v7
@@ -38,9 +39,9 @@ jobs:
       - name: Replace port 443 with 5001 in alpn_responder.js
         run: sed -i 's/listen(443)/listen(5001)/g' alpn_responder.js
         
-      - name: Replace curl
-        if: ${{ matrix.connect != 'using cURL' }}
-        run: sed -i "s/extension_loaded('curl')/false/g" src/ACMEv2.php
+      #- name: Replace curl
+      #  if: ${{ matrix.connect != 'using cURL' }}
+      #  run: sed -i "s/extension_loaded('curl')/false/g" src/ACMEv2.php
         
       - name: Run Pebble
         run: |

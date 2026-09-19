@@ -66,7 +66,7 @@ jobs:
           timeout 30s sh -c 'until curl -sk https://127.0.0.1:14000/dir >/dev/null; do sleep 1; done'
           timeout 30s sh -c 'until curl -s http://127.0.0.1:8055/ >/dev/null; do sleep 1; done'
           
-      - name: Run PHP ${{ matrix.version }} Tests 
+      - name: Run ACMECert Tests on PHP ${{ matrix.version }}
         run: |
           docker exec php \
             php -d curl.cainfo=pebble.crt \

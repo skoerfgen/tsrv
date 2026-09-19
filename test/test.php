@@ -5,8 +5,14 @@ echo 'PHP Version: '.PHP_VERSION,"\n";
 
 require 'ACMECert.php';
 use skoerfgen\ACMECert\ACMECert;
+
 $ac=new ACMECert('https://127.0.0.1:14000/dir');
 $ac->setLogger(function($txt){
+	echo $txt,"\n";
+});
+
+$ac2=new ACMECert('https://127.0.0.1:14001/dir');
+$ac2->setLogger(function($txt){
 	echo $txt,"\n";
 });
 
@@ -17,10 +23,13 @@ foreach([2048,3072,4096] as $k=>$bits){
 	if ($k===0) {
 		$ac->loadAccountKey($key);
 		$ac->register(true);
+		
 	}else{
 		$ac->keyChange($key);
 	}
 	print_r($ac->getAccount());
+	$ac2->loadAccountKey($key);
+	print_r($ac2->registerEAB(true,'kid-1','zWNDZM6eQGHWpSRTPal5eIUYFTu7EajVIoguysqZ9wG44nMEtx3MUAsUDkMTQ12W'));
 	close();
 }
 
@@ -36,6 +45,8 @@ if (PHP_VERSION_ID>=70100){
 			$ac->keyChange($key);
 		}
 		print_r($ac->getAccount());
+		$ac2->loadAccountKey($key);
+		print_r($ac2->registerEAB(true,'kid-1','zWNDZM6eQGHWpSRTPal5eIUYFTu7EajVIoguysqZ9wG44nMEtx3MUAsUDkMTQ12W'));
 		close();
 	}
 }
@@ -183,11 +194,11 @@ open('Deactivate Account');
 print_r($ac->deactivateAccount());
 close();
 
-open('EAB');
+/*open('EAB');
 $ac=new ACMECert('https://127.0.0.1:14001/dir');
 $ac->loadAccountKey($ac->generateRSAKey());
 print_r($ac->registerEAB(true,'kid-1','zWNDZM6eQGHWpSRTPal5eIUYFTu7EajVIoguysqZ9wG44nMEtx3MUAsUDkMTQ12W'));
-close();
+close();*/
 
 // ============================================================================
 
